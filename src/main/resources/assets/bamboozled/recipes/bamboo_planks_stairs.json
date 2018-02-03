@@ -1,0 +1,8 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "result": { "item": "bamboozled:bamboo_planks_stairs", "count": 4 },
+    "pattern": [ "P  ", "PP ", "PPP" ],
+    "key": {
+        "P": { "item": "bamboozled:bamboo_planks", "data": 0 }
+    }
+}

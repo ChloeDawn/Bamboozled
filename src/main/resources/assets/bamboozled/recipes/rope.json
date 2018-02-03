@@ -1,0 +1,8 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "result": { "item": "bamboozled:rope", "count": 3 },
+    "pattern": [ "SS", "SS", "SS" ],
+    "key": {
+        "S": { "ore": "string", "type": "forge:ore_dict" }
+    }
+}

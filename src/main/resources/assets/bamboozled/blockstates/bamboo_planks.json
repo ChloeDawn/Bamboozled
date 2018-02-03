@@ -1,0 +1,14 @@
+{
+    "forge_marker": 1,
+    "defaults": { "model": "cube_all" },
+    "variants": {
+        "orientation=horizontal": [
+            { "textures": { "all": "bamboozled:blocks/bamboo_planks" } },
+            { "textures": { "all": "bamboozled:blocks/bamboo_planks_alt" } }
+        ],
+        "orientation=vertical": [
+            { "textures": { "all": "bamboozled:blocks/bamboo_planks_vertical" } },
+            { "textures": { "all": "bamboozled:blocks/bamboo_planks_vertical_alt" } }
+        ]
+    }
+}

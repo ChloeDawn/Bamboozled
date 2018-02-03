@@ -1,0 +1,36 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures": {
+            "cap": "bamboozled:blocks/bamboo_cap",
+            "side": "bamboozled:blocks/bamboo_side",
+            "layer0": "bamboozled:items/bamboo"
+        }
+    },
+    "variants": {
+        "inventory": {
+            "model": "builtin/generated",
+            "transform": "forge:default-item"
+        },
+        "up": {
+            "true": { "model": "bamboozled:bamboo" },
+            "false": { "model": "bamboozled:bamboo_top" }
+        },
+        "north": {
+            "true": { "submodel": "bamboozled:bamboo_north" },
+            "false": { }
+        },
+        "south": {
+            "true": { "submodel": "bamboozled:bamboo_south" },
+            "false": { }
+        },
+        "west": {
+            "true": { "submodel": "bamboozled:bamboo_west" },
+            "false": { }
+        },
+        "east": {
+            "true": { },
+            "false": { }
+        }
+    }
+}

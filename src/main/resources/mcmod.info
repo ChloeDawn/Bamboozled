@@ -1,0 +1,10 @@
+[
+    {
+        "modid": "bamboozled",
+        "name": "Bamboozled",
+        "description": "Adds bamboo that can be crafted into decorative blocks, and much more",
+        "version": "${version}",
+        "mcversion": "[1.12,1.13)",
+        "authorList": [ "InsomniaKitten" ]
+    }
+]
