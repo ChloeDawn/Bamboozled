@@ -5,6 +5,7 @@ import net.insomniakitten.bamboo.item.ItemBlockBase;
 import net.insomniakitten.bamboo.item.ItemBlockSupplier;
 import net.insomniakitten.bamboo.tile.TileBambooHopper;
 import net.insomniakitten.bamboo.tile.TileEntitySupplier;
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
@@ -20,6 +21,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -47,6 +50,12 @@ public final class BlockBambooHopper extends BlockBase implements TileEntitySupp
         setFullBlock(false);
     }
 
+    private void updatePoweredState(World world, BlockPos pos, IBlockState state) {
+        if (world.isBlockPowered(pos) != state.getValue(POWERED)) {
+            world.setBlockState(pos, state.cycleProperty(POWERED), 4);
+        }
+    }
+
     @Override
     @Deprecated
     public final IBlockState getStateFromMeta(int meta) {
@@ -55,6 +64,29 @@ public final class BlockBambooHopper extends BlockBase implements TileEntitySupp
         return getDefaultState()
                 .withProperty(POWERED, powered)
                 .withProperty(CONNECT, connect);
+    }
+
+    @Override
+    @Deprecated
+    public IBlockState withRotation(IBlockState state, Rotation rot) {
+        return state.withProperty(CONNECT, rot.rotate(state.getValue(CONNECT)));
+    }
+
+    @Override
+    @Deprecated
+    public IBlockState withMirror(IBlockState state, Mirror mirror) {
+        return state.withRotation(mirror.toRotation(state.getValue(CONNECT)));
+    }
+
+    @Override
+    @Deprecated
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos) {
+        updatePoweredState(world, pos, state);
+    }
+
+    @Override
+    public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
+        updatePoweredState(world, pos, state);
     }
 
     @SideOnly(Side.CLIENT)
