@@ -1,5 +1,6 @@
 package net.insomniakitten.bamboo;
 
+import com.google.common.base.Equivalence;
 import net.insomniakitten.bamboo.block.BlockBamboo;
 import net.insomniakitten.bamboo.block.BlockBambooBundle;
 import net.insomniakitten.bamboo.block.BlockBambooHopper;
@@ -151,13 +152,13 @@ public final class BamboozledRegistry {
     }
 
     private static void registerOreEntries() {
-        OreCollection oreEntries = new OreCollection();
+        OreCollection oreEntries = OreCollection.create();
 
         for (Block block : BLOCKS.entries()) {
             if (block instanceof OreEntrySupplier) {
                 ((OreEntrySupplier) block).getOreEntries(oreEntries);
-                for (Map.Entry<ItemStack, List<String>> entry : oreEntries.entrySet()) {
-                    ItemStack stack = entry.getKey().copy();
+                for (Map.Entry<Equivalence.Wrapper<ItemStack>, List<String>> entry : oreEntries.entries()) {
+                    ItemStack stack = entry.getKey().get().copy();
                     for (String ore : entry.getValue()) {
                         OreDictionary.registerOre(ore, stack);
                     }
@@ -168,8 +169,8 @@ public final class BamboozledRegistry {
         for (Item item : ITEMS.entries()) {
             if (item instanceof OreEntrySupplier) {
                 ((OreEntrySupplier) item).getOreEntries(oreEntries);
-                for (Map.Entry<ItemStack, List<String>> entry : oreEntries.entrySet()) {
-                    ItemStack stack = entry.getKey().copy();
+                for (Map.Entry<Equivalence.Wrapper<ItemStack>, List<String>> entry : oreEntries.entries()) {
+                    ItemStack stack = entry.getKey().get().copy();
                     for (String ore : entry.getValue()) {
                         OreDictionary.registerOre(ore, stack);
                     }
