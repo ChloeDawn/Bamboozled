@@ -4,6 +4,6 @@
     "pattern": [ "P P", "PRP", " P " ],
     "key": {
         "P": { "ore": "plankBamboo", "type": "forge:ore_dict" },
-        "R": { "item": "minecraft:wooden_pressure_plate" }
+        "R": { "item": "bamboozled:bamboo_pressure_plate" }
     }
 }

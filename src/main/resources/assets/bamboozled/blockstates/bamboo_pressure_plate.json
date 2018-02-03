@@ -1,0 +1,9 @@
+{
+    "forge_marker": 1,
+    "variants": {
+        "powered": {
+            "false": { "model": "bamboozled:bamboo_pressure_plate_up" },
+            "true": { "model": "bamboozled:bamboo_pressure_plate_down" }
+        }
+    }
+}
