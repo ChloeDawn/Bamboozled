@@ -1,6 +1,7 @@
 package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.Maps;
+import net.insomniakitten.bamboo.BamboozledConfig;
 import net.insomniakitten.bamboo.client.BlockModelMapper;
 import net.insomniakitten.bamboo.item.ItemBlockBase;
 import net.insomniakitten.bamboo.item.ItemBlockSupplier;
@@ -45,15 +46,17 @@ public final class BlockBambooHopper extends BlockBase implements TileEntitySupp
     public static final PropertyBool POWERED = PropertyBool.create("powered");
     public static final PropertyDirection CONNECT = PropertyDirection.create("connect", f -> f != EnumFacing.UP);
 
-    private static final AxisAlignedBB AABB_UPPER = new AxisAlignedBB(0.0D, 0.625D, 0.0D, 1.0D, 1.0D, 1.0D);
-    private static final AxisAlignedBB AABB_UPPER_N = new AxisAlignedBB(0.0D, 0.625D, 0.875D, 1.0D, 1.0D, 1.0D);
-    private static final AxisAlignedBB AABB_UPPER_S = new AxisAlignedBB(0.0D, 0.625D, 0.0D, 1.0D, 1.0D, 0.125D);
-    private static final AxisAlignedBB AABB_UPPER_E = new AxisAlignedBB(0.0D, 0.625D, 0.0D, 0.125D, 1.0D, 1.0D);
-    private static final AxisAlignedBB AABB_UPPER_W = new AxisAlignedBB(0.875D, 0.625D, 0.0D, 1.0D, 1.0D, 1.0D);
-    private static final AxisAlignedBB AABB_PLATE = new AxisAlignedBB(0.125D, 0.625D, 0.125D, 0.875D, 0.6875D, 0.125D);
-    private static final AxisAlignedBB AABB_LOWER = new AxisAlignedBB(0.25D, 0.25D, 0.25D, 0.75D, 0.625D, 0.75D);
+    public static final AxisAlignedBB AABB_UPPER = new AxisAlignedBB(0.0D, 0.625D, 0.0D, 1.0D, 1.0D, 1.0D);
+    public static final AxisAlignedBB AABB_UPPER_N = new AxisAlignedBB(0.0D, 0.625D, 0.875D, 1.0D, 1.0D, 1.0D);
+    public static final AxisAlignedBB AABB_UPPER_S = new AxisAlignedBB(0.0D, 0.625D, 0.0D, 1.0D, 1.0D, 0.125D);
+    public static final AxisAlignedBB AABB_UPPER_E = new AxisAlignedBB(0.0D, 0.625D, 0.0D, 0.125D, 1.0D, 1.0D);
+    public static final AxisAlignedBB AABB_UPPER_W = new AxisAlignedBB(0.875D, 0.625D, 0.0D, 1.0D, 1.0D, 1.0D);
+    public static final AxisAlignedBB AABB_PLATE = new AxisAlignedBB(0.125D, 0.625D, 0.125D, 0.875D, 0.6875D, 0.125D);
+    public static final AxisAlignedBB AABB_LOWER = new AxisAlignedBB(0.25D, 0.25D, 0.25D, 0.75D, 0.625D, 0.75D);
 
-    private static final Map<EnumFacing, AxisAlignedBB> AABB_JOINTS = Maps.newEnumMap(EnumFacing.class);
+    public static final AxisAlignedBB AABB_LOWER_SIMPLE = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.625D, 1.0D);
+
+    public static final Map<EnumFacing, AxisAlignedBB> AABB_JOINTS = Maps.newEnumMap(EnumFacing.class);
 
     static {
         AABB_JOINTS.put(EnumFacing.DOWN, new AxisAlignedBB(0.375D, 0.0D, 0.375D, 0.625D, 0.25D, 0.625D));
@@ -63,10 +66,13 @@ public final class BlockBambooHopper extends BlockBase implements TileEntitySupp
         AABB_JOINTS.put(EnumFacing.WEST, new AxisAlignedBB(0.0D, 0.25D, 0.375D, 0.25D, 0.5D, 0.625D));
     }
 
+    private final boolean fancyCollision;
+
     public BlockBambooHopper() {
         super(Material.WOOD, SoundType.WOOD, 2.0F, 15.0F);
         setOpaqueBlock(false);
         setFullBlock(false);
+        fancyCollision = BamboozledConfig.GENERAL.fancyHopper;
     }
 
     private void updatePoweredState(World world, BlockPos pos, IBlockState state) {
@@ -135,6 +141,10 @@ public final class BlockBambooHopper extends BlockBase implements TileEntitySupp
 
     @Override
     public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
+        if (!fancyCollision) {
+           Collections.addAll(boxes, AABB_UPPER_N, AABB_UPPER_E, AABB_UPPER_S, AABB_UPPER_W, AABB_LOWER_SIMPLE);
+           return;
+        }
         Collections.addAll(boxes, AABB_UPPER_N, AABB_UPPER_E, AABB_UPPER_S, AABB_UPPER_W, AABB_PLATE, AABB_LOWER);
         boxes.add(AABB_JOINTS.get(state.getValue(CONNECT)));
     }
@@ -162,6 +172,8 @@ public final class BlockBambooHopper extends BlockBase implements TileEntitySupp
     @Deprecated
     @Nullable
     public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
+        if (!fancyCollision) return rayTrace(pos, start, end, FULL_BLOCK_AABB);
+
         List<AxisAlignedBB> boxes = new ArrayList<>();
         Collections.addAll(boxes, AABB_UPPER, AABB_LOWER);
         boxes.add(AABB_JOINTS.get(state.getValue(CONNECT)));

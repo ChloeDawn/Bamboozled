@@ -21,6 +21,9 @@ public final class BamboozledObjects {
     @GameRegistry.ObjectHolder("salt_block")
     public static final Block SALT_BLOCK = Blocks.AIR;
 
+    @GameRegistry.ObjectHolder("bamboo_hopper")
+    public static final Block BAMBOO_HOPPER = Blocks.AIR;
+
     @GameRegistry.ObjectHolder("salt_pile")
     public static final Item SALT_PILE = Items.AIR;
 

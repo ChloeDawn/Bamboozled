@@ -1,6 +1,7 @@
 package net.insomniakitten.bamboo;
 
 import net.insomniakitten.bamboo.event.BambooRenderEvents;
+import net.insomniakitten.bamboo.event.HopperRenderEvents;
 import net.insomniakitten.bamboo.event.SlabInteractionEvents;
 import net.insomniakitten.bamboo.world.GeneratorBamboo;
 import net.insomniakitten.bamboo.world.GeneratorSaltOre;
@@ -54,6 +55,9 @@ public final class Bamboozled {
         }
         if (BamboozledConfig.GENERAL.fancyBamboo) {
             MinecraftForge.EVENT_BUS.register(new BambooRenderEvents());
+        }
+        if (BamboozledConfig.GENERAL.fancyHopper) {
+            MinecraftForge.EVENT_BUS.register(new HopperRenderEvents());
         }
     }
 
