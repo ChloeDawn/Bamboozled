@@ -2,17 +2,17 @@
     "__comment": "Copyright © InsomniaKitten 2017",
     "textures": {
         "particle": "bamboozled:blocks/bamboo_hopper_side_down",
-        "down": "bamboozled:blocks/bamboo_hopper_bottom_side",
+        "down": "bamboozled:blocks/bamboo_hopper_down",
         "up": "bamboozled:blocks/bamboo_hopper_top",
         "north": "bamboozled:blocks/bamboo_hopper_side_north",
         "south": "bamboozled:blocks/bamboo_hopper_side_down",
         "west": "bamboozled:blocks/bamboo_hopper_side_west",
         "east": "bamboozled:blocks/bamboo_hopper_side_east",
-        "up_side": "bamboozled:blocks/bamboo_hopper_up_side"
+        "down_c": "bamboozled:blocks/bamboo_hopper_down_c"
     },
     "elements": [
         {
-            "__comment": "Box1",
+            "__comment": "bowl_0_n",
             "from": [ 2, 11, 0 ],
             "to": [ 14, 16, 2 ],
             "faces": {
@@ -22,18 +22,7 @@
             }
         },
         {
-            "__comment": "Box2",
-            "from": [ 0, 10, 0 ],
-            "to": [ 2, 16, 2 ],
-            "faces": {
-                "down": { "uv": [ 0, 14, 2, 16 ], "texture": "#down" },
-                "up": { "uv": [ 0, 0, 2, 2 ], "texture": "#up", "cullface": "up" },
-                "north": { "uv": [ 14, 0, 16, 6 ], "texture": "#north", "cullface": "north" },
-                "west": { "uv": [ 0, 0, 2, 6 ], "texture": "#west", "cullface": "west" }
-            }
-        },
-        {
-            "__comment": "Box2",
+            "__comment": "bowl_0_ne",
             "from": [ 14, 10, 0 ],
             "to": [ 16, 16, 2 ],
             "faces": {
@@ -44,7 +33,7 @@
             }
         },
         {
-            "__comment": "Box1",
+            "__comment": "bowl_0_e",
             "from": [ 14, 11, 2 ],
             "to": [ 16, 16, 14 ],
             "faces": {
@@ -54,17 +43,7 @@
             }
         },
         {
-            "__comment": "Box1",
-            "from": [ 0, 11, 2 ],
-            "to": [ 2, 16, 14 ],
-            "faces": {
-                "up": { "uv": [ 0, 2, 2, 14 ], "texture": "#up", "cullface": "up" },
-                "west": { "uv": [ 2, 0, 14, 5 ], "texture": "#west", "cullface": "west" },
-                "east": { "uv": [ 2, 0, 14, 5 ], "texture": "#east" }
-            }
-        },
-        {
-            "__comment": "Box2",
+            "__comment": "bowl_0_se",
             "from": [ 14, 10, 14 ],
             "to": [ 16, 16, 16 ],
             "faces": {
@@ -75,7 +54,17 @@
             }
         },
         {
-            "__comment": "Box2",
+            "__comment": "bowl_0_s",
+            "from": [ 2, 11, 14 ],
+            "to": [ 14, 16, 16 ],
+            "faces": {
+                "up": { "uv": [ 2, 14, 14, 16 ], "texture": "#up", "cullface": "up" },
+                "north": { "uv": [ 2, 0, 14, 5 ], "texture": "#north" },
+                "south": { "uv": [ 2, 0, 14, 5 ], "texture": "#south", "cullface": "south" }
+            }
+        },
+        {
+            "__comment": "bowl_0_sw",
             "from": [ 0, 10, 14 ],
             "to": [ 2, 16, 16 ],
             "faces": {
@@ -86,17 +75,28 @@
             }
         },
         {
-            "__comment": "Box1",
-            "from": [ 2, 11, 14 ],
-            "to": [ 14, 16, 16 ],
+            "__comment": "bowl_0_w",
+            "from": [ 0, 11, 2 ],
+            "to": [ 2, 16, 14 ],
             "faces": {
-                "up": { "uv": [ 2, 14, 14, 16 ], "texture": "#up", "cullface": "up" },
-                "north": { "uv": [ 2, 0, 14, 5 ], "texture": "#north" },
-                "south": { "uv": [ 2, 0, 14, 5 ], "texture": "#south", "cullface": "south" }
+                "up": { "uv": [ 0, 2, 2, 14 ], "texture": "#up", "cullface": "up" },
+                "west": { "uv": [ 2, 0, 14, 5 ], "texture": "#west", "cullface": "west" },
+                "east": { "uv": [ 2, 0, 14, 5 ], "texture": "#east" }
             }
         },
         {
-            "__comment": "Box9",
+            "__comment": "bowl_0_nw",
+            "from": [ 0, 10, 0 ],
+            "to": [ 2, 16, 2 ],
+            "faces": {
+                "down": { "uv": [ 0, 14, 2, 16 ], "texture": "#down" },
+                "up": { "uv": [ 0, 0, 2, 2 ], "texture": "#up", "cullface": "up" },
+                "north": { "uv": [ 14, 0, 16, 6 ], "texture": "#north", "cullface": "north" },
+                "west": { "uv": [ 0, 0, 2, 6 ], "texture": "#west", "cullface": "west" }
+            }
+        },
+        {
+            "__comment": "bowl_1_n",
             "from": [ 2, 10, 0 ],
             "to": [ 14, 11, 2 ],
             "faces": {
@@ -105,7 +105,7 @@
             }
         },
         {
-            "__comment": "Box9",
+            "__comment": "bowl_1_e",
             "from": [ 14, 10, 2 ],
             "to": [ 16, 11, 14 ],
             "faces": {
@@ -114,16 +114,7 @@
             }
         },
         {
-            "__comment": "Box9",
-            "from": [ 0, 10, 2 ],
-            "to": [ 2, 11, 14 ],
-            "faces": {
-                "down": { "uv": [ 0, 2, 2, 14 ], "texture": "#down" },
-                "west": { "uv": [ 2, 5, 14, 6 ], "texture": "#west", "cullface": "west" }
-            }
-        },
-        {
-            "__comment": "Box9",
+            "__comment": "bowl_1_s",
             "from": [ 2, 10, 14 ],
             "to": [ 14, 11, 16 ],
             "faces": {
@@ -132,7 +123,16 @@
             }
         },
         {
-            "__comment": "Box14",
+            "__comment": "bowl_1_w",
+            "from": [ 0, 10, 2 ],
+            "to": [ 2, 11, 14 ],
+            "faces": {
+                "down": { "uv": [ 0, 2, 2, 14 ], "texture": "#down" },
+                "west": { "uv": [ 2, 5, 14, 6 ], "texture": "#west", "cullface": "west" }
+            }
+        },
+        {
+            "__comment": "plate_n",
             "from": [ 2, 10, 2 ],
             "to": [ 12, 11, 4 ],
             "faces": {
@@ -141,7 +141,7 @@
             }
         },
         {
-            "__comment": "Box14",
+            "__comment": "plate_e",
             "from": [ 12, 10, 2 ],
             "to": [ 14, 11, 12 ],
             "faces": {
@@ -150,7 +150,7 @@
             }
         },
         {
-            "__comment": "Box14",
+            "__comment": "plate_s",
             "from": [ 4, 10, 12 ],
             "to": [ 14, 11, 14 ],
             "faces": {
@@ -159,7 +159,7 @@
             }
         },
         {
-            "__comment": "Box14",
+            "__comment": "plate_w",
             "from": [ 2, 10, 4 ],
             "to": [ 4, 11, 14 ],
             "faces": {
@@ -168,7 +168,7 @@
             }
         },
         {
-            "__comment": "Box14",
+            "__comment": "plate_c",
             "from": [ 4, 10, 4 ],
             "to": [ 12, 11, 12 ],
             "faces": {
@@ -176,7 +176,7 @@
             }
         },
         {
-            "__comment": "Box29",
+            "__comment": "lower_c",
             "from": [ 4, 4, 4 ],
             "to": [ 12, 10, 12 ],
             "faces": {
@@ -187,7 +187,7 @@
             }
         },
         {
-            "__comment": "Box29",
+            "__comment": "lower_nw",
             "from": [ 4, 4, 4 ],
             "to": [ 6, 10, 4.001 ],
             "faces": {
@@ -195,15 +195,7 @@
             }
         },
         {
-            "__comment": "Box29",
-            "from": [ 10, 4, 4 ],
-            "to": [ 12, 10, 4.001 ],
-            "faces": {
-                "north": { "uv": [ 4, 6, 6, 12 ], "texture": "#north" }
-            }
-        },
-        {
-            "__comment": "Box29",
+            "__comment": "lower_n",
             "from": [ 6, 8, 4 ],
             "to": [ 10, 10, 4.001 ],
             "faces": {
@@ -211,12 +203,20 @@
             }
         },
         {
-            "__comment": "Box22",
+            "__comment": "lower_ne",
+            "from": [ 10, 4, 4 ],
+            "to": [ 12, 10, 4.001 ],
+            "faces": {
+                "north": { "uv": [ 4, 6, 6, 12 ], "texture": "#north" }
+            }
+        },
+        {
+            "__comment": "joint_c",
             "from": [ 6, 4, 0 ],
             "to": [ 10, 8, 4 ],
             "faces": {
-                "down": { "uv": [ 6, 12, 10, 16 ], "texture": "#down" },
-                "up": { "uv": [ 6, 0, 10, 4 ], "texture": "#up_side" },
+                "down": { "uv": [ 6, 12, 10, 16 ], "texture": "#down_c" },
+                "up": { "uv": [ 6, 0, 10, 4 ], "texture": "#down_c" },
                 "north": { "uv": [ 6, 8, 10, 12 ], "texture": "#north", "cullface": "north" },
                 "west": { "uv": [ 0, 8, 4, 12 ], "texture": "#west" },
                 "east": { "uv": [ 12, 8, 16, 12 ], "texture": "#east" }

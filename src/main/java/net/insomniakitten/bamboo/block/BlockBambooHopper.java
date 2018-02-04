@@ -1,10 +1,12 @@
 package net.insomniakitten.bamboo.block;
 
+import com.google.common.collect.Maps;
 import net.insomniakitten.bamboo.client.BlockModelMapper;
 import net.insomniakitten.bamboo.item.ItemBlockBase;
 import net.insomniakitten.bamboo.item.ItemBlockSupplier;
 import net.insomniakitten.bamboo.tile.TileBambooHopper;
 import net.insomniakitten.bamboo.tile.TileEntitySupplier;
+import net.insomniakitten.bamboo.util.RayTraceHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -25,24 +27,41 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public final class BlockBambooHopper extends BlockBase implements TileEntitySupplier, ItemBlockSupplier, BlockModelMapper {
 
     public static final PropertyBool POWERED = PropertyBool.create("powered");
     public static final PropertyDirection CONNECT = PropertyDirection.create("connect", f -> f != EnumFacing.UP);
 
-    private static final AxisAlignedBB BASE_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.625D, 1.0D);
-    private static final AxisAlignedBB NORTH_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.875D, 1.0D, 1.0D, 1.0D);
-    private static final AxisAlignedBB SOUTH_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 0.125D);
-    private static final AxisAlignedBB EAST_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.125D, 1.0D, 1.0D);
-    private static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.875D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D);
+    private static final AxisAlignedBB AABB_UPPER = new AxisAlignedBB(0.0D, 0.625D, 0.0D, 1.0D, 1.0D, 1.0D);
+    private static final AxisAlignedBB AABB_UPPER_N = new AxisAlignedBB(0.0D, 0.625D, 0.875D, 1.0D, 1.0D, 1.0D);
+    private static final AxisAlignedBB AABB_UPPER_S = new AxisAlignedBB(0.0D, 0.625D, 0.0D, 1.0D, 1.0D, 0.125D);
+    private static final AxisAlignedBB AABB_UPPER_E = new AxisAlignedBB(0.0D, 0.625D, 0.0D, 0.125D, 1.0D, 1.0D);
+    private static final AxisAlignedBB AABB_UPPER_W = new AxisAlignedBB(0.875D, 0.625D, 0.0D, 1.0D, 1.0D, 1.0D);
+    private static final AxisAlignedBB AABB_PLATE = new AxisAlignedBB(0.125D, 0.625D, 0.125D, 0.875D, 0.6875D, 0.125D);
+    private static final AxisAlignedBB AABB_LOWER = new AxisAlignedBB(0.25D, 0.25D, 0.25D, 0.75D, 0.625D, 0.75D);
+
+    private static final Map<EnumFacing, AxisAlignedBB> AABB_JOINTS = Maps.newEnumMap(EnumFacing.class);
+
+    static {
+        AABB_JOINTS.put(EnumFacing.DOWN, new AxisAlignedBB(0.375D, 0.0D, 0.375D, 0.625D, 0.25D, 0.625D));
+        AABB_JOINTS.put(EnumFacing.NORTH, new AxisAlignedBB(0.375D, 0.25D, 0.0D, 0.625D, 0.5D, 0.25D));
+        AABB_JOINTS.put(EnumFacing.SOUTH, new AxisAlignedBB(0.375D, 0.25D, 0.75D, 0.625D, 0.5D, 1.0D));
+        AABB_JOINTS.put(EnumFacing.EAST, new AxisAlignedBB(0.75D, 0.25D, 0.375D, 1.0D, 0.5D, 0.625D));
+        AABB_JOINTS.put(EnumFacing.WEST, new AxisAlignedBB(0.0D, 0.25D, 0.375D, 0.25D, 0.5D, 0.625D));
+    }
 
     public BlockBambooHopper() {
         super(Material.WOOD, SoundType.WOOD, 2.0F, 15.0F);
@@ -116,7 +135,8 @@ public final class BlockBambooHopper extends BlockBase implements TileEntitySupp
 
     @Override
     public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
-        Collections.addAll(boxes, BASE_AABB, NORTH_AABB, SOUTH_AABB, EAST_AABB, WEST_AABB);
+        Collections.addAll(boxes, AABB_UPPER_N, AABB_UPPER_E, AABB_UPPER_S, AABB_UPPER_W, AABB_PLATE, AABB_LOWER);
+        boxes.add(AABB_JOINTS.get(state.getValue(CONNECT)));
     }
 
     @Override
@@ -128,8 +148,24 @@ public final class BlockBambooHopper extends BlockBase implements TileEntitySupp
 
     @Override
     @Deprecated
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return FULL_BLOCK_AABB;
+    }
+
+    @Override
+    @Deprecated
     public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing side) {
         return side == EnumFacing.UP ? BlockFaceShape.BOWL : BlockFaceShape.UNDEFINED;
+    }
+
+    @Override
+    @Deprecated
+    @Nullable
+    public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
+        List<AxisAlignedBB> boxes = new ArrayList<>();
+        Collections.addAll(boxes, AABB_UPPER, AABB_LOWER);
+        boxes.add(AABB_JOINTS.get(state.getValue(CONNECT)));
+        return RayTraceHelper.rayTraceMultiAABB(boxes, pos, start, end);
     }
 
     @Override
