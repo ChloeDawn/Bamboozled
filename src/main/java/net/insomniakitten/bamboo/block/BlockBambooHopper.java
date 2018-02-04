@@ -193,7 +193,7 @@ public final class BlockBambooHopper extends BlockBase implements TileEntitySupp
 
     @Override
     public ItemBlock getItemBlock() {
-        return new ItemBlockBase(this, "inventory");
+        return new ItemBlockBase(this, "connect=down");
     }
 
     @Override
