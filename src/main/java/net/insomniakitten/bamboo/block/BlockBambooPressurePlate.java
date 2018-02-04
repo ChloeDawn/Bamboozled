@@ -81,11 +81,13 @@ public final class BlockBambooPressurePlate extends BlockPlateBase implements It
     @Override
     @SideOnly(Side.CLIENT)
     public IStateMapper getModelMapper() {
+        //noinspection ConstantConditions
         return new StateMapperBase() {
+            private final ModelResourceLocation unpowered = new ModelResourceLocation(getRegistryName(), "powered=false");
+            private final ModelResourceLocation powered = new ModelResourceLocation(getRegistryName(), "powered=true");
             @Override
             protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                //noinspection ConstantConditions
-                return new ModelResourceLocation(getRegistryName(), "powered=" + (state.getValue(POWER) > 0));
+                return state.getValue(POWER) > 0 ? powered : unpowered;
             }
         };
     }
