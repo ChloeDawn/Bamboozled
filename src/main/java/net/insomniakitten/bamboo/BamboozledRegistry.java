@@ -5,6 +5,7 @@ import net.insomniakitten.bamboo.block.BlockBamboo;
 import net.insomniakitten.bamboo.block.BlockBambooBundle;
 import net.insomniakitten.bamboo.block.BlockBambooHopper;
 import net.insomniakitten.bamboo.block.BlockBambooPlanks;
+import net.insomniakitten.bamboo.block.BlockBambooPressurePlate;
 import net.insomniakitten.bamboo.block.BlockBambooSlab;
 import net.insomniakitten.bamboo.block.BlockBambooStairs;
 import net.insomniakitten.bamboo.block.BlockBambooWall;
@@ -65,6 +66,7 @@ public final class BamboozledRegistry {
                 .register(new BlockBambooStairs(2.0F, 15.0F), "bamboo_planks_stairs")
                 .register(new BlockBambooSlab(2.0F, 15.0F), "bamboo_planks_slab")
                 .register(new BlockBambooWall(), "bamboo_wall")
+                .register(new BlockBambooPressurePlate(), "bamboo_pressure_plate")
                 .register(new BlockBambooHopper(), "bamboo_hopper")
                 .register(new BlockSaltOre(), "salt_ore")
                 .register(new BlockSaltPile(), "salt_pile")

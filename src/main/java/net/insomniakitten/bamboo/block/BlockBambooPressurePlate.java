@@ -11,7 +11,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.SoundCategory;
@@ -40,18 +40,11 @@ public final class BlockBambooPressurePlate extends BlockPlateBase implements It
 
     @Override
     protected int computeRedstoneStrength(World world, BlockPos pos) {
-        double x = pos.getX() + 0.5D;
-        double y = pos.getY();
-        double z = pos.getZ() + 0.5D;
-
-        double dist = Double.MAX_VALUE;
-
-        for (EntityLivingBase entity : world.getEntitiesWithinAABB(EntityLivingBase.class, PRESSURE_AABB)) {
-            double d = entity.getDistanceSq(x, y, z);
-            if (d < dist) dist = d;
+        int power = 0;
+        for (EntityPlayer player : world.getEntitiesWithinAABB(EntityPlayer.class, PRESSURE_AABB.offset(pos))) {
+            if (!player.doesEntityNotTriggerPressurePlate() && power < 15) ++power;
         }
-
-        return (15 * (int) dist) & 15;
+        return power;
     }
 
     @Override
