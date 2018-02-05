@@ -155,7 +155,7 @@ public final class BlockBamboo extends BlockBase implements IPlantable, BlockMod
     @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
         IBlockState state = world.getBlockState(pos.down());
-        boolean canSustainPlant = state.getBlock().canSustainPlant(state, world, pos, UP, (BlockSapling) Blocks.SAPLING);
+        boolean canSustainPlant = state.getBlock().canSustainPlant(state, world, pos.down(), UP, (BlockSapling) Blocks.SAPLING);
         return state.getBlock() == this || canSustainPlant;
     }
 
