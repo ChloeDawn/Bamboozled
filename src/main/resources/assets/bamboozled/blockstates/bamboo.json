@@ -12,6 +12,16 @@
             "model": "builtin/generated",
             "transform": "forge:default-item"
         },
+        "canopy": {
+            "true": {},
+            "false": {}
+        },
+        "leaves": {
+            "0": {},
+            "1": {},
+            "2": {},
+            "3": {}
+        },
         "up": {
             "true": { "model": "bamboozled:bamboo" },
             "false": { "model": "bamboozled:bamboo_top" }

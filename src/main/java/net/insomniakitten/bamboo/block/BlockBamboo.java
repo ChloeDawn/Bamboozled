@@ -26,6 +26,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
@@ -37,6 +38,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.Random;
 
+import static net.minecraft.util.EnumFacing.DOWN;
 import static net.minecraft.util.EnumFacing.EAST;
 import static net.minecraft.util.EnumFacing.NORTH;
 import static net.minecraft.util.EnumFacing.SOUTH;
@@ -46,6 +48,8 @@ import static net.minecraft.util.EnumFacing.WEST;
 public final class BlockBamboo extends BlockBase implements IPlantable, BlockModelMapper, ItemBlockSupplier, OreEntrySupplier {
 
     public static final PropertyInteger PROP_AGE = PropertyInteger.create("age", 0, 15);
+    public static final PropertyBool PROP_CANOPY = PropertyBool.create("canopy");
+    public static final PropertyInteger PROP_LEAVES = PropertyInteger.create("leaves", 0, 3);
 
     private static final ImmutableMap<EnumFacing, PropertyBool> PROPS_SIDES = ImmutableMap.of(
             UP, PropertyBool.create("up"),
@@ -99,6 +103,35 @@ public final class BlockBamboo extends BlockBase implements IPlantable, BlockMod
         setTickRandomly(true);
     }
 
+    private IBlockState getConnectionsForPos(IBlockState state, IBlockAccess world, BlockPos pos) {
+        for (EnumFacing side : PROPS_SIDES.keySet()) {
+            Block block = world.getBlockState(pos.offset(side)).getBlock();
+            state = state.withProperty(PROPS_SIDES.get(side), block == this);
+        }
+        return state;
+    }
+
+    private IBlockState getLeavesForPos(IBlockState state, BlockPos pos) {
+        Random rand = new Random(MathHelper.getPositionRandom(pos));
+        return state.withProperty(PROP_LEAVES, rand.nextInt(4));
+    }
+
+    private IBlockState getCanopyForPos(IBlockState state, IBlockAccess world, BlockPos pos) {
+        if (state.getValue(PROPS_SIDES.get(UP))) {
+            return state.withProperty(PROP_CANOPY, false);
+        }
+
+        BlockPos.MutableBlockPos target = new BlockPos.MutableBlockPos(pos);
+        int height = 0;
+
+        do {
+            target.move(DOWN);
+            ++height;
+        } while (height < 6 && world.getBlockState(target).getBlock() == this);
+
+        return state.withProperty(PROP_CANOPY, height > 5);
+    }
+
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(int meta) {
@@ -108,10 +141,9 @@ public final class BlockBamboo extends BlockBase implements IPlantable, BlockMod
     @Override
     @Deprecated
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        for (EnumFacing side : PROPS_SIDES.keySet()) {
-            Block block = world.getBlockState(pos.offset(side)).getBlock();
-            state = state.withProperty(PROPS_SIDES.get(side), block == this);
-        }
+        state = getLeavesForPos(state, pos);
+        state = getConnectionsForPos(state, world, pos);
+        state = getCanopyForPos(state, world, pos);
         return state;
     }
 
@@ -162,7 +194,7 @@ public final class BlockBamboo extends BlockBase implements IPlantable, BlockMod
     @Override
     protected BlockStateContainer createBlockState() {
         BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
-        builder.add(PROP_AGE);
+        builder.add(PROP_AGE, PROP_CANOPY, PROP_LEAVES);
         for (IProperty<?> property : PROPS_SIDES.values()) {
             builder.add(property);
         }
