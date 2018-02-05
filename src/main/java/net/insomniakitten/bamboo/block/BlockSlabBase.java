@@ -21,6 +21,7 @@ import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.function.Predicate;
@@ -164,9 +165,8 @@ public abstract class BlockSlabBase extends BlockBase {
     }
 
     @Override
-    @Deprecated
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return state.getValue(VARIANT).getBoundingBox();
+    public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
+        boxes.add(state.getValue(VARIANT).getBoundingBox());
     }
 
     @Override
