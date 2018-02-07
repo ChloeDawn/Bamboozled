@@ -112,7 +112,8 @@ public final class BlockBamboo extends BlockBase implements IPlantable, BlockMod
     }
 
     private IBlockState getLeavesForPos(IBlockState state, BlockPos pos) {
-        Random rand = new Random(MathHelper.getPositionRandom(pos));
+        int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+        Random rand = new Random(MathHelper.getCoordinateRandom(x, y, z));
         return state.withProperty(PROP_LEAVES, rand.nextInt(4));
     }
 
