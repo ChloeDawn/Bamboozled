@@ -23,12 +23,10 @@ public final class GeneratorSaltOre {
         int originX = event.getChunkX() << 4;
         int originZ = event.getChunkZ() << 4;
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(originX, 0, originZ);
-        for (int i = 0; i < 4; ++i) {
-            int x = event.getRand().nextInt(16) + 8;
-            int z = event.getRand().nextInt(16) + 8;
-            findSurface(event.getWorld(), pos.setPos(originX + x, 0, originZ + z));
-            generateCluster(event.getWorld(), event.getRand(), pos);
-        }
+        int x = event.getRand().nextInt(16) + 8;
+        int z = event.getRand().nextInt(16) + 8;
+        findSurface(event.getWorld(), pos.setPos(originX + x, 0, originZ + z));
+        generateCluster(event.getWorld(), event.getRand(), pos);
     }
 
     private void findSurface(World world, final BlockPos.MutableBlockPos pos) {
@@ -44,7 +42,7 @@ public final class GeneratorSaltOre {
     private void generateCluster(World world, Random rand, BlockPos.MutableBlockPos pos) {
         if (!world.getBlockState(pos.up()).getMaterial().isLiquid()) return;
         BlockPos.MutableBlockPos target = new BlockPos.MutableBlockPos(pos);
-        final int size = (rand.nextInt(Math.min(clusterSize - 2, 0)) + 2);
+        final int size = (rand.nextInt(Math.max(clusterSize - 2, 1)) + 2);
         for (int x = pos.getX() - size; x <= pos.getX() + size; ++x) {
             for (int z = pos.getZ() - size; z <= pos.getZ() + size; ++z) {
                 int rX = x - pos.getX();
