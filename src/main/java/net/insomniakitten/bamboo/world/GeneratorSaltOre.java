@@ -41,8 +41,7 @@ public final class GeneratorSaltOre {
     }
 
     private void generateCluster(World world, Random rand, BlockPos.MutableBlockPos pos) {
-        final Chunk chunk = world.getChunkFromBlockCoords(pos);
-        if (!chunk.getBlockState(pos).getMaterial().isLiquid()) return;
+        if (!world.getBlockState(pos).getMaterial().isLiquid()) return;
         BlockPos.MutableBlockPos target = new BlockPos.MutableBlockPos(pos);
         final int size = (rand.nextInt(clusterSize - 2) + 2);
         for (int x = pos.getX() - size; x <= pos.getX() + size; ++x) {
@@ -51,9 +50,9 @@ public final class GeneratorSaltOre {
                 int rZ = z - pos.getZ();
                 if (((rX * rX) + (rZ * rZ)) <= (size * size)) {
                     for (int y = pos.getY() - 1; y <= pos.getY() + 1; ++y) {
-                        Block block = chunk.getBlockState(target.setPos(x, y, z)).getBlock();
+                        Block block = world.getBlockState(target.setPos(x, y, z)).getBlock();
                         if (block == Blocks.DIRT || block == Blocks.CLAY || block == Blocks.GRAVEL) {
-                            world.setBlockState(target, BamboozledObjects.SALT_ORE.getDefaultState(), 2);
+                            world.setBlockState(target, BamboozledObjects.SALT_ORE.getDefaultState());
                         }
                     }
                 }
