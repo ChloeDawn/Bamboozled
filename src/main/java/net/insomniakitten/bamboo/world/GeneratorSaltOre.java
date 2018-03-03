@@ -52,7 +52,7 @@ public final class GeneratorSaltOre {
                 if (((rX * rX) + (rZ * rZ)) <= (size * size)) {
                     for (int y = pos.getY() - 1; y <= pos.getY() + 1; ++y) {
                         Block block = world.getBlockState(target.setPos(x, y, z)).getBlock();
-                        if (block == Blocks.DIRT || block == Blocks.CLAY || block == Blocks.GRAVEL) {
+                        if (block == Blocks.DIRT || block == Blocks.CLAY) {
                             world.setBlockState(target, BamboozledObjects.SALT_ORE.getDefaultState(), 2 | 16);
                         }
                     }
