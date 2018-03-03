@@ -136,7 +136,7 @@ public final class BlockBambooHopper extends BlockBase implements TileEntitySupp
 
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        return getDefaultState().withProperty(CONNECT, placer.isSneaking() && side != EnumFacing.DOWN ? side.getOpposite() : EnumFacing.DOWN);
+        return getDefaultState().withProperty(CONNECT, side.getAxis().isHorizontal() ? side.getOpposite() : EnumFacing.DOWN);
     }
 
     @Override
