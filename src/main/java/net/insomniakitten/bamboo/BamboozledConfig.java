@@ -66,7 +66,7 @@ public final class BamboozledConfig {
         @Config.Name("salt_ore_cluster_size")
         @Config.Comment("The size of generated halite clusters")
         @Config.RequiresMcRestart
-        public int saltClusterSize = 4;
+        public int saltClusterSize = 8;
     }
 
 }

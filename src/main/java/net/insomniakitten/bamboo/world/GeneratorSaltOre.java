@@ -44,7 +44,7 @@ public final class GeneratorSaltOre {
     private void generateCluster(World world, Random rand, BlockPos.MutableBlockPos pos) {
         if (!world.getBlockState(pos.up()).getMaterial().isLiquid()) return;
         BlockPos.MutableBlockPos target = new BlockPos.MutableBlockPos(pos);
-        final int size = (rand.nextInt(clusterSize - 2) + 2);
+        final int size = (rand.nextInt(Math.min(clusterSize - 2, 0)) + 2);
         for (int x = pos.getX() - size; x <= pos.getX() + size; ++x) {
             for (int z = pos.getZ() - size; z <= pos.getZ() + size; ++z) {
                 int rX = x - pos.getX();
