@@ -10,9 +10,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber(modid = Bamboozled.ID)
 public final class BamboozledConfig {
 
-    @Config.Name("client")
-    public static final Client CLIENT = new Client();
-
     @Config.Name("general")
     public static final General GENERAL = new General();
 
@@ -24,14 +21,6 @@ public final class BamboozledConfig {
         if (Bamboozled.ID.equals(event.getModID())) {
             ConfigManager.sync(Bamboozled.ID, Config.Type.INSTANCE);
         }
-    }
-
-    public static final class Client {
-        @Config.Name("fancy_bamboo")
-        @Config.Comment({"Should the bounding box of bamboo be fancy and detailed?",
-                         "!! This feature has been moved to general/fancy_bamboo !!"})
-        @Deprecated // TODO Remove in 1.13
-        public boolean fancyBamboo = true;
     }
 
     public static final class General {
@@ -74,10 +63,10 @@ public final class BamboozledConfig {
         @Config.RequiresMcRestart
         public boolean generateSaltOre = true;
 
-        @Config.Name("salt_ore_thickness")
-        @Config.Comment("The thickness of the halite clusters")
+        @Config.Name("salt_ore_cluster_size")
+        @Config.Comment("The size of generated halite clusters")
         @Config.RequiresMcRestart
-        public int saltOreThickness = 3;
+        public int clusterSize = 3;
     }
 
 }
