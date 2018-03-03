@@ -26,22 +26,23 @@ public final class GeneratorSaltOre {
         for (int i = 0; i < 4; ++i) {
             int x = event.getRand().nextInt(16) + 8;
             int z = event.getRand().nextInt(16) + 8;
-            moveToLiquid(event.getWorld(), pos.setPos(originX + x, 0, originZ + z));
+            findSurface(event.getWorld(), pos.setPos(originX + x, 0, originZ + z));
             generateCluster(event.getWorld(), event.getRand(), pos);
         }
     }
 
-    private void moveToLiquid(World world, final BlockPos.MutableBlockPos pos) {
+    private void findSurface(World world, final BlockPos.MutableBlockPos pos) {
         final Chunk chunk = world.getChunkFromBlockCoords(pos);
         IBlockState target;
         pos.setY(world.getHeight(pos.getX(), pos.getZ()));
         do {
             target = chunk.getBlockState(pos.move(EnumFacing.DOWN));
-        } while (!world.isOutsideBuildHeight(pos) && !target.getMaterial().isLiquid());
+        } while (!world.isOutsideBuildHeight(pos)
+                && target.getMaterial().isReplaceable());
     }
 
     private void generateCluster(World world, Random rand, BlockPos.MutableBlockPos pos) {
-        if (!world.getBlockState(pos).getMaterial().isLiquid()) return;
+        if (!world.getBlockState(pos.up()).getMaterial().isLiquid()) return;
         BlockPos.MutableBlockPos target = new BlockPos.MutableBlockPos(pos);
         final int size = (rand.nextInt(clusterSize - 2) + 2);
         for (int x = pos.getX() - size; x <= pos.getX() + size; ++x) {
