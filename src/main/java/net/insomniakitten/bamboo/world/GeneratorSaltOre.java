@@ -16,7 +16,7 @@ import java.util.Random;
 
 public final class GeneratorSaltOre {
 
-    private final int clusterSize = BamboozledConfig.WORLD.clusterSize;
+    private final int clusterSize = BamboozledConfig.WORLD.saltClusterSize;
 
     @SubscribeEvent
     public void onChunkPopulation(PopulateChunkEvent.Post event) {
