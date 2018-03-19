@@ -1,7 +1,7 @@
 package net.insomniakitten.bamboo.world;
 
 import net.insomniakitten.bamboo.BamboozledConfig;
-import net.insomniakitten.bamboo.BamboozledObjects;
+import net.insomniakitten.bamboo.BamboozledBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -51,7 +51,7 @@ public final class GeneratorSaltOre {
                     for (int y = pos.getY() - 1; y <= pos.getY() + 1; ++y) {
                         Block block = world.getBlockState(target.setPos(x, y, z)).getBlock();
                         if (block == Blocks.DIRT || block == Blocks.CLAY) {
-                            world.setBlockState(target, BamboozledObjects.SALT_ORE.getDefaultState(), 2 | 16);
+                            world.setBlockState(target, BamboozledBlocks.SALT_ORE.getDefaultState(), 2 | 16);
                         }
                     }
                 }

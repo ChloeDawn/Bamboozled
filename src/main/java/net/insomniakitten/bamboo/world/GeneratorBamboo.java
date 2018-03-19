@@ -1,9 +1,7 @@
 package net.insomniakitten.bamboo.world;
 
-import net.insomniakitten.bamboo.Bamboozled;
-import net.minecraft.block.Block;
+import net.insomniakitten.bamboo.BamboozledBlocks;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
@@ -11,14 +9,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.Random;
 
 public final class GeneratorBamboo {
-
-    @GameRegistry.ObjectHolder(Bamboozled.ID + ":bamboo")
-    public static final Block BAMBOO = Blocks.AIR;
 
     public GeneratorBamboo() { }
 
@@ -37,8 +31,8 @@ public final class GeneratorBamboo {
                 int maxHeight = 2 + rand.nextInt(rand.nextInt(3) + 4);
                 for (int height = 0; height < maxHeight; ++height) {
                     BlockPos toPlace = pos.move(EnumFacing.UP, 1);
-                    if (world.isAirBlock(toPlace) && BAMBOO.canPlaceBlockAt(world, toPlace)) {
-                        world.setBlockState(toPlace, BAMBOO.getDefaultState(), 2);
+                    if (world.isAirBlock(toPlace) && BamboozledBlocks.BAMBOO.canPlaceBlockAt(world, toPlace)) {
+                        world.setBlockState(toPlace, BamboozledBlocks.BAMBOO.getDefaultState(), 2);
                     }
                 }
             }

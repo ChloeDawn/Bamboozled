@@ -10,11 +10,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber(modid = Bamboozled.ID)
 public final class BamboozledConfig {
 
-    @Config.Name("general")
     public static final General GENERAL = new General();
-
-    @Config.Name("world")
     public static final World WORLD = new World();
+
+    private BamboozledConfig() {}
 
     @SubscribeEvent
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
@@ -50,6 +49,8 @@ public final class BamboozledConfig {
                          "When false, collision logic will also be simplified"})
         @Config.RequiresMcRestart
         public boolean fancyHopper = true;
+
+        private General() {}
     }
 
     public static final class World {
@@ -67,6 +68,8 @@ public final class BamboozledConfig {
         @Config.Comment("The size of generated halite clusters")
         @Config.RequiresMcRestart
         public int saltClusterSize = 8;
+
+        private World() {}
     }
 
 }

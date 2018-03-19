@@ -1,8 +1,9 @@
 package net.insomniakitten.bamboo.entity;
 
 import net.insomniakitten.bamboo.Bamboozled;
-import net.insomniakitten.bamboo.BamboozledObjects;
 import net.insomniakitten.bamboo.block.BlockSalt;
+import net.insomniakitten.bamboo.BamboozledBlocks;
+import net.insomniakitten.bamboo.BamboozledItems;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -38,6 +39,7 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
 
     public int fallTime;
 
+    @SuppressWarnings("unused")
     public EntityFallingSaltBlock(World world) {
         super(world);
     }
@@ -97,7 +99,7 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
         if (fallTime++ == 0) {
             BlockPos poz = new BlockPos(this);
 
-            if (world.getBlockState(poz).getBlock() == BamboozledObjects.SALT_BLOCK) {
+            if (world.getBlockState(poz).getBlock() == BamboozledBlocks.SALT_BLOCK) {
                 world.setBlockToAir(poz);
             } else if (!world.isRemote) {
                 setDead();
@@ -117,9 +119,9 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
             if (!onGround) {
                 if (fallTime > 100 && !world.isRemote && (pos.getY() < 1 || pos.getY() > 256) || fallTime > 600) {
                     if (shouldDropItem && world.getGameRules().getBoolean("doEntityDrops")) {
-                        if (((BlockSalt) BamboozledObjects.SALT_BLOCK).shouldDropBlock()) {
-                            entityDropItem(new ItemStack(BamboozledObjects.SALT_BLOCK), 0.0F);
-                        } else entityDropItem(new ItemStack(BamboozledObjects.SALT_PILE, 9), 0.0F);
+                        if (((BlockSalt) BamboozledBlocks.SALT_BLOCK).shouldDropBlock()) {
+                            entityDropItem(new ItemStack(BamboozledBlocks.SALT_BLOCK), 0.0F);
+                        } else entityDropItem(new ItemStack(BamboozledItems.SALT_PILE, 9), 0.0F);
                     }
                     setDead();
                 }
@@ -139,14 +141,14 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
                 if (state.getBlock() != Blocks.PISTON_EXTENSION) {
                     setDead();
 
-                    if (world.mayPlace(BamboozledObjects.SALT_BLOCK, pos, true, EnumFacing.UP, null)
+                    if (world.mayPlace(BamboozledBlocks.SALT_BLOCK, pos, true, EnumFacing.UP, null)
                             && (world.getBlockState(pos).getMaterial() == Material.WATER
                             || !BlockFalling.canFallThrough(world.getBlockState(pos.down())))) {
-                        world.setBlockState(pos, BamboozledObjects.SALT_BLOCK.getDefaultState(), 3);
+                        world.setBlockState(pos, BamboozledBlocks.SALT_BLOCK.getDefaultState(), 3);
                     } else if (shouldDropItem && world.getGameRules().getBoolean("doEntityDrops")) {
-                        if (((BlockSalt) BamboozledObjects.SALT_BLOCK).shouldDropBlock()) {
-                            entityDropItem(new ItemStack(BamboozledObjects.SALT_BLOCK), 0.0F);
-                        } else entityDropItem(new ItemStack(BamboozledObjects.SALT_PILE, 9), 0.0F);
+                        if (((BlockSalt) BamboozledBlocks.SALT_BLOCK).shouldDropBlock()) {
+                            entityDropItem(new ItemStack(BamboozledBlocks.SALT_BLOCK), 0.0F);
+                        } else entityDropItem(new ItemStack(BamboozledItems.SALT_PILE, 9), 0.0F);
                     }
                 }
             }
@@ -197,7 +199,7 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
 
     @Override
     public IBlockState getBlock() {
-        return BamboozledObjects.SALT_BLOCK.getDefaultState();
+        return BamboozledBlocks.SALT_BLOCK.getDefaultState();
     }
 
     @Override

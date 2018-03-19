@@ -1,9 +1,8 @@
-package net.insomniakitten.bamboo.block;
+package net.insomniakitten.bamboo.block.base;
 
 import net.insomniakitten.bamboo.Bamboozled;
-import net.insomniakitten.bamboo.util.RayTraceHelper;
+import net.insomniakitten.bamboo.util.BoundingBoxes;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFalling;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.MapColor;
@@ -23,30 +22,34 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BlockFallingBase extends BlockFalling {
+public class BlockBase extends Block {
 
-    private final MapColor mapColor;
     private boolean fullBlock = true;
     private boolean opaqueBlock = true;
     private String name;
 
-    public BlockFallingBase(Material material, MapColor mapColor, SoundType sound, float hardness, float resistance) {
-        super(material);
-        this.mapColor = mapColor;
+    public BlockBase(Material material, MapColor mapColor, SoundType sound, float hardness, float resistance) {
+        super(material, mapColor);
         setHardness(hardness);
         setResistance(resistance);
         setSoundType(sound);
         setCreativeTab(Bamboozled.TAB);
     }
 
-    public BlockFallingBase(Material material, SoundType sound, float hardness, float resistance) {
+    public BlockBase(Material material, SoundType sound, float hardness, float resistance) {
         this(material, material.getMaterialMapColor(), sound, hardness, resistance);
     }
 
-    @Override
-    @Deprecated
-    public MapColor getMapColor(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-        return mapColor;
+    public final void setFullBlock(boolean fullBlock) {
+        this.fullBlock = fullBlock;
+    }
+
+    public void setOpaqueBlock(boolean opaqueBlock) {
+        this.opaqueBlock = opaqueBlock;
+    }
+
+    public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
+        boxes.add(FULL_BLOCK_AABB);
     }
 
     @Override
@@ -56,7 +59,7 @@ public abstract class BlockFallingBase extends BlockFalling {
 
     @Override
     @Deprecated
-    public final boolean isFullCube(IBlockState state) {
+    public boolean isFullCube(IBlockState state) {
         return fullBlock;
     }
 
@@ -87,7 +90,7 @@ public abstract class BlockFallingBase extends BlockFalling {
 
     @Override
     @Deprecated
-    public final boolean isOpaqueCube(IBlockState state) {
+    public boolean isOpaqueCube(IBlockState state) {
         return opaqueBlock;
     }
 
@@ -103,7 +106,7 @@ public abstract class BlockFallingBase extends BlockFalling {
             return rayTrace(pos, start, end, box);
         }
 
-        return RayTraceHelper.rayTraceMultiAABB(boxes, pos, start, end);
+        return BoundingBoxes.rayTrace(boxes, pos, start, end);
     }
 
     @Override
@@ -124,18 +127,6 @@ public abstract class BlockFallingBase extends BlockFalling {
     @Deprecated
     public EnumPushReaction getMobilityFlag(IBlockState state) {
         return fullBlock ? EnumPushReaction.NORMAL : EnumPushReaction.DESTROY;
-    }
-
-    public final void setFullBlock(boolean fullBlock) {
-        this.fullBlock = fullBlock;
-    }
-
-    public void setOpaqueBlock(boolean opaqueBlock) {
-        this.opaqueBlock = opaqueBlock;
-    }
-
-    public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
-        boxes.add(FULL_BLOCK_AABB);
     }
 
 }

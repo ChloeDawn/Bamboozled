@@ -2,9 +2,7 @@ package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.insomniakitten.bamboo.item.ItemBlockBase;
-import net.insomniakitten.bamboo.item.ItemBlockSupplier;
-import net.insomniakitten.bamboo.util.OreEntrySupplier;
+import net.insomniakitten.bamboo.block.base.BlockBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -14,8 +12,6 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
@@ -34,7 +30,7 @@ import static net.minecraft.util.EnumFacing.NORTH;
 import static net.minecraft.util.EnumFacing.SOUTH;
 import static net.minecraft.util.EnumFacing.WEST;
 
-public final class BlockSaltPile extends BlockBase implements ItemBlockSupplier, OreEntrySupplier {
+public final class BlockSaltPile extends BlockBase {
 
     public static final ImmutableMap<EnumFacing, PropertyEnum<ConnectionType>> CONNECTION = ImmutableMap.of(
             NORTH, PropertyEnum.create("north", ConnectionType.class),
@@ -66,11 +62,6 @@ public final class BlockSaltPile extends BlockBase implements ItemBlockSupplier,
         super(Material.CIRCUITS, MapColor.SNOW, SoundType.SAND, 0.0F, 0.0F);
         setFullBlock(false);
         setOpaqueBlock(false);
-    }
-
-    @Override
-    public ItemBlock getItemBlock() {
-        return new ItemBlockBase(this);
     }
 
     private boolean canConnectTo(IBlockAccess world, BlockPos pos) {
@@ -171,11 +162,6 @@ public final class BlockSaltPile extends BlockBase implements ItemBlockSupplier,
     @Override
     public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
         boxes.add(AABB_SALT_PILE.get(getAABBIndex(state.getActualState(world, pos))));
-    }
-
-    @Override
-    public void getOreEntries(OreCollection oreEntries) {
-        oreEntries.put(new ItemStack(this), "dustSalt");
     }
 
     public enum ConnectionType implements IStringSerializable {

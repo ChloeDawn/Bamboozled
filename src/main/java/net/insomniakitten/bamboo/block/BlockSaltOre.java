@@ -1,18 +1,16 @@
 package net.insomniakitten.bamboo.block;
 
-import net.insomniakitten.bamboo.BamboozledObjects;
-import net.insomniakitten.bamboo.item.ItemBlockBase;
-import net.insomniakitten.bamboo.item.ItemBlockSupplier;
-import net.insomniakitten.bamboo.util.OreEntrySupplier;
+import net.insomniakitten.bamboo.block.base.BlockBase;
+import net.insomniakitten.bamboo.BamboozledItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -26,17 +24,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public final class BlockSaltOre extends BlockBase implements ItemBlockSupplier, OreEntrySupplier {
+public final class BlockSaltOre extends BlockBase {
 
     public BlockSaltOre() {
         super(Material.ROCK, MapColor.SNOW, SoundType.STONE, 1.5F, 17.5F);
         setOpaqueBlock(false);
         setLightOpacity(1);
-    }
-
-    @Override
-    public ItemBlock getItemBlock() {
-        return new ItemBlockBase(this);
     }
 
     @Override
@@ -75,25 +68,21 @@ public final class BlockSaltOre extends BlockBase implements ItemBlockSupplier, 
 
         world.destroyBlock(pos.down(), false);
         int amount = 4 + world.rand.nextInt(5);
-        ItemStack stack = new ItemStack(BamboozledObjects.SALT_PILE, amount);
+        ItemStack stack = new ItemStack(BamboozledItems.SALT_PILE, amount);
         Block.spawnAsEntity(world, pos.down(), stack);
-    }
-
-    @Override
-    public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        return world.getBlockState(pos.offset(side)).getMaterial().isLiquid();
     }
 
     @Override
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         Random rand = world instanceof World ? ((World) world).rand : new Random();
         int amount = 4 + rand.nextInt(5) * (Math.max(0, rand.nextInt(fortune + 2) - 1) + 1);
-        drops.add(new ItemStack(BamboozledObjects.SALT_PILE, amount));
+        drops.add(new ItemStack(BamboozledItems.SALT_PILE, amount));
     }
 
     @Override
-    public void getOreEntries(OreCollection oreEntries) {
-        oreEntries.put(new ItemStack(this), "oreSalt", "oreHalite");
+    @Deprecated
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+        return BlockFaceShape.SOLID;
     }
 
 }

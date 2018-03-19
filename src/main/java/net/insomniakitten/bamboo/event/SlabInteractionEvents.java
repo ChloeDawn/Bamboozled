@@ -1,8 +1,8 @@
 package net.insomniakitten.bamboo.event;
 
-import net.insomniakitten.bamboo.block.BlockSlabBase;
-import net.insomniakitten.bamboo.block.BlockSlabBase.Variant;
-import net.insomniakitten.bamboo.util.RenderHelper;
+import net.insomniakitten.bamboo.block.base.BlockSlabBase;
+import net.insomniakitten.bamboo.block.base.BlockSlabBase.Variant;
+import net.insomniakitten.bamboo.util.BoundingBoxes;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,9 +21,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class SlabInteractionEvents {
 
+    private SlabInteractionEvents() {}
+
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public void onDrawBlockHighlight(DrawBlockHighlightEvent event) {
+    public static void onDrawBlockHighlight(DrawBlockHighlightEvent event) {
         RayTraceResult result = event.getTarget();
 
         if (result == null) return;
@@ -44,12 +46,12 @@ public final class SlabInteractionEvents {
             box = result.hitVec.y > pos.getY() + 0.5D ? upper : lower;
         } else box = result.sideHit == EnumFacing.UP ? upper : lower;
 
-        RenderHelper.renderBox(box, event.getPlayer(), pos, event.getPartialTicks());
+        BoundingBoxes.renderAt(box, event.getPlayer(), pos, event.getPartialTicks());
         event.setCanceled(true);
     }
 
     @SubscribeEvent
-    public void onBlockBreak(BlockEvent.BreakEvent event) {
+    public static void onBlockBreak(BlockEvent.BreakEvent event) {
         IBlockState state = event.getState();
         World world = event.getWorld();
         BlockPos pos = event.getPos();
@@ -73,7 +75,7 @@ public final class SlabInteractionEvents {
         event.setCanceled(true);
     }
 
-    private RayTraceResult rayTrace(EntityPlayer entity) {
+    private static RayTraceResult rayTrace(EntityPlayer entity) {
         double length = entity.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
         double x = entity.posX, y = entity.posY, z = entity.posZ;
 

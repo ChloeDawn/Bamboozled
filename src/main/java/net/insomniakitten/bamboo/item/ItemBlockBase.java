@@ -1,10 +1,10 @@
 package net.insomniakitten.bamboo.item;
 
-import net.insomniakitten.bamboo.client.ItemModelSupplier;
+import net.insomniakitten.bamboo.Bamboozled;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -13,25 +13,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class ItemBlockBase extends ItemBlock implements ItemModelSupplier {
-
-    private final String variant;
-
-    public ItemBlockBase(Block block, String variant) {
-        super(block);
-        this.variant = variant;
-        //noinspection ConstantConditions
-        setRegistryName(block.getRegistryName());
-    }
+public class ItemBlockBase extends ItemBlock {
 
     public ItemBlockBase(Block block) {
-        this(block, "normal");
+        super(block);
     }
 
     @Override
-    public void getModels(List<ModelResourceLocation> models) {
-        //noinspection ConstantConditions
-        models.add(new ModelResourceLocation(getRegistryName(), variant));
+    public Item setUnlocalizedName(String name) {
+        return super.setUnlocalizedName(Bamboozled.ID + "." + name);
     }
 
     @Override

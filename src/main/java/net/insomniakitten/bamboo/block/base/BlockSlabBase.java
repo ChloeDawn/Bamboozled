@@ -1,4 +1,4 @@
-package net.insomniakitten.bamboo.block;
+package net.insomniakitten.bamboo.block.base;
 
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockSlab.EnumBlockHalf;
@@ -26,7 +26,7 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.function.Predicate;
 
-public abstract class BlockSlabBase extends BlockBase {
+public class BlockSlabBase extends BlockBase {
 
     public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
 

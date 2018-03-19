@@ -1,9 +1,7 @@
 package net.insomniakitten.bamboo.block;
 
 import net.insomniakitten.bamboo.BamboozledConfig;
-import net.insomniakitten.bamboo.item.ItemBlockSupplier;
-import net.insomniakitten.bamboo.item.ItemSubBlockBase;
-import net.insomniakitten.bamboo.util.OreEntrySupplier;
+import net.insomniakitten.bamboo.block.base.BlockBase;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -11,13 +9,10 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -27,14 +22,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Random;
 
-public final class BlockBambooBundle extends BlockBase implements ItemBlockSupplier, OreEntrySupplier {
+public final class BlockBambooBundle extends BlockBase {
 
     private static final PropertyEnum<EnumFacing.Axis> AXIS = PropertyEnum.create("axis", EnumFacing.Axis.class);
     private static final PropertyInteger DRIED = PropertyInteger.create("dried", 0, 3);
@@ -52,7 +44,7 @@ public final class BlockBambooBundle extends BlockBase implements ItemBlockSuppl
         return state.getValue(DRIED) == 3;
     }
 
-    private boolean isDry(int meta) {
+    public boolean isDry(int meta) {
         return meta == 1;
     }
 
@@ -146,43 +138,6 @@ public final class BlockBambooBundle extends BlockBase implements ItemBlockSuppl
         int axis = state.getValue(AXIS).ordinal();
         int dried = state.getValue(DRIED) << 2;
         return axis | dried;
-    }
-
-    @Override
-    public ItemBlock getItemBlock() {
-        return new ItemSubBlockBase(this) {
-            @Override
-            public void getModels(List<ModelResourceLocation> models) {
-                models.add(0, new ModelResourceLocation(getRegistryName(), "axis=y,dried=0"));
-                models.add(1, new ModelResourceLocation(getRegistryName(), "axis=y,dried=3"));
-            }
-
-            @Override
-            @SideOnly(Side.CLIENT)
-            public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
-                if (isDry(stack.getMetadata()) || isDryingEnabled) {
-                    super.addInformation(stack, world, tooltip, flag);
-                }
-            }
-
-            @Override
-            public int getItemBurnTime(ItemStack stack) {
-                return isDry(stack.getMetadata()) ? 288 : 0;
-            }
-
-            @Override
-            public String getUnlocalizedName(ItemStack stack) {
-                String name = super.getUnlocalizedName(stack);
-                if (isDry(stack.getMetadata())) name += "_dried";
-                return name;
-            }
-        };
-    }
-
-    @Override
-    public void getOreEntries(OreCollection oreEntries) {
-        oreEntries.put(new ItemStack(this, 1, 0), "blockBamboo");
-        oreEntries.put(new ItemStack(this, 1, 1), "blockBambooDried");
     }
 
 }

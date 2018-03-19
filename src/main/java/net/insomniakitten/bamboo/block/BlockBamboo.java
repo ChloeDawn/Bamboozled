@@ -4,10 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.BamboozledConfig;
-import net.insomniakitten.bamboo.client.BlockModelMapper;
-import net.insomniakitten.bamboo.item.ItemBlockBase;
-import net.insomniakitten.bamboo.item.ItemBlockSupplier;
-import net.insomniakitten.bamboo.util.OreEntrySupplier;
+import net.insomniakitten.bamboo.block.base.BlockBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.block.SoundType;
@@ -18,11 +15,7 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.statemap.IStateMapper;
-import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -45,7 +38,7 @@ import static net.minecraft.util.EnumFacing.SOUTH;
 import static net.minecraft.util.EnumFacing.UP;
 import static net.minecraft.util.EnumFacing.WEST;
 
-public final class BlockBamboo extends BlockBase implements IPlantable, BlockModelMapper, ItemBlockSupplier, OreEntrySupplier {
+public final class BlockBamboo extends BlockBase implements IPlantable {
 
     public static final PropertyInteger PROP_AGE = PropertyInteger.create("age", 0, 15);
     public static final PropertyBool PROP_CANOPY = PropertyBool.create("canopy");
@@ -203,11 +196,6 @@ public final class BlockBamboo extends BlockBase implements IPlantable, BlockMod
     }
 
     @Override
-    public ItemBlock getItemBlock() {
-        return new ItemBlockBase(this, "inventory");
-    }
-
-    @Override
     public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
         if (!advancedBamboo) {
             boxes.add(AABB_SIMPLE);
@@ -252,17 +240,6 @@ public final class BlockBamboo extends BlockBase implements IPlantable, BlockMod
     @Override
     public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
         return world.getBlockState(pos);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IStateMapper getModelMapper() {
-        return new StateMap.Builder().ignore(PROP_AGE).build();
-    }
-
-    @Override
-    public void getOreEntries(OreCollection oreEntries) {
-        oreEntries.put(new ItemStack(this), "bamboo");
     }
 
 }

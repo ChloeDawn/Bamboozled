@@ -1,6 +1,7 @@
 package net.insomniakitten.bamboo.item;
 
-import net.insomniakitten.bamboo.block.BlockSlabBase;
+import net.insomniakitten.bamboo.block.base.BlockSlabBase;
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,14 +20,9 @@ public class ItemBlockSlabBase extends ItemBlockBase {
 
     private final BlockSlabBase slab;
 
-    public ItemBlockSlabBase(BlockSlabBase slab, String variant) {
-        super(slab, variant);
-        this.slab = slab;
-    }
-
-    public ItemBlockSlabBase(BlockSlabBase slab) {
+    public ItemBlockSlabBase(Block slab) {
         super(slab);
-        this.slab = slab;
+        this.slab = (BlockSlabBase) slab;
     }
 
     @Override

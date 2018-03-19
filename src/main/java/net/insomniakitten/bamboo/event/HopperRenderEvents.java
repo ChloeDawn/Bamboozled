@@ -1,8 +1,8 @@
 package net.insomniakitten.bamboo.event;
 
-import net.insomniakitten.bamboo.BamboozledObjects;
 import net.insomniakitten.bamboo.block.BlockBambooHopper;
-import net.insomniakitten.bamboo.util.RenderHelper;
+import net.insomniakitten.bamboo.BamboozledBlocks;
+import net.insomniakitten.bamboo.util.BoundingBoxes;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -24,9 +24,11 @@ public final class HopperRenderEvents {
             0.125D, 0.6875D, 0.125D, 0.875D, 1.0D, 0.875D
     ).shrink(0.004D);
 
+    private HopperRenderEvents() {}
+
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public void onDrawBlockHighlight(DrawBlockHighlightEvent event) {
+    public static void onDrawBlockHighlight(DrawBlockHighlightEvent event) {
         if (event.getTarget() == null) return;
         if (event.getTarget().typeOfHit != RayTraceResult.Type.BLOCK) return;
 
@@ -35,14 +37,14 @@ public final class HopperRenderEvents {
         World world = player.world;
         IBlockState state = world.getBlockState(pos);
 
-        if (state.getBlock() != BamboozledObjects.BAMBOO_HOPPER) return;
+        if (state.getBlock() != BamboozledBlocks.BAMBOO_HOPPER) return;
 
         List<AxisAlignedBB> boxes = new LinkedList<>();
 
         Collections.addAll(boxes, AABB_BOWL, BlockBambooHopper.AABB_UPPER, BlockBambooHopper.AABB_LOWER);
         boxes.add(BlockBambooHopper.AABB_JOINTS.get(state.getValue(BlockBambooHopper.CONNECT)));
 
-        RenderHelper.renderBoxes(boxes, player, pos, event.getPartialTicks());
+        BoundingBoxes.renderAt(boxes, player, pos, event.getPartialTicks());
 
         event.setCanceled(true);
     }

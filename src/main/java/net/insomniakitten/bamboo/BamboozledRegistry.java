@@ -1,36 +1,33 @@
 package net.insomniakitten.bamboo;
 
-import com.google.common.base.Equivalence;
 import net.insomniakitten.bamboo.block.BlockBamboo;
 import net.insomniakitten.bamboo.block.BlockBambooBundle;
 import net.insomniakitten.bamboo.block.BlockBambooHopper;
-import net.insomniakitten.bamboo.block.BlockBambooPlanks;
 import net.insomniakitten.bamboo.block.BlockBambooPressurePlate;
-import net.insomniakitten.bamboo.block.BlockBambooSlab;
-import net.insomniakitten.bamboo.block.BlockBambooStairs;
 import net.insomniakitten.bamboo.block.BlockBambooWall;
 import net.insomniakitten.bamboo.block.BlockRope;
 import net.insomniakitten.bamboo.block.BlockSalt;
 import net.insomniakitten.bamboo.block.BlockSaltOre;
 import net.insomniakitten.bamboo.block.BlockSaltPile;
-import net.insomniakitten.bamboo.client.BlockModelMapper;
-import net.insomniakitten.bamboo.client.ItemModelSupplier;
+import net.insomniakitten.bamboo.block.base.BlockPlanksBase;
+import net.insomniakitten.bamboo.block.base.BlockSlabBase;
+import net.insomniakitten.bamboo.block.base.BlockStairsBase;
 import net.insomniakitten.bamboo.entity.EntityFallingSaltBlock;
+import net.insomniakitten.bamboo.item.ItemBambooBundle;
 import net.insomniakitten.bamboo.item.ItemBase;
-import net.insomniakitten.bamboo.item.ItemBlockSupplier;
-import net.insomniakitten.bamboo.tile.TileEntitySupplier;
-import net.insomniakitten.bamboo.util.OreEntrySupplier;
-import net.insomniakitten.bamboo.util.OreEntrySupplier.OreCollection;
-import net.insomniakitten.bamboo.util.RegistryHolder;
+import net.insomniakitten.bamboo.item.ItemBlockBase;
+import net.insomniakitten.bamboo.item.ItemBlockPlanksBase;
+import net.insomniakitten.bamboo.item.ItemBlockSlabBase;
+import net.insomniakitten.bamboo.tile.TileBambooHopper;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.IStateMapper;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.entity.RenderFallingBlock;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
@@ -43,58 +40,51 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 @Mod.EventBusSubscriber(modid = Bamboozled.ID)
 public final class BamboozledRegistry {
-
-    private static final RegistryHolder<Block> BLOCKS = new RegistryHolder<>();
-    private static final RegistryHolder<Item> ITEMS = new RegistryHolder<>();
 
     private BamboozledRegistry() {}
 
     @SubscribeEvent
     public static void onBlockRegistry(RegistryEvent.Register<Block> event) {
-        BLOCKS.begin(event)
-                .register(new BlockBamboo(), "bamboo")
-                .register(new BlockBambooBundle(), "bamboo_bundle")
-                .register(new BlockBambooStairs(1.0F, 5.0F), "bamboo_dried_stairs")
-                .register(new BlockBambooSlab(1.0F, 5.0F), "bamboo_dried_slab")
-                .register(new BlockBambooPlanks(), "bamboo_planks")
-                .register(new BlockBambooStairs(2.0F, 15.0F), "bamboo_planks_stairs")
-                .register(new BlockBambooSlab(2.0F, 15.0F), "bamboo_planks_slab")
-                .register(new BlockBambooWall(), "bamboo_wall")
-                .register(new BlockBambooPressurePlate(), "bamboo_pressure_plate")
-                .register(new BlockBambooHopper(), "bamboo_hopper")
-                .register(new BlockSaltOre(), "salt_ore")
-                .register(new BlockSaltPile(), "salt_pile")
-                .register(new BlockSalt(), "salt_block")
-                .register(new BlockRope(), "rope");
-
-        registerTileEntities();
+        GameRegistry.registerTileEntity(TileBambooHopper.class, Bamboozled.ID + ":bamboo_hopper");
+        event.getRegistry().registerAll(
+                new BlockBamboo().setRegistryName("bamboo").setUnlocalizedName("bamboo"),
+                new BlockBambooBundle().setRegistryName("bamboo_bundle").setUnlocalizedName("bamboo_bundle"),
+                new BlockStairsBase(Material.WOOD, SoundType.WOOD, 1.0F, 5.0F).setRegistryName("bamboo_dried_stairs").setUnlocalizedName("bamboo_dried_stairs"),
+                new BlockSlabBase(Material.WOOD, SoundType.WOOD, 1.0F, 5.0F).setRegistryName("bamboo_dried_slab").setUnlocalizedName("bamboo_dried_slab"),
+                new BlockPlanksBase().setRegistryName("bamboo_planks").setUnlocalizedName("bamboo_planks"),
+                new BlockStairsBase(Material.WOOD, SoundType.WOOD, 2.0F, 15.0F).setRegistryName("bamboo_planks_stairs").setUnlocalizedName("bamboo_planks_stairs"),
+                new BlockSlabBase(Material.WOOD, SoundType.WOOD, 2.0F, 15.0F).setRegistryName("bamboo_planks_slab").setUnlocalizedName("bamboo_planks_slab"),
+                new BlockBambooWall().setRegistryName("bamboo_wall").setUnlocalizedName("bamboo_wall"),
+                new BlockBambooPressurePlate().setRegistryName("bamboo_pressure_plate").setUnlocalizedName("bamboo_pressure_plate"),
+                new BlockBambooHopper().setRegistryName("bamboo_hopper").setUnlocalizedName("bamboo_hopper"),
+                new BlockSaltOre().setRegistryName("salt_ore").setUnlocalizedName("salt_ore"),
+                new BlockSaltPile().setRegistryName("salt_pile").setUnlocalizedName("salt_pile"),
+                new BlockSalt().setRegistryName("salt_block").setUnlocalizedName("salt_block"),
+                new BlockRope().setRegistryName("rope").setUnlocalizedName("rope")
+        );
     }
 
     @SubscribeEvent
     public static void onItemRegistry(RegistryEvent.Register<Item> event) {
-        RegistryHolder<Item>.Registry items = ITEMS.begin(event)
-                .register(new ItemBase() {
-                    @Override
-                    public void getOreEntries(OreCollection oreEntries) {
-                        oreEntries.put(new ItemStack(this), "bambooDried");
-                    }
-                }, "bamboo_dried");
-
-        for (Block block : BLOCKS.entries()) {
-            if (block instanceof ItemBlockSupplier) {
-                ItemBlockSupplier provider = (ItemBlockSupplier) block;
-                ItemBlock iblock = provider.getItemBlock();
-                if (iblock != null) items.register(iblock);
-            }
-        }
-
-        registerOreEntries();
+        event.getRegistry().registerAll(
+                new ItemBlockBase(BamboozledBlocks.BAMBOO).setRegistryName("bamboo"),
+                new ItemBase().setRegistryName("bamboo_dried").setUnlocalizedName("bamboo_dried"),
+                new ItemBambooBundle(BamboozledBlocks.BAMBOO_BUNDLE).setRegistryName("bamboo_bundle"),
+                new ItemBlockBase(BamboozledBlocks.BAMBOO_DRIED_STAIRS).setRegistryName("bamboo_dried_stairs"),
+                new ItemBlockSlabBase(BamboozledBlocks.BAMBOO_DRIED_SLAB).setRegistryName("bamboo_dried_slab"),
+                new ItemBlockPlanksBase(BamboozledBlocks.BAMBOO_PLANKS).setRegistryName("bamboo_planks"),
+                new ItemBlockBase(BamboozledBlocks.BAMBOO_PLANKS_STAIRS).setRegistryName("bamboo_planks_stairs"),
+                new ItemBlockSlabBase(BamboozledBlocks.BAMBOO_PLANKS_SLAB).setRegistryName("bamboo_planks_slab"),
+                new ItemBlockBase(BamboozledBlocks.BAMBOO_WALL).setRegistryName("bamboo_wall"),
+                new ItemBlockBase(BamboozledBlocks.BAMBOO_PRESSURE_PLATE).setRegistryName("bamboo_pressure_plate"),
+                new ItemBlockBase(BamboozledBlocks.BAMBOO_HOPPER).setRegistryName("bamboo_hopper"),
+                new ItemBlockBase(BamboozledBlocks.SALT_ORE).setRegistryName("salt_ore"),
+                new ItemBlockBase(BamboozledBlocks.SALT_PILE).setRegistryName("salt_pile"),
+                new ItemBlockBase(BamboozledBlocks.SALT_BLOCK).setRegistryName("salt_block"),
+                new ItemBlockBase(BamboozledBlocks.ROPE).setRegistryName("rope")
+        );
     }
 
     @SubscribeEvent
@@ -104,81 +94,42 @@ public final class BamboozledRegistry {
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
+    @SuppressWarnings("ConstantConditions")
     public static void onModelRegistry(ModelRegistryEvent event) {
         RenderingRegistry.registerEntityRenderingHandler(EntityFallingSaltBlock.class, RenderFallingBlock::new);
-        for (Block block : BLOCKS.entries()) {
-            if (block instanceof BlockModelMapper) {
-                IStateMapper mapper = ((BlockModelMapper) block).getModelMapper();
-                if (mapper != null) ModelLoader.setCustomStateMapper(block, mapper);
-            }
-        }
-
-        for (Item item : ITEMS.entries()) {
-            if (item instanceof ItemModelSupplier) {
-                List<ModelResourceLocation> models = new LinkedList<>();
-                ((ItemModelSupplier) item).getModels(models);
-                for (int i = 0; i < models.size(); ++i) {
-                    ModelResourceLocation model = models.get(i);
-                    if (model != null) {
-                        ModelLoader.setCustomModelResourceLocation(item, i, model);
-                    }
-                }
-            }
-        }
+        ModelLoader.setCustomStateMapper(BamboozledBlocks.BAMBOO, new StateMap.Builder().ignore(BlockBamboo.PROP_AGE).build());
+        ModelLoader.setCustomStateMapper(BamboozledBlocks.BAMBOO_PRESSURE_PLATE, BlockBambooPressurePlate.STATE_MAPPER);
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO, 0, new ModelResourceLocation(BamboozledItems.BAMBOO.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_DRIED, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_DRIED.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_BUNDLE, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_BUNDLE.getRegistryName(), "axis=y,dried=0"));
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_BUNDLE, 1, new ModelResourceLocation(BamboozledItems.BAMBOO_BUNDLE.getRegistryName(), "axis=y,dried=3"));
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_DRIED_STAIRS, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_DRIED_STAIRS.getRegistryName(), "facing=east,half=bottom,shape=straight"));
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_DRIED_SLAB, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_DRIED_SLAB.getRegistryName(), "variant=lower"));
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_PLANKS, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_PLANKS.getRegistryName(), "orientation=horizontal"));
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_PLANKS, 1, new ModelResourceLocation(BamboozledItems.BAMBOO_PLANKS.getRegistryName(), "orientation=vertical"));
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_PLANKS_STAIRS, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_PLANKS_STAIRS.getRegistryName(), "facing=east,half=bottom,shape=straight"));
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_PLANKS_SLAB, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_PLANKS_SLAB.getRegistryName(), "variant=lower"));
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_WALL, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_WALL.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_PRESSURE_PLATE, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_PRESSURE_PLATE.getRegistryName(), "powered=false"));
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_HOPPER, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_HOPPER.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.SALT_ORE, 0, new ModelResourceLocation(BamboozledItems.SALT_ORE.getRegistryName(), "normal"));
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.SALT_PILE, 0, new ModelResourceLocation(BamboozledItems.SALT_PILE.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.SALT_BLOCK, 0, new ModelResourceLocation(BamboozledItems.SALT_BLOCK.getRegistryName(), "normal"));
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.ROPE, 0, new ModelResourceLocation(BamboozledItems.ROPE.getRegistryName(), "inventory"));
     }
 
     @SubscribeEvent
     public static void onRecipeRegistry(RegistryEvent.Register<IRecipe> event) {
+        // TODO More ore entries... eventually
+        OreDictionary.registerOre("bamboo", BamboozledBlocks.BAMBOO);
+        OreDictionary.registerOre("blockBamboo", BamboozledBlocks.BAMBOO_BUNDLE);
+        OreDictionary.registerOre("dustSalt", BamboozledItems.SALT_PILE);
+        OreDictionary.registerOre("oreSalt", BamboozledBlocks.SALT_ORE);
+        OreDictionary.registerOre("oreHalite", BamboozledBlocks.SALT_ORE);
+
         // TODO Implement a JSON smelting recipe registry...
-        GameRegistry.addSmelting(
-                new ItemStack(BamboozledObjects.BAMBOO_ITEM),
-                new ItemStack(BamboozledObjects.BAMBOO_DRIED),
-                0.0F
-        );
-        GameRegistry.addSmelting(
-                new ItemStack(BamboozledObjects.SALT_ORE),
-                new ItemStack(BamboozledObjects.SALT_PILE, 4),
-                0.0F
-        );
-    }
-
-    private static void registerTileEntities() {
-        for (Block block : BLOCKS.entries()) {
-            if (block instanceof TileEntitySupplier) {
-                TileEntitySupplier supplier = ((TileEntitySupplier) block);
-                Class<? extends TileEntity> tile = supplier.getTileClass();
-                String key = supplier.getTileKey();
-                GameRegistry.registerTileEntity(tile, key);
-            }
-        }
-    }
-
-    private static void registerOreEntries() {
-        OreCollection oreEntries = OreCollection.create();
-
-        for (Block block : BLOCKS.entries()) {
-            if (block instanceof OreEntrySupplier) {
-                ((OreEntrySupplier) block).getOreEntries(oreEntries);
-                for (Map.Entry<Equivalence.Wrapper<ItemStack>, List<String>> entry : oreEntries.entries()) {
-                    ItemStack stack = entry.getKey().get().copy();
-                    for (String ore : entry.getValue()) {
-                        OreDictionary.registerOre(ore, stack);
-                    }
-                }
-            }
-        }
-
-        for (Item item : ITEMS.entries()) {
-            if (item instanceof OreEntrySupplier) {
-                ((OreEntrySupplier) item).getOreEntries(oreEntries);
-                for (Map.Entry<Equivalence.Wrapper<ItemStack>, List<String>> entry : oreEntries.entries()) {
-                    ItemStack stack = entry.getKey().get().copy();
-                    for (String ore : entry.getValue()) {
-                        OreDictionary.registerOre(ore, stack);
-                    }
-                }
-            }
-        }
+        GameRegistry.addSmelting(BamboozledItems.BAMBOO, new ItemStack(BamboozledItems.BAMBOO_DRIED), 0.0F);
+        GameRegistry.addSmelting(BamboozledBlocks.SALT_ORE, new ItemStack(BamboozledItems.SALT_PILE, 4), 0.0F);
     }
 
 }

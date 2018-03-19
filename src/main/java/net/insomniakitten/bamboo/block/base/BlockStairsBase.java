@@ -1,4 +1,4 @@
-package net.insomniakitten.bamboo.block;
+package net.insomniakitten.bamboo.block.base;
 
 import net.insomniakitten.bamboo.Bamboozled;
 import net.minecraft.block.Block;
@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public abstract class BlockStairsBase extends BlockStairs {
+public class BlockStairsBase extends BlockStairs {
 
     private final Material material;
     private final MapColor mapColor;

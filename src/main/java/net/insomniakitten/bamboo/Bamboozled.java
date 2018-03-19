@@ -45,19 +45,19 @@ public final class Bamboozled {
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
         if (BamboozledConfig.WORLD.generateBamboo) {
-            MinecraftForge.EVENT_BUS.register(new GeneratorBamboo());
+            MinecraftForge.EVENT_BUS.register(GeneratorBamboo.class);
         }
         if (BamboozledConfig.WORLD.generateSaltOre) {
-            MinecraftForge.EVENT_BUS.register(new GeneratorSaltOre());
+            MinecraftForge.EVENT_BUS.register(GeneratorSaltOre.class);
         }
         if (BamboozledConfig.GENERAL.advancedSlabInteraction) {
-            MinecraftForge.EVENT_BUS.register(new SlabInteractionEvents());
+            MinecraftForge.EVENT_BUS.register(SlabInteractionEvents.class);
         }
         if (BamboozledConfig.GENERAL.fancyBamboo) {
-            MinecraftForge.EVENT_BUS.register(new BambooRenderEvents());
+            MinecraftForge.EVENT_BUS.register(BambooRenderEvents.class);
         }
         if (BamboozledConfig.GENERAL.fancyHopper) {
-            MinecraftForge.EVENT_BUS.register(new HopperRenderEvents());
+            MinecraftForge.EVENT_BUS.register(HopperRenderEvents.class);
         }
     }
 

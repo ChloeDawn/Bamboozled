@@ -1,8 +1,8 @@
 package net.insomniakitten.bamboo.event;
 
-import net.insomniakitten.bamboo.BamboozledObjects;
 import net.insomniakitten.bamboo.block.BlockBamboo;
-import net.insomniakitten.bamboo.util.RenderHelper;
+import net.insomniakitten.bamboo.BamboozledBlocks;
+import net.insomniakitten.bamboo.util.BoundingBoxes;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -19,9 +19,11 @@ import java.util.List;
 
 public final class BambooRenderEvents {
 
+    private BambooRenderEvents() {}
+
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public void onDrawBlockHighlight(DrawBlockHighlightEvent event) {
+    public static void onDrawBlockHighlight(DrawBlockHighlightEvent event) {
         if (event.getTarget() == null) return;
         if (event.getTarget().typeOfHit != RayTraceResult.Type.BLOCK) return;
 
@@ -30,14 +32,14 @@ public final class BambooRenderEvents {
         World world = player.world;
         IBlockState state = world.getBlockState(pos);
 
-        if (state.getBlock() != BamboozledObjects.BAMBOO_BLOCK) return;
+        if (state.getBlock() != BamboozledBlocks.BAMBOO) return;
 
         List<AxisAlignedBB> boxes = new LinkedList<>();
 
         ((BlockBamboo) state.getBlock()).getCollisionBoxes(
                 state.getActualState(world, pos), world, pos, boxes);
 
-        RenderHelper.renderBoxes(boxes, player, pos, event.getPartialTicks());
+        BoundingBoxes.renderAt(boxes, player, pos, event.getPartialTicks());
 
         event.setCanceled(true);
     }

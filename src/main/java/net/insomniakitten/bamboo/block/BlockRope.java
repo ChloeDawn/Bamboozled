@@ -1,10 +1,8 @@
 package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableMap;
-import net.insomniakitten.bamboo.BamboozledObjects;
-import net.insomniakitten.bamboo.item.ItemBlockBase;
-import net.insomniakitten.bamboo.item.ItemBlockSupplier;
-import net.insomniakitten.bamboo.util.OreEntrySupplier;
+import net.insomniakitten.bamboo.block.base.BlockBase;
+import net.insomniakitten.bamboo.BamboozledItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
@@ -16,7 +14,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -33,7 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public final class BlockRope extends BlockBase implements ItemBlockSupplier, OreEntrySupplier {
+public final class BlockRope extends BlockBase {
 
     private static final PropertyDirection FACING = PropertyDirection.create("facing", f -> f != EnumFacing.UP);
 
@@ -127,7 +124,7 @@ public final class BlockRope extends BlockBase implements ItemBlockSupplier, Ore
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         ItemStack stack = player.getHeldItem(hand);
-        if (!stack.isEmpty() && stack.getItem() == BamboozledObjects.ROPE_ITEM) {
+        if (!stack.isEmpty() && stack.getItem() == BamboozledItems.ROPE) {
             Chunk chunk = world.getChunkFromBlockCoords(pos);
             BlockPos.MutableBlockPos target = new BlockPos.MutableBlockPos(pos);
 
@@ -195,16 +192,6 @@ public final class BlockRope extends BlockBase implements ItemBlockSupplier, Ore
     @Deprecated
     public EnumPushReaction getMobilityFlag(IBlockState state) {
         return EnumPushReaction.DESTROY;
-    }
-
-    @Override
-    public ItemBlock getItemBlock() {
-        return new ItemBlockBase(this, "inventory");
-    }
-
-    @Override
-    public void getOreEntries(OreCollection oreEntries) {
-        oreEntries.put(new ItemStack(this), "rope");
     }
 
 }

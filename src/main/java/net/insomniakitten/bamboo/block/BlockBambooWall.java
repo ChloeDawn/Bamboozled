@@ -2,18 +2,14 @@ package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.insomniakitten.bamboo.item.ItemBlockBase;
-import net.insomniakitten.bamboo.item.ItemBlockSupplier;
-import net.insomniakitten.bamboo.util.OreEntrySupplier;
-import net.insomniakitten.bamboo.util.RayTraceHelper;
+import net.insomniakitten.bamboo.block.base.BlockBase;
+import net.insomniakitten.bamboo.util.BoundingBoxes;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -36,7 +32,7 @@ import static net.minecraft.util.EnumFacing.SOUTH;
 import static net.minecraft.util.EnumFacing.UP;
 import static net.minecraft.util.EnumFacing.WEST;
 
-public final class BlockBambooWall extends BlockBase implements ItemBlockSupplier, OreEntrySupplier {
+public final class BlockBambooWall extends BlockBase {
 
     private static final ImmutableList<AxisAlignedBB> AABB_COLLISION = ImmutableList.of(
             new AxisAlignedBB(0.375D, 0.0D, 0.375D, 0.625D, 1.5D, 0.625D),
@@ -162,17 +158,7 @@ public final class BlockBambooWall extends BlockBase implements ItemBlockSupplie
             return rayTrace(pos, start, end, box);
         }
 
-        return RayTraceHelper.rayTraceMultiAABB(boxes, pos, start, end);
-    }
-
-    @Override
-    public ItemBlock getItemBlock() {
-        return new ItemBlockBase(this, "inventory");
-    }
-
-    @Override
-    public void getOreEntries(OreCollection oreEntries) {
-        oreEntries.put(new ItemStack(this), "wallBamboo");
+        return BoundingBoxes.rayTrace(boxes, pos, start, end);
     }
 
 }

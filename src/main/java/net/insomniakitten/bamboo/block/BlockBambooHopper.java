@@ -2,12 +2,9 @@ package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.Maps;
 import net.insomniakitten.bamboo.BamboozledConfig;
-import net.insomniakitten.bamboo.client.BlockModelMapper;
-import net.insomniakitten.bamboo.item.ItemBlockBase;
-import net.insomniakitten.bamboo.item.ItemBlockSupplier;
+import net.insomniakitten.bamboo.block.base.BlockBase;
 import net.insomniakitten.bamboo.tile.TileBambooHopper;
-import net.insomniakitten.bamboo.tile.TileEntitySupplier;
-import net.insomniakitten.bamboo.util.RayTraceHelper;
+import net.insomniakitten.bamboo.util.BoundingBoxes;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -16,10 +13,7 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.statemap.IStateMapper;
-import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -41,7 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public final class BlockBambooHopper extends BlockBase implements TileEntitySupplier, ItemBlockSupplier, BlockModelMapper {
+public final class BlockBambooHopper extends BlockBase {
 
     public static final PropertyBool POWERED = PropertyBool.create("powered");
     public static final PropertyDirection CONNECT = PropertyDirection.create("connect", f -> f != EnumFacing.UP);
@@ -177,29 +171,7 @@ public final class BlockBambooHopper extends BlockBase implements TileEntitySupp
         List<AxisAlignedBB> boxes = new ArrayList<>();
         Collections.addAll(boxes, AABB_UPPER, AABB_LOWER);
         boxes.add(AABB_JOINTS.get(state.getValue(CONNECT)));
-        return RayTraceHelper.rayTraceMultiAABB(boxes, pos, start, end);
-    }
-
-    @Override
-    public Class<? extends TileEntity> getTileClass() {
-        return TileBambooHopper.class;
-    }
-
-    @Override
-    public String getTileKey() {
-        //noinspection ConstantConditions
-        return getRegistryName().toString();
-    }
-
-    @Override
-    public ItemBlock getItemBlock() {
-        return new ItemBlockBase(this, "inventory");
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IStateMapper getModelMapper() {
-        return new StateMap.Builder().ignore(POWERED).build();
+        return BoundingBoxes.rayTrace(boxes, pos, start, end);
     }
 
 }

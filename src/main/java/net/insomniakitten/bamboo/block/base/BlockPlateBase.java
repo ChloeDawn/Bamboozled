@@ -1,4 +1,4 @@
-package net.insomniakitten.bamboo.block;
+package net.insomniakitten.bamboo.block.base;
 
 import net.insomniakitten.bamboo.Bamboozled;
 import net.minecraft.block.Block;
