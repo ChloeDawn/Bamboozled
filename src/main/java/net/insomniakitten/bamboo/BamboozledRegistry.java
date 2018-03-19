@@ -121,12 +121,31 @@ public final class BamboozledRegistry {
 
     @SubscribeEvent
     public static void onRecipeRegistry(RegistryEvent.Register<IRecipe> event) {
-        // TODO More ore entries... eventually
-        OreDictionary.registerOre("bamboo", BamboozledBlocks.BAMBOO);
-        OreDictionary.registerOre("blockBamboo", BamboozledBlocks.BAMBOO_BUNDLE);
-        OreDictionary.registerOre("dustSalt", BamboozledItems.SALT_PILE);
-        OreDictionary.registerOre("oreSalt", BamboozledBlocks.SALT_ORE);
-        OreDictionary.registerOre("oreHalite", BamboozledBlocks.SALT_ORE);
+        OreDictionary.registerOre("bamboo", new ItemStack(BamboozledItems.BAMBOO, 1, OreDictionary.WILDCARD_VALUE));
+        
+        OreDictionary.registerOre("blockBamboo", new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, OreDictionary.WILDCARD_VALUE));
+        OreDictionary.registerOre("blockBambooDried", new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, 1));
+        
+        OreDictionary.registerOre("stairBamboo", new ItemStack(BamboozledItems.BAMBOO_DRIED_STAIRS, 1, OreDictionary.WILDCARD_VALUE));
+        OreDictionary.registerOre("stairWood", new ItemStack(BamboozledItems.BAMBOO_DRIED_STAIRS, 1, OreDictionary.WILDCARD_VALUE));
+        
+        OreDictionary.registerOre("slabBamboo", new ItemStack(BamboozledItems.BAMBOO_DRIED_SLAB, 1, OreDictionary.WILDCARD_VALUE));
+        OreDictionary.registerOre("slabWood", new ItemStack(BamboozledItems.BAMBOO_DRIED_SLAB, 1, OreDictionary.WILDCARD_VALUE));
+        
+        OreDictionary.registerOre("plankBamboo", new ItemStack(BamboozledItems.BAMBOO_PLANKS, 1, OreDictionary.WILDCARD_VALUE));
+        OreDictionary.registerOre("plankWood", new ItemStack(BamboozledItems.BAMBOO_PLANKS, 1, OreDictionary.WILDCARD_VALUE));
+        OreDictionary.registerOre("plankBambooVertical", new ItemStack(BamboozledItems.BAMBOO_PLANKS, 1, 1));
+        OreDictionary.registerOre("plankWoodVertical", new ItemStack(BamboozledItems.BAMBOO_PLANKS, 1, 1));
+        
+        OreDictionary.registerOre("stairWood", new ItemStack(BamboozledItems.BAMBOO_PLANKS_STAIRS, 1, OreDictionary.WILDCARD_VALUE));
+        OreDictionary.registerOre("slabWood", new ItemStack(BamboozledItems.BAMBOO_PLANKS_SLAB, 1, OreDictionary.WILDCARD_VALUE));
+        
+        OreDictionary.registerOre("wallBamboo", new ItemStack(BamboozledItems.BAMBOO_WALL, 1, OreDictionary.WILDCARD_VALUE));
+        
+        OreDictionary.registerOre("oreSalt", new ItemStack(BamboozledItems.SALT_ORE, 1, OreDictionary.WILDCARD_VALUE));
+        OreDictionary.registerOre("oreHalite", new ItemStack(BamboozledItems.SALT_ORE, 1, OreDictionary.WILDCARD_VALUE));
+        OreDictionary.registerOre("dustSalt", new ItemStack(BamboozledItems.SALT_PILE, 1, OreDictionary.WILDCARD_VALUE));
+        OreDictionary.registerOre("blockSalt", new ItemStack(BamboozledItems.SALT_BLOCK, 1, OreDictionary.WILDCARD_VALUE));
 
         // TODO Implement a JSON smelting recipe registry...
         GameRegistry.addSmelting(BamboozledItems.BAMBOO, new ItemStack(BamboozledItems.BAMBOO_DRIED), 0.0F);
