@@ -12,7 +12,7 @@ public final class BamboozledWailaPlugin implements IWailaPlugin {
 
     @Override
     public void register(IWailaRegistrar registrar) {
-        Bamboozled.LOGGER.debug("Registering Hwyla data providers");
+        Bamboozled.LOGGER.debug("Registering Hwyla data providers...");
         registrar.registerBodyProvider(ProviderBambooBundle.INSTANCE, BlockBambooBundle.class);
     }
 

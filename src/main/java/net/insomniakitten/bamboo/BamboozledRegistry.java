@@ -47,7 +47,10 @@ public final class BamboozledRegistry {
 
     @SubscribeEvent
     public static void onBlockRegistry(RegistryEvent.Register<Block> event) {
+        Bamboozled.LOGGER.debug("Registering block entities...");
         GameRegistry.registerTileEntity(TileBambooHopper.class, Bamboozled.ID + ":bamboo_hopper");
+
+        Bamboozled.LOGGER.debug("Registering blocks...");
         event.getRegistry().registerAll(
                 new BlockBamboo().setRegistryName("bamboo").setUnlocalizedName("bamboo"),
                 new BlockBambooBundle().setRegistryName("bamboo_bundle").setUnlocalizedName("bamboo_bundle"),
@@ -68,6 +71,7 @@ public final class BamboozledRegistry {
 
     @SubscribeEvent
     public static void onItemRegistry(RegistryEvent.Register<Item> event) {
+        Bamboozled.LOGGER.debug("Registering items...");
         event.getRegistry().registerAll(
                 new ItemBlockBase(BamboozledBlocks.BAMBOO).setRegistryName("bamboo"),
                 new ItemBase().setRegistryName("bamboo_dried").setUnlocalizedName("bamboo_dried"),
@@ -89,6 +93,7 @@ public final class BamboozledRegistry {
 
     @SubscribeEvent
     public static void onEntityRegistry(RegistryEvent.Register<EntityEntry> event) {
+        Bamboozled.LOGGER.debug("Registering entity entries...");
         event.getRegistry().register(EntityFallingSaltBlock.INSTANCE.build());
     }
 
@@ -96,10 +101,15 @@ public final class BamboozledRegistry {
     @SideOnly(Side.CLIENT)
     @SuppressWarnings("ConstantConditions")
     public static void onModelRegistry(ModelRegistryEvent event) {
+        Bamboozled.LOGGER.debug("Registering entity renderers...");
         RenderingRegistry.registerEntityRenderingHandler(EntityFallingSaltBlock.class, RenderFallingBlock::new);
+
+        Bamboozled.LOGGER.debug("Registering state mappers...");
         ModelLoader.setCustomStateMapper(BamboozledBlocks.BAMBOO, new StateMap.Builder().ignore(BlockBamboo.PROP_AGE).build());
         ModelLoader.setCustomStateMapper(BamboozledBlocks.BAMBOO_PRESSURE_PLATE, BlockBambooPressurePlate.STATE_MAPPER);
         ModelLoader.setCustomStateMapper(BamboozledBlocks.BAMBOO_HOPPER, new StateMap.Builder().ignore(BlockBambooHopper.POWERED).build());
+
+        Bamboozled.LOGGER.debug("Registering item models...");
         ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO, 0, new ModelResourceLocation(BamboozledItems.BAMBOO.getRegistryName(), "inventory"));
         ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_DRIED, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_DRIED.getRegistryName(), "inventory"));
         ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_BUNDLE, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_BUNDLE.getRegistryName(), "axis=y,dried=0"));
@@ -121,33 +131,27 @@ public final class BamboozledRegistry {
 
     @SubscribeEvent
     public static void onRecipeRegistry(RegistryEvent.Register<IRecipe> event) {
+        Bamboozled.LOGGER.debug("Registering ore dictionary entries...");
         OreDictionary.registerOre("bamboo", new ItemStack(BamboozledItems.BAMBOO, 1, OreDictionary.WILDCARD_VALUE));
-        
         OreDictionary.registerOre("blockBamboo", new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, OreDictionary.WILDCARD_VALUE));
         OreDictionary.registerOre("blockBambooDried", new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, 1));
-        
         OreDictionary.registerOre("stairBamboo", new ItemStack(BamboozledItems.BAMBOO_DRIED_STAIRS, 1, OreDictionary.WILDCARD_VALUE));
         OreDictionary.registerOre("stairWood", new ItemStack(BamboozledItems.BAMBOO_DRIED_STAIRS, 1, OreDictionary.WILDCARD_VALUE));
-        
         OreDictionary.registerOre("slabBamboo", new ItemStack(BamboozledItems.BAMBOO_DRIED_SLAB, 1, OreDictionary.WILDCARD_VALUE));
         OreDictionary.registerOre("slabWood", new ItemStack(BamboozledItems.BAMBOO_DRIED_SLAB, 1, OreDictionary.WILDCARD_VALUE));
-        
         OreDictionary.registerOre("plankBamboo", new ItemStack(BamboozledItems.BAMBOO_PLANKS, 1, OreDictionary.WILDCARD_VALUE));
         OreDictionary.registerOre("plankWood", new ItemStack(BamboozledItems.BAMBOO_PLANKS, 1, OreDictionary.WILDCARD_VALUE));
         OreDictionary.registerOre("plankBambooVertical", new ItemStack(BamboozledItems.BAMBOO_PLANKS, 1, 1));
         OreDictionary.registerOre("plankWoodVertical", new ItemStack(BamboozledItems.BAMBOO_PLANKS, 1, 1));
-        
         OreDictionary.registerOre("stairWood", new ItemStack(BamboozledItems.BAMBOO_PLANKS_STAIRS, 1, OreDictionary.WILDCARD_VALUE));
         OreDictionary.registerOre("slabWood", new ItemStack(BamboozledItems.BAMBOO_PLANKS_SLAB, 1, OreDictionary.WILDCARD_VALUE));
-        
         OreDictionary.registerOre("wallBamboo", new ItemStack(BamboozledItems.BAMBOO_WALL, 1, OreDictionary.WILDCARD_VALUE));
-        
         OreDictionary.registerOre("oreSalt", new ItemStack(BamboozledItems.SALT_ORE, 1, OreDictionary.WILDCARD_VALUE));
         OreDictionary.registerOre("oreHalite", new ItemStack(BamboozledItems.SALT_ORE, 1, OreDictionary.WILDCARD_VALUE));
         OreDictionary.registerOre("dustSalt", new ItemStack(BamboozledItems.SALT_PILE, 1, OreDictionary.WILDCARD_VALUE));
         OreDictionary.registerOre("blockSalt", new ItemStack(BamboozledItems.SALT_BLOCK, 1, OreDictionary.WILDCARD_VALUE));
 
-        // TODO Implement a JSON smelting recipe registry...
+        Bamboozled.LOGGER.debug("Registering furnace smelting recipes...");
         GameRegistry.addSmelting(BamboozledItems.BAMBOO, new ItemStack(BamboozledItems.BAMBOO_DRIED), 0.0F);
         GameRegistry.addSmelting(BamboozledBlocks.SALT_ORE, new ItemStack(BamboozledItems.SALT_PILE, 4), 0.0F);
     }
