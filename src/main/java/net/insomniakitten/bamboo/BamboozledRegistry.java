@@ -132,24 +132,27 @@ public final class BamboozledRegistry {
     @SubscribeEvent
     public static void onRecipeRegistry(RegistryEvent.Register<IRecipe> event) {
         Bamboozled.LOGGER.debug("Registering ore dictionary entries...");
-        OreDictionary.registerOre("bamboo", new ItemStack(BamboozledItems.BAMBOO, 1, OreDictionary.WILDCARD_VALUE));
-        OreDictionary.registerOre("blockBamboo", new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, OreDictionary.WILDCARD_VALUE));
+        OreDictionary.registerOre("bamboo", BamboozledItems.BAMBOO);
+        OreDictionary.registerOre("blockBamboo", BamboozledItems.BAMBOO_BUNDLE);
+        OreDictionary.registerOre("blockBamboo", new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, 1));
         OreDictionary.registerOre("blockBambooDried", new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, 1));
-        OreDictionary.registerOre("stairBamboo", new ItemStack(BamboozledItems.BAMBOO_DRIED_STAIRS, 1, OreDictionary.WILDCARD_VALUE));
-        OreDictionary.registerOre("stairWood", new ItemStack(BamboozledItems.BAMBOO_DRIED_STAIRS, 1, OreDictionary.WILDCARD_VALUE));
-        OreDictionary.registerOre("slabBamboo", new ItemStack(BamboozledItems.BAMBOO_DRIED_SLAB, 1, OreDictionary.WILDCARD_VALUE));
-        OreDictionary.registerOre("slabWood", new ItemStack(BamboozledItems.BAMBOO_DRIED_SLAB, 1, OreDictionary.WILDCARD_VALUE));
-        OreDictionary.registerOre("plankBamboo", new ItemStack(BamboozledItems.BAMBOO_PLANKS, 1, OreDictionary.WILDCARD_VALUE));
-        OreDictionary.registerOre("plankWood", new ItemStack(BamboozledItems.BAMBOO_PLANKS, 1, OreDictionary.WILDCARD_VALUE));
+        OreDictionary.registerOre("stairBamboo", BamboozledItems.BAMBOO_DRIED_STAIRS);
+        OreDictionary.registerOre("stairWood", BamboozledItems.BAMBOO_DRIED_STAIRS);
+        OreDictionary.registerOre("slabBamboo", BamboozledItems.BAMBOO_DRIED_SLAB);
+        OreDictionary.registerOre("slabWood", BamboozledItems.BAMBOO_DRIED_SLAB);
+        OreDictionary.registerOre("plankBamboo", BamboozledItems.BAMBOO_PLANKS);
+        OreDictionary.registerOre("plankWood", BamboozledItems.BAMBOO_PLANKS);
+        OreDictionary.registerOre("plankBamboo", new ItemStack(BamboozledItems.BAMBOO_PLANKS, 1, 1));
+        OreDictionary.registerOre("plankWood", new ItemStack(BamboozledItems.BAMBOO_PLANKS, 1, 1));
         OreDictionary.registerOre("plankBambooVertical", new ItemStack(BamboozledItems.BAMBOO_PLANKS, 1, 1));
         OreDictionary.registerOre("plankWoodVertical", new ItemStack(BamboozledItems.BAMBOO_PLANKS, 1, 1));
-        OreDictionary.registerOre("stairWood", new ItemStack(BamboozledItems.BAMBOO_PLANKS_STAIRS, 1, OreDictionary.WILDCARD_VALUE));
-        OreDictionary.registerOre("slabWood", new ItemStack(BamboozledItems.BAMBOO_PLANKS_SLAB, 1, OreDictionary.WILDCARD_VALUE));
-        OreDictionary.registerOre("wallBamboo", new ItemStack(BamboozledItems.BAMBOO_WALL, 1, OreDictionary.WILDCARD_VALUE));
-        OreDictionary.registerOre("oreSalt", new ItemStack(BamboozledItems.SALT_ORE, 1, OreDictionary.WILDCARD_VALUE));
-        OreDictionary.registerOre("oreHalite", new ItemStack(BamboozledItems.SALT_ORE, 1, OreDictionary.WILDCARD_VALUE));
-        OreDictionary.registerOre("dustSalt", new ItemStack(BamboozledItems.SALT_PILE, 1, OreDictionary.WILDCARD_VALUE));
-        OreDictionary.registerOre("blockSalt", new ItemStack(BamboozledItems.SALT_BLOCK, 1, OreDictionary.WILDCARD_VALUE));
+        OreDictionary.registerOre("stairWood", BamboozledItems.BAMBOO_PLANKS_STAIRS);
+        OreDictionary.registerOre("slabWood", BamboozledItems.BAMBOO_PLANKS_SLAB);
+        OreDictionary.registerOre("wallBamboo", BamboozledItems.BAMBOO_WALL);
+        OreDictionary.registerOre("oreSalt", BamboozledItems.SALT_ORE);
+        OreDictionary.registerOre("oreHalite", BamboozledItems.SALT_ORE);
+        OreDictionary.registerOre("dustSalt", BamboozledItems.SALT_PILE);
+        OreDictionary.registerOre("blockSalt", BamboozledItems.SALT_BLOCK);
 
         Bamboozled.LOGGER.debug("Registering furnace smelting recipes...");
         GameRegistry.addSmelting(BamboozledItems.BAMBOO, new ItemStack(BamboozledItems.BAMBOO_DRIED), 0.0F);
