@@ -99,6 +99,7 @@ public final class BamboozledRegistry {
         RenderingRegistry.registerEntityRenderingHandler(EntityFallingSaltBlock.class, RenderFallingBlock::new);
         ModelLoader.setCustomStateMapper(BamboozledBlocks.BAMBOO, new StateMap.Builder().ignore(BlockBamboo.PROP_AGE).build());
         ModelLoader.setCustomStateMapper(BamboozledBlocks.BAMBOO_PRESSURE_PLATE, BlockBambooPressurePlate.STATE_MAPPER);
+        ModelLoader.setCustomStateMapper(BamboozledBlocks.BAMBOO_HOPPER, new StateMap.Builder().ignore(BlockBambooHopper.POWERED).build());
         ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO, 0, new ModelResourceLocation(BamboozledItems.BAMBOO.getRegistryName(), "inventory"));
         ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_DRIED, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_DRIED.getRegistryName(), "inventory"));
         ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_BUNDLE, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_BUNDLE.getRegistryName(), "axis=y,dried=0"));
