@@ -1,39 +1,13 @@
 {
     "multipart": [
-        {
-            "apply": { "model": "bamboozled:salt_pile_none", "y": 0 }
-        },
-        {
-            "when": { "north": "up" },
-            "apply": { "model": "bamboozled:salt_pile_up", "y": 0 }
-        },
-        {
-            "when": { "east": "up" },
-            "apply": { "model": "bamboozled:salt_pile_up", "y": 90 }
-        },
-        {
-            "when": { "south": "up" },
-            "apply": { "model": "bamboozled:salt_pile_up", "y": 180 }
-        },
-        {
-            "when": { "west": "up" },
-            "apply": { "model": "bamboozled:salt_pile_up", "y": 270 }
-        },
-        {
-            "when": { "north": "side" },
-            "apply": { "model": "bamboozled:salt_pile_side", "y": 0 }
-        },
-        {
-            "when": { "east": "side" },
-            "apply": { "model": "bamboozled:salt_pile_side", "y": 90 }
-        },
-        {
-            "when": { "south": "side" },
-            "apply": { "model": "bamboozled:salt_pile_side", "y": 180 }
-        },
-        {
-            "when": { "west": "side" },
-            "apply": { "model": "bamboozled:salt_pile_side", "y": 270 }
-        }
+        { "apply": { "model": "bamboozled:salt_pile_none", "y": 0 } },
+        { "when": { "north": "up" }, "apply": { "model": "bamboozled:salt_pile_up", "y": 0 } },
+        { "when": { "east": "up" }, "apply": { "model": "bamboozled:salt_pile_up", "y": 90 } },
+        { "when": { "south": "up" }, "apply": { "model": "bamboozled:salt_pile_up", "y": 180 } },
+        { "when": { "west": "up" }, "apply": { "model": "bamboozled:salt_pile_up", "y": 270 } },
+        { "when": { "north": "side" }, "apply": { "model": "bamboozled:salt_pile_side", "y": 0 } },
+        { "when": { "east": "side" }, "apply": { "model": "bamboozled:salt_pile_side", "y": 90 } },
+        { "when": { "south": "side" }, "apply": { "model": "bamboozled:salt_pile_side", "y": 180 } },
+        { "when": { "west": "side" }, "apply": { "model": "bamboozled:salt_pile_side", "y": 270 } }
     ]
 }
