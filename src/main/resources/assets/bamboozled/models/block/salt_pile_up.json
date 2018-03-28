@@ -1,0 +1,32 @@
+{
+    "__comment": "Copyright © InsomniaKitten 2017",
+    "textures": {
+        "particle": "bamboozled:blocks/salt_pile_side",
+        "side": "bamboozled:blocks/salt_pile_side",
+        "up": "bamboozled:blocks/salt_pile_up"
+    },
+    "elements": [
+        {
+            "from": [ 0, 0, 1 ],
+            "to": [ 16, 1, 16 ],
+            "faces": {
+                "up": { "uv": [ 0, 1, 16, 16 ], "texture": "#side" }
+            }
+        },
+        {
+            "from": [ 0, 1, 0 ],
+            "to": [ 16, 16, 1 ],
+            "faces": {
+                "south": { "uv": [ 0, 0, 16, 15 ], "texture": "#up" }
+            }
+        },
+        {
+            "from": [ 0, 16, 0 ],
+            "to": [ 16, 17, 1 ],
+            "faces": {
+                "up": { "uv": [ 0, 0, 16, 1 ], "texture": "#side" },
+                "south": { "uv": [ 0, 15, 16, 16 ], "texture": "#up" }
+            }
+        }
+    ]
+}

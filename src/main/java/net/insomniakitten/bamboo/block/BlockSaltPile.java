@@ -12,6 +12,7 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
@@ -142,7 +143,7 @@ public final class BlockSaltPile extends BlockBase {
     @Override
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.CUTOUT;
+        return BlockRenderLayer.TRANSLUCENT;
     }
 
     @Override
@@ -162,6 +163,12 @@ public final class BlockSaltPile extends BlockBase {
     @Override
     public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
         boxes.add(AABB_SALT_PILE.get(getAABBIndex(state.getActualState(world, pos))));
+    }
+
+    @Override
+    @Deprecated
+    public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entity, boolean isActualState) {
+
     }
 
     public enum ConnectionType implements IStringSerializable {
