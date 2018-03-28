@@ -44,12 +44,6 @@ public final class BamboozledConfig {
         @Config.RequiresMcRestart
         public boolean fancyBamboo = true;
 
-        @Config.Name("fancy_hopper")
-        @Config.Comment({"Should the bounding box of hopper be fancy and detailed?",
-                         "When false, collision logic will also be simplified"})
-        @Config.RequiresMcRestart
-        public boolean fancyHopper = true;
-
         private General() {}
     }
 

@@ -20,9 +20,6 @@ public final class BamboozledItems {
 
     public static final Item BAMBOO_WALL = Items.AIR;
 
-    public static final Item BAMBOO_HOPPER = Items.AIR;
-    public static final Item BAMBOO_PRESSURE_PLATE = Items.AIR;
-
     public static final Item SALT_ORE = Items.AIR;
     public static final Item SALT_PILE = Items.AIR;
     public static final Item SALT_BLOCK = Items.AIR;

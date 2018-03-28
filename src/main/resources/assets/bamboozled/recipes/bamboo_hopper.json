@@ -1,9 +1,0 @@
-{
-    "type": "minecraft:crafting_shaped",
-    "result": { "item": "bamboozled:bamboo_hopper" },
-    "pattern": [ "P P", "PRP", " P " ],
-    "key": {
-        "P": { "ore": "plankBamboo", "type": "forge:ore_dict" },
-        "R": { "item": "bamboozled:bamboo_pressure_plate" }
-    }
-}
