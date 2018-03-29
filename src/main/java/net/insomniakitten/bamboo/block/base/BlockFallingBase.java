@@ -37,7 +37,6 @@ public class BlockFallingBase extends BlockFalling {
         setResistance(resistance);
         setSoundType(sound);
         setCreativeTab(Bamboozled.TAB);
-        lightOpacity = opaqueBlock ? 255 : 0;
     }
 
     public BlockFallingBase(Material material, SoundType sound, float hardness, float resistance) {
@@ -125,6 +124,11 @@ public class BlockFallingBase extends BlockFalling {
     @Deprecated
     public EnumPushReaction getMobilityFlag(IBlockState state) {
         return fullBlock ? EnumPushReaction.NORMAL : EnumPushReaction.DESTROY;
+    }
+
+    @Override
+    public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return opaqueBlock ? 255 : 0;
     }
 
     public final void setFullBlock(boolean fullBlock) {

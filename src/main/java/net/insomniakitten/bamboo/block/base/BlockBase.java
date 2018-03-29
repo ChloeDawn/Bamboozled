@@ -34,7 +34,6 @@ public class BlockBase extends Block {
         setResistance(resistance);
         setSoundType(sound);
         setCreativeTab(Bamboozled.TAB);
-        lightOpacity = opaqueBlock ? 255 : 0;
     }
 
     public BlockBase(Material material, SoundType sound, float hardness, float resistance) {
@@ -128,6 +127,11 @@ public class BlockBase extends Block {
     @Deprecated
     public EnumPushReaction getMobilityFlag(IBlockState state) {
         return fullBlock ? EnumPushReaction.NORMAL : EnumPushReaction.DESTROY;
+    }
+
+    @Override
+    public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return opaqueBlock ? 255 : 0;
     }
 
 }
