@@ -49,6 +49,11 @@ public final class BamboozledConfig {
         @Config.RequiresMcRestart
         public boolean saltBlockDropsItself = false;
 
+        @Config.Name("salt_hurts_undead")
+        @Config.Comment("Should salt hurt undead mobs that walk on it?")
+        @Config.RequiresMcRestart
+        public boolean saltHurtsUndead = true;
+
         @Config.Name("advanced_slab_interaction")
         @Config.Comment("Should slabs be breakable individually when they are a double slab?")
         @Config.RequiresMcRestart

@@ -2,6 +2,7 @@ package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import net.insomniakitten.bamboo.BamboozledConfig;
 import net.insomniakitten.bamboo.block.base.BlockBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -13,7 +14,11 @@ import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -59,10 +64,13 @@ public final class BlockSaltPile extends BlockBase {
             new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D)
     );
 
+    private final boolean saltHurtsUndead;
+
     public BlockSaltPile() {
         super(Material.CIRCUITS, MapColor.SNOW, SoundType.SAND, 0.0F, 0.0F);
         setFullBlock(false);
         setOpaqueBlock(false);
+        saltHurtsUndead = BamboozledConfig.GENERAL.saltHurtsUndead;
     }
 
     private boolean canConnectTo(IBlockAccess world, BlockPos pos) {
@@ -149,6 +157,18 @@ public final class BlockSaltPile extends BlockBase {
     @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
         return isSolid(world.getBlockState(pos.down()), world, pos.down());
+    }
+
+    @Override
+    public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
+        if (saltHurtsUndead && entity instanceof EntityLiving) {
+            EntityLivingBase living = (EntityLivingBase) entity;
+            if (living.getCreatureAttribute() == EnumCreatureAttribute.UNDEAD) {
+                if (world.getTotalWorldTime() % 20 == 0) {
+                    living.attackEntityFrom(DamageSource.MAGIC, 1);
+                }
+            }
+        }
     }
 
     @Override
