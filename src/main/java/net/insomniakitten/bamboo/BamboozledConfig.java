@@ -3,6 +3,7 @@ package net.insomniakitten.bamboo;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -10,6 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber(modid = Bamboozled.ID)
 public final class BamboozledConfig {
 
+    public static final Client CLIENT = new Client();
     public static final General GENERAL = new General();
     public static final World WORLD = new World();
 
@@ -18,8 +20,22 @@ public final class BamboozledConfig {
     @SubscribeEvent
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (Bamboozled.ID.equals(event.getModID())) {
+            final boolean lastFancyHalite = CLIENT.forceFancyHalite;
             ConfigManager.sync(Bamboozled.ID, Config.Type.INSTANCE);
+            if (CLIENT.forceFancyHalite != lastFancyHalite) {
+                Bamboozled.LOGGER.debug("Reloading renderers...");
+                FMLCommonHandler.instance().reloadRenderers();
+            }
         }
+    }
+
+    public static final class Client {
+        @Config.Name("force_fancy_salt_ore")
+        @Config.Comment({ "Should halite always render as a translucent block?",
+                          "If false, halite will render solid on Fast graphics." })
+        public boolean forceFancyHalite = false;
+
+        private Client() {}
     }
 
     public static final class General {

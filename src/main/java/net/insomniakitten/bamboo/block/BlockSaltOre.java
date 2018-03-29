@@ -1,5 +1,6 @@
 package net.insomniakitten.bamboo.block;
 
+import net.insomniakitten.bamboo.BamboozledConfig;
 import net.insomniakitten.bamboo.BamboozledItems;
 import net.insomniakitten.bamboo.block.base.BlockBase;
 import net.minecraft.block.Block;
@@ -33,17 +34,11 @@ public final class BlockSaltOre extends BlockBase {
     }
 
     @Override
-    @Deprecated
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        return world.getBlockState(pos.offset(side)).getBlock() != this
-                && super.shouldSideBeRendered(state, world, pos, side);
-    }
-
-    @Override
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
+        return BamboozledConfig.CLIENT.forceFancyHalite || isFancyGraphics()
+               ? BlockRenderLayer.TRANSLUCENT
+               : BlockRenderLayer.SOLID;
     }
 
     @Override
@@ -73,6 +68,12 @@ public final class BlockSaltOre extends BlockBase {
     }
 
     @Override
+    public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
+        return !BamboozledConfig.CLIENT.forceFancyHalite && !isFancyGraphics()
+                || world.getBlockState(pos.offset(face)).getBlock() == this;
+    }
+
+    @Override
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         Random rand = world instanceof World ? ((World) world).rand : new Random();
         int amount = 4 + rand.nextInt(5) * (Math.max(0, rand.nextInt(fortune + 2) - 1) + 1);
@@ -83,6 +84,10 @@ public final class BlockSaltOre extends BlockBase {
     @Deprecated
     public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.SOLID;
+    }
+
+    private boolean isFancyGraphics() {
+        return !Blocks.LEAVES.isOpaqueCube(Blocks.LEAVES.getDefaultState());
     }
 
 }
