@@ -37,6 +37,7 @@ public class BlockFallingBase extends BlockFalling {
         setResistance(resistance);
         setSoundType(sound);
         setCreativeTab(Bamboozled.TAB);
+        lightOpacity = opaqueBlock ? 255 : 0;
     }
 
     public BlockFallingBase(Material material, SoundType sound, float hardness, float resistance) {

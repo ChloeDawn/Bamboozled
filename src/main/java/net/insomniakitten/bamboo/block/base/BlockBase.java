@@ -34,6 +34,7 @@ public class BlockBase extends Block {
         setResistance(resistance);
         setSoundType(sound);
         setCreativeTab(Bamboozled.TAB);
+        lightOpacity = opaqueBlock ? 255 : 0;
     }
 
     public BlockBase(Material material, SoundType sound, float hardness, float resistance) {
