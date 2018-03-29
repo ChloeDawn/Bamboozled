@@ -29,7 +29,7 @@ public final class ItemBambooBundle extends ItemSubBlockBase {
     @Override
     public int getItemBurnTime(ItemStack stack) {
         BlockBambooBundle bundle = (BlockBambooBundle) BamboozledBlocks.BAMBOO_BUNDLE;
-        return bundle.isDry(stack.getMetadata()) ? 288 : 0;
+        return bundle.isDry(stack.getMetadata()) ? 288 : -1;
     }
 
     @Override
