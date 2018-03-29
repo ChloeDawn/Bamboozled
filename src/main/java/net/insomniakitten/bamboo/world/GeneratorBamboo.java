@@ -16,6 +16,19 @@ public final class GeneratorBamboo {
 
     public GeneratorBamboo() { }
 
+    private static void getSurface(World world, final MutableBlockPos pos) {
+        final Chunk chunk = world.getChunkFromBlockCoords(pos);
+        IBlockState target;
+        pos.setY(world.getHeight(pos.getX(), pos.getZ()));
+        do {
+            target = chunk.getBlockState(pos.move(EnumFacing.DOWN));
+        } while (!world.isOutsideBuildHeight(pos)
+                && ((!target.getMaterial().isLiquid()
+                && target.getBlock().isReplaceable(world, pos))
+                || target.getBlock().isFoliage(world, pos)
+                || target.getBlock().isWood(world, pos)));
+    }
+
     @SubscribeEvent
     public void onChunkPopulation(PopulateChunkEvent.Post event) {
         if (event.getRand().nextInt(6) != 0) return;
@@ -37,19 +50,6 @@ public final class GeneratorBamboo {
                 }
             }
         }
-    }
-
-    private static void getSurface(World world, final MutableBlockPos pos) {
-        final Chunk chunk = world.getChunkFromBlockCoords(pos);
-        IBlockState target;
-        pos.setY(world.getHeight(pos.getX(), pos.getZ()));
-        do {
-            target = chunk.getBlockState(pos.move(EnumFacing.DOWN));
-        } while (!world.isOutsideBuildHeight(pos)
-                && ((!target.getMaterial().isLiquid()
-                && target.getBlock().isReplaceable(world, pos))
-                || target.getBlock().isFoliage(world, pos)
-                || target.getBlock().isWood(world, pos)));
     }
 
 }

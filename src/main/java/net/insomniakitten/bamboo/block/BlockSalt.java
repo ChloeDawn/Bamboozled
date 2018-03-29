@@ -1,8 +1,8 @@
 package net.insomniakitten.bamboo.block;
 
 import net.insomniakitten.bamboo.BamboozledConfig;
-import net.insomniakitten.bamboo.block.base.BlockFallingBase;
 import net.insomniakitten.bamboo.BamboozledItems;
+import net.insomniakitten.bamboo.block.base.BlockFallingBase;
 import net.insomniakitten.bamboo.entity.EntityFallingSaltBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;

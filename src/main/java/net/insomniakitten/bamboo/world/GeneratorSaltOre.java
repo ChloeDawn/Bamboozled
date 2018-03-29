@@ -1,7 +1,7 @@
 package net.insomniakitten.bamboo.world;
 
-import net.insomniakitten.bamboo.BamboozledConfig;
 import net.insomniakitten.bamboo.BamboozledBlocks;
+import net.insomniakitten.bamboo.BamboozledConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;

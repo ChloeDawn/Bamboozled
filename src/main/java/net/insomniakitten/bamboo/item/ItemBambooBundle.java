@@ -1,7 +1,7 @@
 package net.insomniakitten.bamboo.item;
 
-import net.insomniakitten.bamboo.block.BlockBambooBundle;
 import net.insomniakitten.bamboo.BamboozledBlocks;
+import net.insomniakitten.bamboo.block.BlockBambooBundle;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;

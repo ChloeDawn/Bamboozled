@@ -1,9 +1,9 @@
 package net.insomniakitten.bamboo.entity;
 
 import net.insomniakitten.bamboo.Bamboozled;
-import net.insomniakitten.bamboo.block.BlockSalt;
 import net.insomniakitten.bamboo.BamboozledBlocks;
 import net.insomniakitten.bamboo.BamboozledItems;
+import net.insomniakitten.bamboo.block.BlockSalt;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;

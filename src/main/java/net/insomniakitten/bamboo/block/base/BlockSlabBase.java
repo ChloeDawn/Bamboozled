@@ -154,6 +154,11 @@ public class BlockSlabBase extends BlockBase {
     }
 
     @Override
+    public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
+        boxes.add(state.getValue(VARIANT).getBoundingBox());
+    }
+
+    @Override
     public int getMetaFromState(IBlockState state) {
         return state.getValue(VARIANT).ordinal();
     }
@@ -162,11 +167,6 @@ public class BlockSlabBase extends BlockBase {
     @Deprecated
     public boolean isFullCube(IBlockState state) {
         return isDouble(state);
-    }
-
-    @Override
-    public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
-        boxes.add(state.getValue(VARIANT).getBoundingBox());
     }
 
     @Override

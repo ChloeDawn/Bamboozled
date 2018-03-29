@@ -39,8 +39,8 @@ public final class BamboozledConfig {
         public boolean advancedSlabInteraction = true;
 
         @Config.Name("fancy_bamboo")
-        @Config.Comment({"Should the bounding box of bamboo be fancy and detailed?",
-                         "When false, collision logic will also be simplified"})
+        @Config.Comment({ "Should the bounding box of bamboo be fancy and detailed?",
+                          "When false, collision logic will also be simplified" })
         @Config.RequiresMcRestart
         public boolean fancyBamboo = true;
 

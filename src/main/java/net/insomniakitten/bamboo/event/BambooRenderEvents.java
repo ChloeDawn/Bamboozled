@@ -1,7 +1,7 @@
 package net.insomniakitten.bamboo.event;
 
-import net.insomniakitten.bamboo.block.BlockBamboo;
 import net.insomniakitten.bamboo.BamboozledBlocks;
+import net.insomniakitten.bamboo.block.BlockBamboo;
 import net.insomniakitten.bamboo.util.BoundingBoxes;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;

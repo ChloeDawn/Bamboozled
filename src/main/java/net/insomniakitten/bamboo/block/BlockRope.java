@@ -1,8 +1,8 @@
 package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableMap;
-import net.insomniakitten.bamboo.block.base.BlockBase;
 import net.insomniakitten.bamboo.BamboozledItems;
+import net.insomniakitten.bamboo.block.base.BlockBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
