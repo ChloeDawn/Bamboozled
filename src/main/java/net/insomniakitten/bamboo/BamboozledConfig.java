@@ -20,9 +20,9 @@ public final class BamboozledConfig {
     @SubscribeEvent
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (Bamboozled.ID.equals(event.getModID())) {
-            final boolean lastFancyHalite = CLIENT.forceFancyHalite;
+            final boolean lastFancySaltOre = CLIENT.forceFancySaltOre;
             ConfigManager.sync(Bamboozled.ID, Config.Type.INSTANCE);
-            if (CLIENT.forceFancyHalite != lastFancyHalite) {
+            if (CLIENT.forceFancySaltOre != lastFancySaltOre) {
                 Bamboozled.LOGGER.debug("Reloading renderers...");
                 FMLCommonHandler.instance().reloadRenderers();
             }
@@ -33,7 +33,7 @@ public final class BamboozledConfig {
         @Config.Name("force_fancy_salt_ore")
         @Config.Comment({ "Should halite always render as a translucent block?",
                           "If false, halite will render solid on Fast graphics." })
-        public boolean forceFancyHalite = false;
+        public boolean forceFancySaltOre = false;
 
         private Client() {}
     }

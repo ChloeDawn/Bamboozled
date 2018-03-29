@@ -36,7 +36,7 @@ public final class BlockSaltOre extends BlockBase {
     @Override
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer() {
-        return BamboozledConfig.CLIENT.forceFancyHalite || isFancyGraphics()
+        return BamboozledConfig.CLIENT.forceFancySaltOre || isFancyGraphics()
                ? BlockRenderLayer.TRANSLUCENT
                : BlockRenderLayer.SOLID;
     }
@@ -69,7 +69,7 @@ public final class BlockSaltOre extends BlockBase {
 
     @Override
     public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
-        return !BamboozledConfig.CLIENT.forceFancyHalite && !isFancyGraphics()
+        return !BamboozledConfig.CLIENT.forceFancySaltOre && !isFancyGraphics()
                 || world.getBlockState(pos.offset(face)).getBlock() == this;
     }
 
