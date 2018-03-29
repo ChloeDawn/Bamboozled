@@ -11,11 +11,14 @@ import net.insomniakitten.bamboo.block.base.BlockPlanksBase;
 import net.insomniakitten.bamboo.block.base.BlockSlabBase;
 import net.insomniakitten.bamboo.block.base.BlockStairsBase;
 import net.insomniakitten.bamboo.entity.EntityFallingSaltBlock;
+import net.insomniakitten.bamboo.entity.EntityThrownSaltPile;
+import net.insomniakitten.bamboo.entity.render.RenderThrownSaltPile;
 import net.insomniakitten.bamboo.item.ItemBambooBundle;
 import net.insomniakitten.bamboo.item.ItemBase;
 import net.insomniakitten.bamboo.item.ItemBlockBase;
 import net.insomniakitten.bamboo.item.ItemBlockPlanksBase;
 import net.insomniakitten.bamboo.item.ItemBlockSlabBase;
+import net.insomniakitten.bamboo.item.ItemSaltPile;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -75,7 +78,7 @@ public final class BamboozledRegistry {
                 new ItemBlockSlabBase(BamboozledBlocks.BAMBOO_PLANKS_SLAB).setRegistryName("bamboo_planks_slab"),
                 new ItemBlockBase(BamboozledBlocks.BAMBOO_WALL).setRegistryName("bamboo_wall"),
                 new ItemBlockBase(BamboozledBlocks.SALT_ORE).setRegistryName("salt_ore"),
-                new ItemBlockBase(BamboozledBlocks.SALT_PILE).setRegistryName("salt_pile"),
+                new ItemSaltPile(BamboozledBlocks.SALT_PILE).setRegistryName("salt_pile"),
                 new ItemBlockBase(BamboozledBlocks.SALT_BLOCK).setRegistryName("salt_block"),
                 new ItemBlockBase(BamboozledBlocks.ROPE).setRegistryName("rope")
         );
@@ -84,7 +87,8 @@ public final class BamboozledRegistry {
     @SubscribeEvent
     public static void onEntityRegistry(RegistryEvent.Register<EntityEntry> event) {
         Bamboozled.LOGGER.debug("Registering entity entries...");
-        event.getRegistry().register(EntityFallingSaltBlock.INSTANCE.build());
+        event.getRegistry().register(EntityFallingSaltBlock.ENTRY.build());
+        event.getRegistry().register(EntityThrownSaltPile.ENTRY.build());
     }
 
     @SubscribeEvent
@@ -93,6 +97,7 @@ public final class BamboozledRegistry {
     public static void onModelRegistry(ModelRegistryEvent event) {
         Bamboozled.LOGGER.debug("Registering entity renderers...");
         RenderingRegistry.registerEntityRenderingHandler(EntityFallingSaltBlock.class, RenderFallingBlock::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityThrownSaltPile.class, RenderThrownSaltPile::new);
 
         Bamboozled.LOGGER.debug("Registering state mappers...");
         ModelLoader.setCustomStateMapper(BamboozledBlocks.BAMBOO, new StateMap.Builder().ignore(BlockBamboo.PROP_AGE).build());

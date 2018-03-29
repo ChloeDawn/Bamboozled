@@ -27,7 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class EntityFallingSaltBlock extends EntityFallingBlock {
 
-    public static final EntityEntryBuilder INSTANCE = EntityEntryBuilder.create()
+    public static final EntityEntryBuilder ENTRY = EntityEntryBuilder.create()
             .entity(EntityFallingSaltBlock.class)
             .id(Bamboozled.ID + ":falling_salt_block", 0)
             .name(Bamboozled.ID + ".falling_salt_block")

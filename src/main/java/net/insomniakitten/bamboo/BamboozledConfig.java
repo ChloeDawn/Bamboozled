@@ -54,6 +54,18 @@ public final class BamboozledConfig {
         @Config.RequiresMcRestart
         public boolean saltHurtsUndead = true;
 
+        @Config.Name("throwable_salt_piles")
+        @Config.Comment({ "Should piles of salt be throwable?",
+                          "If \"salt_hurts_undead\" is enabled, thrown salt will also deal damage" })
+        @Config.RequiresMcRestart
+        public boolean throwableSaltPiles = true;
+
+        @Config.Name("throw_requires_sneaking")
+        @Config.Comment({ "Should sneaking be required to throw salt piles?",
+                          "This config is unused if \"throwable_salt_piles\" is disabled" })
+        @Config.RequiresMcRestart
+        public boolean throwRequiresSneaking = false;
+
         @Config.Name("advanced_slab_interaction")
         @Config.Comment("Should slabs be breakable individually when they are a double slab?")
         @Config.RequiresMcRestart
