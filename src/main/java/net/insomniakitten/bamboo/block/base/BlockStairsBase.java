@@ -38,6 +38,7 @@ public class BlockStairsBase extends BlockStairs {
         setResistance(resistance);
         setSoundType(sound);
         setCreativeTab(Bamboozled.TAB);
+        useNeighborBrightness = true;
         this.material = material;
         this.mapColor = mapColor;
     }
