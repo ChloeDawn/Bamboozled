@@ -23,7 +23,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static net.minecraft.util.EnumFacing.DOWN;
 import static net.minecraft.util.EnumFacing.EAST;
@@ -53,9 +52,8 @@ public final class BlockBambooWall extends BlockBase {
             new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.5D, 1.0D)
     );
 
-    private static final ImmutableList<AxisAlignedBB> AABB_SELECTION = ImmutableList.copyOf(
-            AABB_COLLISION.stream().map(aabb -> aabb.setMaxY(1.0D)).collect(Collectors.toList())
-    );
+    private static final ImmutableList<AxisAlignedBB> AABB_SELECTION = AABB_COLLISION.stream()
+            .map(aabb -> aabb.setMaxY(1.0D)).collect(ImmutableList.toImmutableList());
 
     private static final ImmutableMap<EnumFacing, PropertyBool> CONNECTION = ImmutableMap.of(
             NORTH, PropertyBool.create("north"),
