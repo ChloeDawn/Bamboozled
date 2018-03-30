@@ -10,10 +10,26 @@ buildscript {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
+def modVersion = '1.1.0'
+def mcfVersion = '1.12.2-14.23.2.2629'
+def mcpMappings = 'snapshot_20180319'
+
+def hwylaVersion = '1.8.23-B38_1.12'
+def jeiVersion = '1.12.2:4.8.5.144'
+def ctmVersion = 'MC1.12-0.2.3.12'
+
 version = "1.12-$modVersion"
 group = 'net.insomniakitten.bamboozled'
 archivesBaseName = 'Bamboozled'
 sourceCompatibility = 1.8
+
+minecraft {
+    version = mcfVersion
+    mappings = mcpMappings
+    runDir = 'run'
+    replaceIn 'Bamboozled.java'
+    replace '%VERSION%', modVersion
+}
 
 repositories {
     maven { url 'http://maven.tterrag.com' }
@@ -25,14 +41,6 @@ dependencies {
     deobfCompile "team.chisel.ctm:CTM:$ctmVersion"
     deobfCompile "mcp.mobius.waila:Hwyla:$hwylaVersion"
     deobfCompile "mezz.jei:jei_$jeiVersion"
-}
-
-minecraft {
-    version = mcfVersion
-    mappings = mcpMappings
-    runDir = 'run'
-    replaceIn 'Bamboozled.java'
-    replace '%VERSION%', modVersion
 }
 
 processResources {
