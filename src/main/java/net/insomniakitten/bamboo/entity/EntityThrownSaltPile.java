@@ -46,7 +46,6 @@ public final class EntityThrownSaltPile extends EntityThrowable {
                 if (living.getCreatureAttribute() == EnumCreatureAttribute.UNDEAD) {
                     living.attackEntityFrom(DamageSource.MAGIC, 2);
                 }
-
             }
         }
     }

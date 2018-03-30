@@ -91,7 +91,6 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
 
     @Override
     public void onUpdate() {
-
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;

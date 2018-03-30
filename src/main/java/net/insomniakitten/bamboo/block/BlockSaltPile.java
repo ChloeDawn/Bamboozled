@@ -187,9 +187,7 @@ public final class BlockSaltPile extends BlockBase {
 
     @Override
     @Deprecated
-    public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entity, boolean isActualState) {
-
-    }
+    public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entity, boolean isActualState) {}
 
     public enum ConnectionType implements IStringSerializable {
         UP, SIDE, NONE;
