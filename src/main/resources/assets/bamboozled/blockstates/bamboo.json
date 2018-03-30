@@ -9,10 +9,10 @@
     "variants": {
         "canopy": {
             "true": { "submodel": "bamboozled:bamboo_canopy" },
-            "false": {}
+            "false": { }
         },
         "leaves": {
-            "0": {},
+            "0": { },
             "1": {
                 "submodel": "bamboozled:bamboo_leaves",
                 "textures": { "leaves": "bamboozled:blocks/bamboo_leaves_0" }

@@ -2,6 +2,7 @@ package net.insomniakitten.bamboo;
 
 import net.insomniakitten.bamboo.block.BlockBamboo;
 import net.insomniakitten.bamboo.block.BlockBambooBundle;
+import net.insomniakitten.bamboo.block.BlockBambooDoor;
 import net.insomniakitten.bamboo.block.BlockBambooWall;
 import net.insomniakitten.bamboo.block.BlockRope;
 import net.insomniakitten.bamboo.block.BlockSalt;
@@ -16,10 +17,12 @@ import net.insomniakitten.bamboo.entity.render.RenderThrownSaltPile;
 import net.insomniakitten.bamboo.item.ItemBambooBundle;
 import net.insomniakitten.bamboo.item.ItemBase;
 import net.insomniakitten.bamboo.item.ItemBlockBase;
+import net.insomniakitten.bamboo.item.ItemBlockDoorBase;
 import net.insomniakitten.bamboo.item.ItemBlockPlanksBase;
 import net.insomniakitten.bamboo.item.ItemBlockSlabBase;
 import net.insomniakitten.bamboo.item.ItemSaltPile;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDoor;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -57,6 +60,7 @@ public final class BamboozledRegistry {
                 new BlockStairsBase(Material.WOOD, SoundType.WOOD, 2.0F, 15.0F).setRegistryName("bamboo_planks_stairs").setUnlocalizedName("bamboo_planks_stairs"),
                 new BlockSlabBase(Material.WOOD, SoundType.WOOD, 2.0F, 15.0F).setRegistryName("bamboo_planks_slab").setUnlocalizedName("bamboo_planks_slab"),
                 new BlockBambooWall().setRegistryName("bamboo_wall").setUnlocalizedName("bamboo_wall"),
+                new BlockBambooDoor().setRegistryName("bamboo_door").setUnlocalizedName("bamboo_door"),
                 new BlockSaltOre().setRegistryName("salt_ore").setUnlocalizedName("salt_ore"),
                 new BlockSaltPile().setRegistryName("salt_pile").setUnlocalizedName("salt_pile"),
                 new BlockSalt().setRegistryName("salt_block").setUnlocalizedName("salt_block"),
@@ -77,6 +81,7 @@ public final class BamboozledRegistry {
                 new ItemBlockBase(BamboozledBlocks.BAMBOO_PLANKS_STAIRS).setRegistryName("bamboo_planks_stairs"),
                 new ItemBlockSlabBase(BamboozledBlocks.BAMBOO_PLANKS_SLAB).setRegistryName("bamboo_planks_slab"),
                 new ItemBlockBase(BamboozledBlocks.BAMBOO_WALL).setRegistryName("bamboo_wall"),
+                new ItemBlockDoorBase(BamboozledBlocks.BAMBOO_DOOR).setRegistryName("bamboo_door"),
                 new ItemBlockBase(BamboozledBlocks.SALT_ORE).setRegistryName("salt_ore"),
                 new ItemSaltPile(BamboozledBlocks.SALT_PILE).setRegistryName("salt_pile"),
                 new ItemBlockBase(BamboozledBlocks.SALT_BLOCK).setRegistryName("salt_block"),
@@ -101,6 +106,7 @@ public final class BamboozledRegistry {
 
         Bamboozled.LOGGER.debug("Registering state mappers...");
         ModelLoader.setCustomStateMapper(BamboozledBlocks.BAMBOO, new StateMap.Builder().ignore(BlockBamboo.PROP_AGE).build());
+        ModelLoader.setCustomStateMapper(BamboozledBlocks.BAMBOO_DOOR, new StateMap.Builder().ignore(BlockDoor.POWERED).build());
 
         Bamboozled.LOGGER.debug("Registering item models...");
         ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO, 0, new ModelResourceLocation(BamboozledItems.BAMBOO.getRegistryName(), "inventory"));
@@ -114,6 +120,7 @@ public final class BamboozledRegistry {
         ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_PLANKS_STAIRS, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_PLANKS_STAIRS.getRegistryName(), "facing=east,half=bottom,shape=straight"));
         ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_PLANKS_SLAB, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_PLANKS_SLAB.getRegistryName(), "variant=lower"));
         ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_WALL, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_WALL.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(BamboozledItems.BAMBOO_DOOR, 0, new ModelResourceLocation(BamboozledItems.BAMBOO_DOOR.getRegistryName(), "inventory"));
         ModelLoader.setCustomModelResourceLocation(BamboozledItems.SALT_ORE, 0, new ModelResourceLocation(BamboozledItems.SALT_ORE.getRegistryName(), "normal"));
         ModelLoader.setCustomModelResourceLocation(BamboozledItems.SALT_PILE, 0, new ModelResourceLocation(BamboozledItems.SALT_PILE.getRegistryName(), "inventory"));
         ModelLoader.setCustomModelResourceLocation(BamboozledItems.SALT_BLOCK, 0, new ModelResourceLocation(BamboozledItems.SALT_BLOCK.getRegistryName(), "normal"));
@@ -140,6 +147,7 @@ public final class BamboozledRegistry {
         OreDictionary.registerOre("stairWood", BamboozledItems.BAMBOO_PLANKS_STAIRS);
         OreDictionary.registerOre("slabWood", BamboozledItems.BAMBOO_PLANKS_SLAB);
         OreDictionary.registerOre("wallBamboo", BamboozledItems.BAMBOO_WALL);
+        OreDictionary.registerOre("doorBamboo", BamboozledItems.BAMBOO_DOOR);
         OreDictionary.registerOre("oreSalt", BamboozledItems.SALT_ORE);
         OreDictionary.registerOre("oreHalite", BamboozledItems.SALT_ORE);
         OreDictionary.registerOre("dustSalt", BamboozledItems.SALT_PILE);
