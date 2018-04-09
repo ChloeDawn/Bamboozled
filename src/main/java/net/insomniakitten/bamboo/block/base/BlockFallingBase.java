@@ -62,7 +62,7 @@ public class BlockFallingBase extends BlockFalling {
     @Override
     @Deprecated
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-        List<AxisAlignedBB> boxes = new ArrayList<>();
+        final List<AxisAlignedBB> boxes = new ArrayList<>();
         getCollisionBoxes(state, world, pos, boxes);
         return !boxes.isEmpty() ? boxes.get(0) : FULL_BLOCK_AABB;
     }
@@ -77,7 +77,7 @@ public class BlockFallingBase extends BlockFalling {
     @Deprecated
     public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entity, boolean isActualState) {
         if (!isActualState) state = state.getActualState(world, pos);
-        List<AxisAlignedBB> boxes = new ArrayList<>();
+        final List<AxisAlignedBB> boxes = new ArrayList<>();
         getCollisionBoxes(state, world, pos, boxes);
         for (AxisAlignedBB box : boxes) {
             addCollisionBoxToList(pos, entityBox, collidingBoxes, box);
@@ -94,7 +94,7 @@ public class BlockFallingBase extends BlockFalling {
     @Deprecated
     @Nullable
     public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
-        List<AxisAlignedBB> boxes = new ArrayList<>();
+        final List<AxisAlignedBB> boxes = new ArrayList<>();
         getCollisionBoxes(state, world, pos, boxes);
 
         if (boxes.size() <= 1) {

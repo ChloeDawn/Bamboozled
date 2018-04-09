@@ -27,7 +27,7 @@ public class ItemBlockSlabBase extends ItemBlockBase {
 
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        ItemStack stack = player.getHeldItem(hand);
+        final ItemStack stack = player.getHeldItem(hand);
         if (!stack.isEmpty() && player.canPlayerEdit(pos.offset(facing), facing, stack)) {
             if (tryPlace(player, stack, world, pos, facing)) {
                 return EnumActionResult.SUCCESS;
@@ -43,7 +43,7 @@ public class ItemBlockSlabBase extends ItemBlockBase {
     @Override
     @SideOnly(Side.CLIENT)
     public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side, EntityPlayer player, ItemStack stack) {
-        IBlockState state = world.getBlockState(pos);
+        final IBlockState state = world.getBlockState(pos);
         return state.getBlock() == slab
                 && (side == EnumFacing.UP && slab.isLower(state)
                 || side == EnumFacing.DOWN && slab.isUpper(state))
@@ -52,15 +52,15 @@ public class ItemBlockSlabBase extends ItemBlockBase {
     }
 
     private boolean tryPlace(EntityPlayer player, ItemStack stack, World world, BlockPos pos, EnumFacing side) {
-        IBlockState state = world.getBlockState(pos);
+        final IBlockState state = world.getBlockState(pos);
         if (state.getBlock() != slab) return false;
         if (slab.isDouble(state)) return false;
         if (side == null || side == EnumFacing.UP && slab.isLower(state) || side == EnumFacing.DOWN && slab.isUpper(state)) {
-            IBlockState dSlab = slab.getDouble();
-            AxisAlignedBB aabb = dSlab.getCollisionBoundingBox(world, pos);
+            final IBlockState dSlab = slab.getDouble();
+            final AxisAlignedBB aabb = dSlab.getCollisionBoundingBox(world, pos);
             if (aabb == null) return false;
             if (world.checkNoEntityCollision(aabb.offset(pos)) && world.setBlockState(pos, dSlab)) {
-                SoundType sound = dSlab.getBlock().getSoundType(dSlab, world, pos, player);
+                final SoundType sound = dSlab.getBlock().getSoundType(dSlab, world, pos, player);
                 world.playSound(player, pos, sound.getPlaceSound(), SoundCategory.BLOCKS,
                         (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
                 stack.shrink(1);

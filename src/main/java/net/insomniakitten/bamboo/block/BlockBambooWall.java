@@ -9,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.BlockStateContainer.Builder;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -79,8 +80,8 @@ public final class BlockBambooWall extends BlockBase {
     }
 
     public boolean canConnectTo(IBlockAccess world, BlockPos pos, EnumFacing side) {
-        BlockFaceShape shape = world.getBlockState(pos).getBlockFaceShape(world, pos, side);
-        boolean isValidShape = shape == BlockFaceShape.SOLID || shape == BlockFaceShape.MIDDLE_POLE;
+        final BlockFaceShape shape = world.getBlockState(pos).getBlockFaceShape(world, pos, side);
+        final boolean isValidShape = shape == BlockFaceShape.SOLID || shape == BlockFaceShape.MIDDLE_POLE;
         return isValidShape || world.getBlockState(pos).getBlock() == this;
     }
 
@@ -88,7 +89,7 @@ public final class BlockBambooWall extends BlockBase {
     @Deprecated
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         for (EnumFacing side : EnumFacing.HORIZONTALS) {
-            boolean canConnect = canConnectTo(world, pos.offset(side), side);
+            final boolean canConnect = canConnectTo(world, pos.offset(side), side);
             state = state.withProperty(CONNECTION.get(side), canConnect);
         }
         return state;
@@ -98,17 +99,17 @@ public final class BlockBambooWall extends BlockBase {
     @Deprecated
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        IBlockState actualState = state.getActualState(world, pos);
-        IBlockState actualStateAt = world.getBlockState(pos.offset(side)).getActualState(world, pos.offset(side));
-        boolean matchState = actualState != actualStateAt;
-        boolean matchBlock = actualState.getBlock() != actualStateAt.getBlock();
+        final IBlockState actualState = state.getActualState(world, pos);
+        final IBlockState actualStateAt = world.getBlockState(pos.offset(side)).getActualState(world, pos.offset(side));
+        final boolean matchState = actualState != actualStateAt;
+        final boolean matchBlock = actualState.getBlock() != actualStateAt.getBlock();
         return (side.getAxis().isVertical() ? matchState : matchBlock)
                 && super.shouldSideBeRendered(state, world, pos, side);
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
+        final Builder builder = new Builder(this);
         CONNECTION.values().forEach(builder::add);
         return builder.build();
     }
@@ -140,7 +141,7 @@ public final class BlockBambooWall extends BlockBase {
     @Deprecated
     @Nullable
     public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
-        List<AxisAlignedBB> boxes = new ArrayList<>();
+        final List<AxisAlignedBB> boxes = new ArrayList<>();
         state = state.getActualState(world, pos);
 
         boxes.add(AABB_SELECTION.get(0));
@@ -152,7 +153,7 @@ public final class BlockBambooWall extends BlockBase {
         }
 
         if (boxes.size() <= 1) {
-            AxisAlignedBB box = !boxes.isEmpty() ? boxes.get(0) : FULL_BLOCK_AABB;
+            final AxisAlignedBB box = !boxes.isEmpty() ? boxes.get(0) : FULL_BLOCK_AABB;
             return rayTrace(pos, start, end, box);
         }
 

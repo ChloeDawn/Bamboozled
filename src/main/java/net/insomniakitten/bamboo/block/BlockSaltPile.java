@@ -82,15 +82,23 @@ public final class BlockSaltPile extends BlockBase {
     }
 
     private int getAABBIndex(IBlockState state) {
+        final boolean north = isConnectedAt(state, NORTH);
+        final boolean south = isConnectedAt(state, SOUTH);
+        final boolean east = isConnectedAt(state, EAST);
+        final boolean west = isConnectedAt(state, WEST);
         int index = 0;
-        boolean north = isConnectedAt(state, NORTH);
-        boolean south = isConnectedAt(state, SOUTH);
-        boolean east = isConnectedAt(state, EAST);
-        boolean west = isConnectedAt(state, WEST);
-        if (north || south && !east && !west) index |= 1 << NORTH.getHorizontalIndex();
-        if (south || north && !east && !west) index |= 1 << SOUTH.getHorizontalIndex();
-        if (east || west && !north && !south) index |= 1 << EAST.getHorizontalIndex();
-        if (west || east && !north && !south) index |= 1 << WEST.getHorizontalIndex();
+        if (north || south && !east && !west) {
+            index |= 1 << NORTH.getHorizontalIndex();
+        }
+        if (south || north && !east && !west) {
+            index |= 1 << SOUTH.getHorizontalIndex();
+        }
+        if (east || west && !north && !south) {
+            index |= 1 << EAST.getHorizontalIndex();
+        }
+        if (west || east && !north && !south) {
+            index |= 1 << WEST.getHorizontalIndex();
+        }
         return index;
     }
 
@@ -107,7 +115,7 @@ public final class BlockSaltPile extends BlockBase {
 
     private ConnectionType getAttachPosition(IBlockAccess world, BlockPos pos, EnumFacing direction) {
         pos = pos.offset(direction);
-        IBlockState state = world.getBlockState(pos);
+        final IBlockState state = world.getBlockState(pos);
         if (canConnectTo(world, pos) || (!state.isNormalCube() && canConnectTo(world, pos.down()))) {
             return ConnectionType.SIDE;
         }
@@ -162,7 +170,7 @@ public final class BlockSaltPile extends BlockBase {
     @Override
     public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
         if (saltHurtsUndead && entity instanceof EntityLiving) {
-            EntityLivingBase living = (EntityLivingBase) entity;
+            final EntityLivingBase living = (EntityLivingBase) entity;
             if (living.getCreatureAttribute() == EnumCreatureAttribute.UNDEAD) {
                 if (world.getTotalWorldTime() % 20 == 0) {
                     living.attackEntityFrom(DamageSource.MAGIC, 1);

@@ -96,7 +96,7 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
         prevPosZ = posZ;
 
         if (fallTime++ == 0) {
-            BlockPos poz = new BlockPos(this);
+            final BlockPos poz = new BlockPos(this);
 
             if (world.getBlockState(poz).getBlock() == BamboozledBlocks.SALT_BLOCK) {
                 world.setBlockToAir(poz);
@@ -113,7 +113,7 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
         move(MoverType.SELF, motionX, motionY, motionZ);
 
         if (!world.isRemote) {
-            BlockPos pos = new BlockPos(this);
+            final BlockPos pos = new BlockPos(this);
 
             if (!onGround) {
                 if (fallTime > 100 && !world.isRemote && (pos.getY() < 1 || pos.getY() > 256) || fallTime > 600) {
@@ -125,7 +125,7 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
                     setDead();
                 }
             } else {
-                IBlockState state = world.getBlockState(pos);
+                final IBlockState state = world.getBlockState(pos);
                 if (world.isAirBlock(new BlockPos(posX, posY - 0.01D, posZ))
                         && !(world.getBlockState(pos).getMaterial() == Material.WATER)
                         && BlockFalling.canFallThrough(world.getBlockState(new BlockPos(posX, posY - 0.01D, posZ)))) {

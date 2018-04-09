@@ -52,7 +52,7 @@ public final class BlockSalt extends BlockFallingBase {
     @Override
     public void onEntityWalk(World world, BlockPos pos, Entity entity) {
         if (saltHurtsUndead && entity instanceof EntityLiving) {
-            EntityLivingBase living = (EntityLivingBase) entity;
+            final EntityLivingBase living = (EntityLivingBase) entity;
             if (living.getCreatureAttribute() == EnumCreatureAttribute.UNDEAD) {
                 if (world.getTotalWorldTime() % 20 == 0) {
                     living.attackEntityFrom(DamageSource.MAGIC, 1);
@@ -73,8 +73,8 @@ public final class BlockSalt extends BlockFallingBase {
                     world.spawnEntity(new EntityFallingSaltBlock(world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D));
                 }
             } else {
-                IBlockState state = world.getBlockState(pos);
                 world.setBlockToAir(pos);
+
                 BlockPos target;
 
                 target = pos.down();
@@ -84,7 +84,7 @@ public final class BlockSalt extends BlockFallingBase {
                 }
 
                 if (target.getY() > 0) {
-                    world.setBlockState(target.up(), state);
+                    world.setBlockState(target.up(), world.getBlockState(pos));
                 }
             }
         }

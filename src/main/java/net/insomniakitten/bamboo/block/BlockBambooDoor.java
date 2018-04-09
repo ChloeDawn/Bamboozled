@@ -70,8 +70,9 @@ public final class BlockBambooDoor extends BlockDoor {
     public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
         state = state.getActualState(world, pos);
 
-        boolean lowerHalf = state.getValue(HALF) == EnumDoorHalf.LOWER;
-        Map<EnumFacing, AxisAlignedBB> boxes = lowerHalf ? AABB_LOWER : AABB_UPPER;
+        final  boolean lowerHalf = state.getValue(HALF) == EnumDoorHalf.LOWER;
+        final Map<EnumFacing, AxisAlignedBB> boxes = lowerHalf ? AABB_LOWER : AABB_UPPER;
+
         EnumFacing facing = state.getValue(FACING);
 
         if (state.getValue(OPEN)) {

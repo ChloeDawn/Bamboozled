@@ -16,6 +16,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.BlockStateContainer.Builder;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -109,14 +110,14 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
         if (event.getTarget() == null) return;
         if (event.getTarget().typeOfHit != RayTraceResult.Type.BLOCK) return;
 
-        BlockPos pos = event.getTarget().getBlockPos();
-        EntityPlayer player = event.getPlayer();
-        World world = player.world;
-        IBlockState state = world.getBlockState(pos);
+        final BlockPos pos = event.getTarget().getBlockPos();
+        final EntityPlayer player = event.getPlayer();
+        final World world = player.world;
+        final IBlockState state = world.getBlockState(pos);
 
         if (state.getBlock() != BamboozledBlocks.BAMBOO) return;
 
-        List<AxisAlignedBB> boxes = new LinkedList<>();
+        final List<AxisAlignedBB> boxes = new LinkedList<>();
 
         ((BlockBamboo) state.getBlock()).getCollisionBoxes(
                 state.getActualState(world, pos), world, pos, boxes);
@@ -128,15 +129,15 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
 
     private IBlockState getConnectionsForPos(IBlockState state, IBlockAccess world, BlockPos pos) {
         for (EnumFacing side : PROPS_SIDES.keySet()) {
-            Block block = world.getBlockState(pos.offset(side)).getBlock();
+            final Block block = world.getBlockState(pos.offset(side)).getBlock();
             state = state.withProperty(PROPS_SIDES.get(side), block == this);
         }
         return state;
     }
 
     private IBlockState getLeavesForPos(IBlockState state, BlockPos pos) {
-        int x = pos.getX(), y = pos.getY(), z = pos.getZ();
-        Random rand = new Random(MathHelper.getCoordinateRandom(x, y, z));
+        final int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+        final Random rand = new Random(MathHelper.getCoordinateRandom(x, y, z));
         return state.withProperty(PROP_LEAVES, rand.nextInt(4));
     }
 
@@ -145,7 +146,7 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
             return state.withProperty(PROP_CANOPY, false);
         }
 
-        BlockPos.MutableBlockPos target = new BlockPos.MutableBlockPos(pos);
+        final BlockPos.MutableBlockPos target = new BlockPos.MutableBlockPos(pos);
         int height = 0;
 
         do {
@@ -175,8 +176,8 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
     @Deprecated
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        boolean renderUp = world.getBlockState(pos.up()).getBlock() != this && side == EnumFacing.UP;
-        boolean renderDown = world.getBlockState(pos.down()).getBlock() != this && side == EnumFacing.DOWN;
+        final boolean renderUp = side == EnumFacing.UP && world.getBlockState(pos.up()).getBlock() != this;
+        final boolean renderDown = side == EnumFacing.DOWN && world.getBlockState(pos.down()).getBlock() != this;
         return (renderUp || renderDown) && super.shouldSideBeRendered(state, world, pos, side);
     }
 
@@ -210,19 +211,18 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
 
     @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        IBlockState state = world.getBlockState(pos.down());
-        boolean canSustainPlant = state.getBlock().canSustainPlant(state, world, pos.down(), UP, (BlockSapling) Blocks.SAPLING);
+        final IBlockState state = world.getBlockState(pos.down());
+        final boolean canSustainPlant = state.getBlock().canSustainPlant(state, world, pos.down(), UP, (BlockSapling) Blocks.SAPLING);
         return state.getBlock() == this || canSustainPlant;
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
-        builder.add(PROP_AGE, PROP_CANOPY, PROP_LEAVES);
+        final Builder builder = new Builder(this);
         for (IProperty<?> property : PROPS_SIDES.values()) {
             builder.add(property);
         }
-        return builder.build();
+        return builder.add(PROP_AGE, PROP_CANOPY, PROP_LEAVES).build();
     }
 
     @Override
@@ -260,7 +260,7 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
     @Override
     public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
         if (plantTypeTropical == null) {
-            String name = "Tropical";
+            final String name = "Tropical";
             Bamboozled.LOGGER.debug("Registering new PlantType \"{}\"", name);
             plantTypeTropical = EnumPlantType.getPlantType(name);
         }

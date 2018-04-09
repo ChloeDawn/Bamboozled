@@ -32,14 +32,14 @@ public final class ItemSaltPile extends ItemBlock {
             return new ActionResult<>(EnumActionResult.PASS, player.getHeldItem(hand));
         }
 
-        ItemStack stack = player.getHeldItem(hand);
+        final ItemStack stack = player.getHeldItem(hand);
         if (!player.isCreative()) stack.shrink(1);
 
         player.playSound(SoundEvents.ENTITY_SNOWBALL_THROW, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
         player.getCooldownTracker().setCooldown(this, 10);
 
         if (!world.isRemote) {
-            EntityThrownSaltPile saltPile = new EntityThrownSaltPile(world, player);
+            final EntityThrownSaltPile saltPile = new EntityThrownSaltPile(world, player);
             saltPile.shoot(player, player.rotationPitch, player.rotationYaw, 0.0F, 1.5F, 1.0F);
             world.spawnEntity(saltPile);
         }

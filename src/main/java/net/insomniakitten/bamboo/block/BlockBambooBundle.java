@@ -96,7 +96,7 @@ public final class BlockBambooBundle extends BlockBase {
 
     @Override
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
-        boolean hasSunlight = world.isDaytime() && world.canBlockSeeSky(pos.up());
+        final boolean hasSunlight = world.isDaytime() && world.canBlockSeeSky(pos.up());
         if (isDryingEnabled && !world.isRemote && !isDry(state) && hasSunlight) {
             world.setBlockState(pos, state.cycleProperty(DRIED));
         }
@@ -135,8 +135,8 @@ public final class BlockBambooBundle extends BlockBase {
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        int axis = state.getValue(AXIS).ordinal();
-        int dried = state.getValue(DRIED) << 2;
+        final int axis = state.getValue(AXIS).ordinal();
+        final int dried = state.getValue(DRIED) << 2;
         return axis | dried;
     }
 

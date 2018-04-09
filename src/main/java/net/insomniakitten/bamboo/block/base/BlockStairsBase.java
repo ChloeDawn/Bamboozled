@@ -80,7 +80,7 @@ public class BlockStairsBase extends BlockStairs {
     @Override
     @SideOnly(Side.CLIENT)
     public int getPackedLightmapCoords(IBlockState state, IBlockAccess world, BlockPos pos) {
-        int light = world.getCombinedLight(pos, state.getLightValue(world, pos));
+        final int light = world.getCombinedLight(pos, state.getLightValue(world, pos));
         if (light == 0 && state.getBlock() instanceof BlockSlab) {
             pos = pos.down();
             state = world.getBlockState(pos);

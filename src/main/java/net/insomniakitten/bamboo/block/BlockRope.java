@@ -53,16 +53,16 @@ public final class BlockRope extends BlockBase {
     }
 
     private boolean doFacingsMatch(IBlockState a, IBlockState b) {
-        boolean matchBlock = a.getBlock() == this && b.getBlock() == this;
+        final boolean matchBlock = a.getBlock() == this && b.getBlock() == this;
         return matchBlock && a.getValue(FACING) == b.getValue(FACING);
     }
 
     public boolean canPlaceAt(World world, BlockPos pos, EnumFacing facing) {
         pos = pos.offset(facing.getOpposite());
-        IBlockState state = world.getBlockState(pos);
-        BlockFaceShape shape = state.getBlockFaceShape(world, pos, facing);
-        IBlockState above = world.getBlockState(pos.offset(facing).up());
-        boolean isValidSide = FACING.getAllowedValues().contains(facing);
+        final IBlockState state = world.getBlockState(pos);
+        final BlockFaceShape shape = state.getBlockFaceShape(world, pos, facing);
+        final IBlockState above = world.getBlockState(pos.offset(facing).up());
+        final boolean isValidSide = FACING.getAllowedValues().contains(facing);
         return isValidSide && (above.getBlock() == this || shape == BlockFaceShape.SOLID);
     }
 
@@ -95,7 +95,7 @@ public final class BlockRope extends BlockBase {
     @Deprecated
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        IBlockState offset = world.getBlockState(pos.offset(side));
+        final IBlockState offset = world.getBlockState(pos.offset(side));
         return (offset.getBlock() != this || !doFacingsMatch(state, offset))
                 && super.shouldSideBeRendered(state, world, pos, side);
     }
@@ -123,10 +123,10 @@ public final class BlockRope extends BlockBase {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        ItemStack stack = player.getHeldItem(hand);
+        final ItemStack stack = player.getHeldItem(hand);
         if (!stack.isEmpty() && stack.getItem() == BamboozledItems.ROPE) {
-            Chunk chunk = world.getChunkFromBlockCoords(pos);
-            BlockPos.MutableBlockPos target = new BlockPos.MutableBlockPos(pos);
+            final Chunk chunk = world.getChunkFromBlockCoords(pos);
+            final BlockPos.MutableBlockPos target = new BlockPos.MutableBlockPos(pos);
 
             do {
                 target.move(EnumFacing.DOWN);
@@ -153,8 +153,8 @@ public final class BlockRope extends BlockBase {
 
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        EnumFacing placerFacing = placer.getHorizontalFacing().getOpposite();
-        IBlockState above = world.getBlockState(pos.up());
+        final EnumFacing placerFacing = placer.getHorizontalFacing().getOpposite();
+        final IBlockState above = world.getBlockState(pos.up());
         if (above.getBlock() == this) {
             return withFacing(above.getValue(FACING));
         }

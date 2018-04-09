@@ -50,8 +50,8 @@ public final class BlockSaltOre extends BlockBase {
         if (!entity.onGround || motion >= 0) return;
         if (!(entity instanceof EntityFallingBlock)) return;
 
-        BlockPos pos = new BlockPos(entity);
-        IBlockState state = ((EntityFallingBlock) entity).getBlock();
+        final BlockPos pos = new BlockPos(entity);
+        final IBlockState state = ((EntityFallingBlock) entity).getBlock();
 
         if (ReflectionHelper.getPrivateValue(
                 EntityFallingBlock.class,
@@ -62,8 +62,10 @@ public final class BlockSaltOre extends BlockBase {
         if (!world.mayPlace(state.getBlock(), pos, true, EnumFacing.UP, null)) return;
 
         world.destroyBlock(pos.down(), false);
-        int amount = 4 + world.rand.nextInt(5);
-        ItemStack stack = new ItemStack(BamboozledItems.SALT_PILE, amount);
+
+        final int amount = 4 + world.rand.nextInt(5);
+        final ItemStack stack = new ItemStack(BamboozledItems.SALT_PILE, amount);
+
         Block.spawnAsEntity(world, pos.down(), stack);
     }
 
@@ -75,8 +77,8 @@ public final class BlockSaltOre extends BlockBase {
 
     @Override
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        Random rand = world instanceof World ? ((World) world).rand : new Random();
-        int amount = 4 + rand.nextInt(5) * (Math.max(0, rand.nextInt(fortune + 2) - 1) + 1);
+        final Random rand = world instanceof World ? ((World) world).rand : new Random();
+        final int amount = 4 + rand.nextInt(5) * (Math.max(0, rand.nextInt(fortune + 2) - 1) + 1);
         drops.add(new ItemStack(BamboozledItems.SALT_PILE, amount));
     }
 

@@ -42,7 +42,7 @@ public final class EntityThrownSaltPile extends EntityThrowable {
     protected void onImpact(RayTraceResult result) {
         if (saltHurtsUndead && result.typeOfHit == RayTraceResult.Type.ENTITY) {
             if (result.entityHit instanceof EntityLivingBase) {
-                EntityLivingBase living = (EntityLivingBase) result.entityHit;
+                final EntityLivingBase living = (EntityLivingBase) result.entityHit;
                 if (living.getCreatureAttribute() == EnumCreatureAttribute.UNDEAD) {
                     living.attackEntityFrom(DamageSource.MAGIC, 2);
                 }

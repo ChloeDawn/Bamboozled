@@ -20,26 +20,27 @@ public final class ItemBambooBundle extends ItemSubBlockBase {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
-        BlockBambooBundle bundle = (BlockBambooBundle) BamboozledBlocks.BAMBOO_BUNDLE;
-        if (bundle.isDryingEnabled() || bundle.isDry(stack.getMetadata())) {
+        if (getBambooBundle().isDryingEnabled() || getBambooBundle().isDry(stack.getMetadata())) {
             super.addInformation(stack, world, tooltip, flag);
         }
     }
 
     @Override
     public int getItemBurnTime(ItemStack stack) {
-        BlockBambooBundle bundle = (BlockBambooBundle) BamboozledBlocks.BAMBOO_BUNDLE;
-        return bundle.isDry(stack.getMetadata()) ? 288 : -1;
+        return getBambooBundle().isDry(stack.getMetadata()) ? 288 : -1;
     }
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        BlockBambooBundle bundle = (BlockBambooBundle) BamboozledBlocks.BAMBOO_BUNDLE;
         String name = super.getUnlocalizedName(stack);
-        if (bundle.isDry(stack.getMetadata())) {
+        if (getBambooBundle().isDry(stack.getMetadata())) {
             name += "_dried";
         }
         return name;
+    }
+
+    BlockBambooBundle getBambooBundle() {
+        return (BlockBambooBundle) BamboozledBlocks.BAMBOO_BUNDLE;
     }
 
 }

@@ -19,16 +19,16 @@ public final class GeneratorBamboo {
     @SubscribeEvent
     public static void onChunkPopulation(PopulateChunkEvent.Post event) {
         if (event.getRand().nextInt(6) != 0) return;
-        World world = event.getWorld();
-        Random rand = event.getRand();
-        int x = event.getChunkX() * 16 + 8;
-        int z = event.getChunkZ() * 16 + 8;
-        MutableBlockPos pos = new MutableBlockPos(z, 0, z);
+        final World world = event.getWorld();
+        final Random rand = event.getRand();
+        final int x = event.getChunkX() * 16 + 8;
+        final int z = event.getChunkZ() * 16 + 8;
+        final MutableBlockPos pos = new MutableBlockPos(z, 0, z);
         for (int i = 0; i < 8; ++i) {
             pos.setPos(x + rand.nextInt(5) - rand.nextInt(5), 0, z + rand.nextInt(5) - rand.nextInt(5));
             if (world.getBiome(pos).isHighHumidity()) {
                 getSurface(world, pos);
-                int maxHeight = 2 + rand.nextInt(rand.nextInt(3) + 4);
+                final int maxHeight = 2 + rand.nextInt(rand.nextInt(3) + 4);
                 for (int height = 0; height < maxHeight; ++height) {
                     BlockPos toPlace = pos.move(EnumFacing.UP, 1);
                     if (world.isAirBlock(toPlace) && BamboozledBlocks.BAMBOO.canPlaceBlockAt(world, toPlace)) {

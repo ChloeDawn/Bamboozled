@@ -31,12 +31,15 @@ public final class BoundingBoxes {
         GlStateManager.disableTexture2D();
         GlStateManager.depthMask(false);
 
-        double offsetX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks;
-        double offsetY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks;
-        double offsetZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
+        final double offsetX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks;
+        final double offsetY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks;
+        final double offsetZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
 
         for (AxisAlignedBB box : boxes) {
-            AxisAlignedBB target = box.grow(0.002D).offset(pos).offset(-offsetX, -offsetY, -offsetZ);
+            final AxisAlignedBB target = box
+                    .grow(0.002D)
+                    .offset(pos)
+                    .offset(-offsetX, -offsetY, -offsetZ);
             RenderGlobal.drawSelectionBoundingBox(target, 0.0F, 0.0F, 0.0F, 0.4F);
         }
 
@@ -52,16 +55,16 @@ public final class BoundingBoxes {
     }
 
     public static RayTraceResult rayTrace(List<AxisAlignedBB> boxes, BlockPos pos, Vec3d start, Vec3d end) {
-        List<RayTraceResult> results = new ArrayList<>();
+        final List<RayTraceResult> results = new ArrayList<>();
 
-        double x = pos.getX(), y = pos.getY(), z = pos.getZ();
-        Vec3d a = start.subtract(x, y, z);
-        Vec3d b = end.subtract(x, y, z);
+        final double x = pos.getX(), y = pos.getY(), z = pos.getZ();
+        final Vec3d a = start.subtract(x, y, z);
+        final Vec3d b = end.subtract(x, y, z);
 
         for (AxisAlignedBB box : boxes) {
-            RayTraceResult result = box.calculateIntercept(a, b);
+            final RayTraceResult result = box.calculateIntercept(a, b);
             if (result != null) {
-                Vec3d vec = result.hitVec.addVector(x, y, z);
+                final Vec3d vec = result.hitVec.addVector(x, y, z);
                 results.add(new RayTraceResult(vec, result.sideHit, pos));
             }
         }
@@ -70,7 +73,7 @@ public final class BoundingBoxes {
         double sqrDis = 0.0D;
 
         for (RayTraceResult result : results) {
-            double newSqrDis = result.hitVec.squareDistanceTo(end);
+            final double newSqrDis = result.hitVec.squareDistanceTo(end);
             if (newSqrDis > sqrDis) {
                 ret = result;
                 sqrDis = newSqrDis;

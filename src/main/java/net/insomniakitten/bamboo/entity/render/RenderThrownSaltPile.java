@@ -28,9 +28,9 @@ public final class RenderThrownSaltPile extends Render<EntityThrownSaltPile> {
         GlStateManager.rotate(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(getRotationAngle(), 1.0F, 0.0F, 0.0F);
         GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-        this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-        if (this.renderOutlines) {
+        if (renderOutlines) {
             GlStateManager.enableColorMaterial();
             GlStateManager.enableOutlineMode(this.getTeamColor(entity));
         }

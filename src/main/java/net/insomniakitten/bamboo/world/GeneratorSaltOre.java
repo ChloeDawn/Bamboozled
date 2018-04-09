@@ -22,11 +22,11 @@ public final class GeneratorSaltOre {
 
     @SubscribeEvent
     public static void onChunkPopulation(PopulateChunkEvent.Post event) {
-        int originX = event.getChunkX() << 4;
-        int originZ = event.getChunkZ() << 4;
-        MutableBlockPos pos = new MutableBlockPos(originX, 0, originZ);
-        int x = event.getRand().nextInt(16) + 8;
-        int z = event.getRand().nextInt(16) + 8;
+        final int originX = event.getChunkX() << 4;
+        final int originZ = event.getChunkZ() << 4;
+        final MutableBlockPos pos = new MutableBlockPos(originX, 0, originZ);
+        final int x = event.getRand().nextInt(16) + 8;
+        final int z = event.getRand().nextInt(16) + 8;
         findSurface(event.getWorld(), pos.setPos(originX + x, 0, originZ + z));
         generateCluster(event.getWorld(), event.getRand(), pos);
     }
@@ -43,15 +43,14 @@ public final class GeneratorSaltOre {
 
     private static void generateCluster(World world, Random rand, MutableBlockPos pos) {
         if (!world.getBlockState(pos.up()).getMaterial().isLiquid()) return;
-        MutableBlockPos target = new MutableBlockPos(pos);
+        final MutableBlockPos target = new MutableBlockPos(pos);
         final int size = (rand.nextInt(Math.max(CLUSTER_SIZE - 2, 1)) + 2);
         for (int x = pos.getX() - size; x <= pos.getX() + size; ++x) {
             for (int z = pos.getZ() - size; z <= pos.getZ() + size; ++z) {
-                int rX = x - pos.getX();
-                int rZ = z - pos.getZ();
+                final int rX = x - pos.getX(), rZ = z - pos.getZ();
                 if (((rX * rX) + (rZ * rZ)) <= (size * size)) {
                     for (int y = pos.getY() - 1; y <= pos.getY() + 1; ++y) {
-                        Block block = world.getBlockState(target.setPos(x, y, z)).getBlock();
+                        final Block block = world.getBlockState(target.setPos(x, y, z)).getBlock();
                         if (block == Blocks.DIRT || block == Blocks.CLAY) {
                             world.setBlockState(target, BamboozledBlocks.SALT_ORE.getDefaultState(), 2 | 16);
                         }

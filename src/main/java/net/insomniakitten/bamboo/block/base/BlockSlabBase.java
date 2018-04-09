@@ -78,14 +78,14 @@ public class BlockSlabBase extends BlockBase {
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(int meta) {
-        Variant variant = Variant.VALUES[meta];
+        final Variant variant = Variant.VALUES[meta];
         return getDefaultState().withProperty(VARIANT, variant);
     }
 
     @Deprecated
     @SideOnly(Side.CLIENT)
     public int getPackedLightmapCoords(IBlockState state, IBlockAccess world, BlockPos pos) {
-        int light = world.getCombinedLight(pos, state.getLightValue(world, pos));
+        final int light = world.getCombinedLight(pos, state.getLightValue(world, pos));
         if (light == 0) {
             pos = pos.down();
             state = world.getBlockState(pos);
@@ -98,7 +98,7 @@ public class BlockSlabBase extends BlockBase {
     @Deprecated
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        IBlockState target = world.getBlockState(pos.offset(side));
+        final IBlockState target = world.getBlockState(pos.offset(side));
         if (side.getAxis().isHorizontal()) {
             if (target.getBlock() instanceof BlockSlabBase
                     && target.getPropertyKeys().contains(VARIANT)) {
@@ -106,7 +106,7 @@ public class BlockSlabBase extends BlockBase {
             }
             if (target.getBlock() instanceof BlockSlab
                     && target.getPropertyKeys().contains(BlockSlab.HALF)) {
-                EnumBlockHalf half = target.getValue(BlockSlab.HALF);
+                final EnumBlockHalf half = target.getValue(BlockSlab.HALF);
                 if (state.getValue(VARIANT).doesMatchHalf(half)) return false;
             }
         }
