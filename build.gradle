@@ -1,7 +1,7 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://files.minecraftforge.net/maven' }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
@@ -10,13 +10,13 @@ buildscript {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-def modVersion = '1.1.0'
-def mcfVersion = '1.12.2-14.23.2.2629'
-def mcpMappings = 'snapshot_20180319'
+def modVersion = '1.2.0'
+def mcfVersion = '1.12.2-14.23.2.2654'
+def mcpMappings = 'snapshot_20180409'
 
-def hwylaVersion = '1.8.23-B38_1.12'
-def jeiVersion = '1.12.2:4.8.5.144'
-def ctmVersion = 'MC1.12-0.2.3.12'
+def hwylaVersion = '1.8.25-B40_1.12'
+def jeiVersion = '1.12.2:4.8.5.159'
+def ctmVersion = 'MC1.12-0.3.0.14'
 
 version = "1.12-$modVersion"
 group = 'net.insomniakitten.bamboozled'
@@ -32,9 +32,9 @@ minecraft {
 }
 
 repositories {
-    maven { url 'http://maven.tterrag.com' }
-    maven { url 'http://tehnut.info/maven' }
-    maven { url 'http://dvs1.progwml6.com/files/maven' }
+    maven { url = 'http://maven.tterrag.com' }
+    maven { url = 'http://tehnut.info/maven' }
+    maven { url = 'http://dvs1.progwml6.com/files/maven' }
 }
 
 dependencies {
