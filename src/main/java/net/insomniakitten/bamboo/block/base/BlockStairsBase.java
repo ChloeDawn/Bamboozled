@@ -30,8 +30,6 @@ public class BlockStairsBase extends BlockStairs {
     private final Material material;
     private final MapColor mapColor;
 
-    private String name;
-
     public BlockStairsBase(Material material, MapColor mapColor, SoundType sound, float hardness, float resistance) {
         super(Blocks.STONE.getDefaultState());
         setHardness(hardness);
@@ -60,11 +58,7 @@ public class BlockStairsBase extends BlockStairs {
 
     @Override
     public final String getUnlocalizedName() {
-        if (name == null) {
-            name = super.getUnlocalizedName()
-                    .replace("tile.", "block.");
-        }
-        return name;
+        return super.getUnlocalizedName().replace("tile.", "block.");
     }
 
     @Override

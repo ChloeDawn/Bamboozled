@@ -26,7 +26,6 @@ public class BlockBase extends Block {
 
     private boolean fullBlock = true;
     private boolean opaqueBlock = true;
-    private String name;
 
     public BlockBase(Material material, MapColor mapColor, SoundType sound, float hardness, float resistance) {
         super(material, mapColor);
@@ -116,11 +115,7 @@ public class BlockBase extends Block {
 
     @Override
     public final String getUnlocalizedName() {
-        if (name == null) {
-            name = super.getUnlocalizedName()
-                    .replace("tile.", "block.");
-        }
-        return name;
+        return super.getUnlocalizedName().replace("tile.", "block.");
     }
 
     @Override

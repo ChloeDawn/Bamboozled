@@ -28,7 +28,6 @@ public class BlockFallingBase extends BlockFalling {
     private final MapColor mapColor;
     private boolean fullBlock = true;
     private boolean opaqueBlock = true;
-    private String name;
 
     public BlockFallingBase(Material material, MapColor mapColor, SoundType sound, float hardness, float resistance) {
         super(material);
@@ -113,11 +112,7 @@ public class BlockFallingBase extends BlockFalling {
 
     @Override
     public final String getUnlocalizedName() {
-        if (name == null) {
-            name = super.getUnlocalizedName()
-                    .replace("tile.", "block.");
-        }
-        return name;
+        return super.getUnlocalizedName().replace("tile.", "block.");
     }
 
     @Override
