@@ -1,7 +1,6 @@
 package net.insomniakitten.bamboo;
 
 import net.insomniakitten.bamboo.event.BambooRenderEvents;
-import net.insomniakitten.bamboo.event.SlabInteractionEvents;
 import net.insomniakitten.bamboo.world.GeneratorBamboo;
 import net.insomniakitten.bamboo.world.GeneratorSaltOre;
 import net.minecraft.creativetab.CreativeTabs;
@@ -48,9 +47,6 @@ public final class Bamboozled {
         }
         if (BamboozledConfig.WORLD.generateSaltOre) {
             MinecraftForge.EVENT_BUS.register(GeneratorSaltOre.class);
-        }
-        if (BamboozledConfig.GENERAL.advancedSlabInteraction) {
-            MinecraftForge.EVENT_BUS.register(SlabInteractionEvents.class);
         }
         if (BamboozledConfig.GENERAL.fancyBamboo) {
             MinecraftForge.EVENT_BUS.register(BambooRenderEvents.class);

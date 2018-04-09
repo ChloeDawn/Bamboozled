@@ -66,11 +66,6 @@ public final class BamboozledConfig {
         @Config.RequiresMcRestart
         public boolean throwRequiresSneaking = false;
 
-        @Config.Name("advanced_slab_interaction")
-        @Config.Comment("Should slabs be breakable individually when they are a double slab?")
-        @Config.RequiresMcRestart
-        public boolean advancedSlabInteraction = true;
-
         @Config.Name("fancy_bamboo")
         @Config.Comment({ "Should the bounding box of bamboo be fancy and detailed?",
                           "When false, collision logic will also be simplified" })
