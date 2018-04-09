@@ -1,6 +1,6 @@
 package net.insomniakitten.bamboo;
 
-import net.insomniakitten.bamboo.event.BambooRenderEvents;
+import net.insomniakitten.bamboo.block.BlockBamboo;
 import net.insomniakitten.bamboo.world.GeneratorBamboo;
 import net.insomniakitten.bamboo.world.GeneratorSaltOre;
 import net.minecraft.creativetab.CreativeTabs;
@@ -49,7 +49,7 @@ public final class Bamboozled {
             MinecraftForge.EVENT_BUS.register(GeneratorSaltOre.class);
         }
         if (BamboozledConfig.GENERAL.fancyBamboo) {
-            MinecraftForge.EVENT_BUS.register(BambooRenderEvents.class);
+            MinecraftForge.EVENT_BUS.register(BlockBamboo.class);
         }
     }
 

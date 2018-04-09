@@ -3,8 +3,10 @@ package net.insomniakitten.bamboo.block;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.insomniakitten.bamboo.Bamboozled;
+import net.insomniakitten.bamboo.BamboozledBlocks;
 import net.insomniakitten.bamboo.BamboozledConfig;
 import net.insomniakitten.bamboo.block.base.BlockBase;
+import net.insomniakitten.bamboo.util.BoundingBoxes;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.block.SoundType;
@@ -15,19 +17,24 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -94,6 +101,29 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
         setFullBlock(false);
         setOpaqueBlock(false);
         setTickRandomly(true);
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public static void onDrawBlockHighlight(DrawBlockHighlightEvent event) {
+        if (event.getTarget() == null) return;
+        if (event.getTarget().typeOfHit != RayTraceResult.Type.BLOCK) return;
+
+        BlockPos pos = event.getTarget().getBlockPos();
+        EntityPlayer player = event.getPlayer();
+        World world = player.world;
+        IBlockState state = world.getBlockState(pos);
+
+        if (state.getBlock() != BamboozledBlocks.BAMBOO) return;
+
+        List<AxisAlignedBB> boxes = new LinkedList<>();
+
+        ((BlockBamboo) state.getBlock()).getCollisionBoxes(
+                state.getActualState(world, pos), world, pos, boxes);
+
+        BoundingBoxes.renderAt(boxes, player, pos, event.getPartialTicks());
+
+        event.setCanceled(true);
     }
 
     private IBlockState getConnectionsForPos(IBlockState state, IBlockAccess world, BlockPos pos) {
