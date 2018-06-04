@@ -16,7 +16,6 @@ import net.minecraft.world.World;
 import java.util.Objects;
 
 public final class ItemSaltPile extends ItemBlock {
-
     private final boolean throwableSaltPiles;
     private final boolean throwRequiresSneaking;
 
@@ -48,5 +47,4 @@ public final class ItemSaltPile extends ItemBlock {
 
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
-
 }

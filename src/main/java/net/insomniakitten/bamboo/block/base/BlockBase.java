@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockBase extends Block {
-
     private boolean fullBlock = true;
     private boolean opaqueBlock = true;
 
@@ -128,5 +127,4 @@ public class BlockBase extends Block {
     public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
         return opaqueBlock ? 255 : 0;
     }
-
 }

@@ -15,7 +15,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public final class RenderThrownSaltPile extends Render<EntityThrownSaltPile> {
-
     public RenderThrownSaltPile(RenderManager manager) {
         super(manager);
     }
@@ -61,5 +60,4 @@ public final class RenderThrownSaltPile extends Render<EntityThrownSaltPile> {
         final float viewX = renderManager.playerViewX;
         return (float) (thirdPerson == 2 ? -1 : 1) * viewX;
     }
-
 }

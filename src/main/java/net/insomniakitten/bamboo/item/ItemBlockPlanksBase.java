@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
 public class ItemBlockPlanksBase extends ItemSubBlockBase {
-
     public ItemBlockPlanksBase(Block block) {
         super(block);
     }
@@ -17,5 +16,4 @@ public class ItemBlockPlanksBase extends ItemSubBlockBase {
         }
         return name;
     }
-
 }

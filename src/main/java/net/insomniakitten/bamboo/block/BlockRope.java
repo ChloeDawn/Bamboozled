@@ -31,7 +31,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 public final class BlockRope extends BlockBase {
-
     private static final PropertyDirection FACING = PropertyDirection.create("facing", f -> f != EnumFacing.UP);
 
     private static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB_ROPE = ImmutableMap.of(
@@ -193,5 +192,4 @@ public final class BlockRope extends BlockBase {
     public EnumPushReaction getMobilityFlag(IBlockState state) {
         return EnumPushReaction.DESTROY;
     }
-
 }

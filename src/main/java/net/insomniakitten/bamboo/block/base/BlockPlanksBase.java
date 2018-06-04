@@ -21,7 +21,6 @@ import net.minecraft.world.World;
 import java.util.Locale;
 
 public class BlockPlanksBase extends BlockBase {
-
     private static final PropertyEnum<Orientation> ORIENTATION = PropertyEnum.create("orientation", Orientation.class);
 
     public BlockPlanksBase() {
@@ -72,7 +71,8 @@ public class BlockPlanksBase extends BlockBase {
     }
 
     private enum Orientation implements IStringSerializable {
-        HORIZONTAL, VERTICAL;
+        HORIZONTAL,
+        VERTICAL;
 
         private static final Orientation[] VALUES = values();
 
@@ -81,5 +81,4 @@ public class BlockPlanksBase extends BlockBase {
             return name().toLowerCase(Locale.ROOT);
         }
     }
-
 }

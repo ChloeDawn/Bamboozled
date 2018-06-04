@@ -26,7 +26,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Random;
 
 public class BlockStairsBase extends BlockStairs {
-
     private final Material material;
     private final MapColor mapColor;
 
@@ -114,7 +113,7 @@ public class BlockStairsBase extends BlockStairs {
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
-        return FULL_BLOCK_AABB;
+        return FULL_BLOCK_AABB.offset(pos);
     }
 
     @Override
@@ -166,5 +165,4 @@ public class BlockStairsBase extends BlockStairs {
     public MapColor getMapColor(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
         return mapColor;
     }
-
 }

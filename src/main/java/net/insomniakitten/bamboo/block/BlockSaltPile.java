@@ -37,7 +37,6 @@ import static net.minecraft.util.EnumFacing.SOUTH;
 import static net.minecraft.util.EnumFacing.WEST;
 
 public final class BlockSaltPile extends BlockBase {
-
     public static final ImmutableMap<EnumFacing, PropertyEnum<ConnectionType>> CONNECTION = ImmutableMap.of(
             NORTH, PropertyEnum.create("north", ConnectionType.class),
             SOUTH, PropertyEnum.create("south", ConnectionType.class),
@@ -198,11 +197,12 @@ public final class BlockSaltPile extends BlockBase {
     public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entity, boolean isActualState) {}
 
     public enum ConnectionType implements IStringSerializable {
-        UP, SIDE, NONE;
+        UP,
+        SIDE,
+        NONE;
 
         public String getName() {
             return name().toLowerCase(Locale.ROOT);
         }
     }
-
 }

@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockFallingBase extends BlockFalling {
-
     private final MapColor mapColor;
     private boolean fullBlock = true;
     private boolean opaqueBlock = true;
@@ -137,5 +136,4 @@ public class BlockFallingBase extends BlockFalling {
     public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
         boxes.add(FULL_BLOCK_AABB);
     }
-
 }

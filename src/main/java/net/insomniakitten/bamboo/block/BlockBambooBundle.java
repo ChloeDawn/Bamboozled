@@ -27,7 +27,6 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public final class BlockBambooBundle extends BlockBase {
-
     private static final PropertyEnum<EnumFacing.Axis> AXIS = PropertyEnum.create("axis", EnumFacing.Axis.class);
     private static final PropertyInteger DRIED = PropertyInteger.create("dried", 0, 3);
 
@@ -139,5 +138,4 @@ public final class BlockBambooBundle extends BlockBase {
         final int dried = state.getValue(DRIED) << 2;
         return axis | dried;
     }
-
 }

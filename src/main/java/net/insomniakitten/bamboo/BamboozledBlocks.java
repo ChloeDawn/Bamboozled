@@ -6,7 +6,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @GameRegistry.ObjectHolder(Bamboozled.ID)
 public final class BamboozledBlocks {
-
     public static final Block BAMBOO = Blocks.AIR;
     public static final Block BAMBOO_BUNDLE = Blocks.AIR;
 
@@ -27,5 +26,4 @@ public final class BamboozledBlocks {
     public static final Block ROPE = Blocks.AIR;
 
     private BamboozledBlocks() {}
-
 }

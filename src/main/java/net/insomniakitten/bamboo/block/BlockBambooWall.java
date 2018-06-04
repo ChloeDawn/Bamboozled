@@ -33,7 +33,6 @@ import static net.minecraft.util.EnumFacing.UP;
 import static net.minecraft.util.EnumFacing.WEST;
 
 public final class BlockBambooWall extends BlockBase {
-
     private static final ImmutableList<AxisAlignedBB> AABB_COLLISION = ImmutableList.of(
             new AxisAlignedBB(0.375D, 0.0D, 0.375D, 0.625D, 1.5D, 0.625D),
             new AxisAlignedBB(0.375D, 0.0D, 0.375D, 0.625D, 1.5D, 1.0D),
@@ -159,5 +158,4 @@ public final class BlockBambooWall extends BlockBase {
 
         return BoundingBoxes.rayTrace(boxes, pos, start, end);
     }
-
 }

@@ -26,7 +26,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Random;
 
 public final class BlockSaltOre extends BlockBase {
-
     public BlockSaltOre() {
         super(Material.ROCK, MapColor.SNOW, SoundType.STONE, 1.5F, 17.5F);
         setOpaqueBlock(false);
@@ -91,5 +90,4 @@ public final class BlockSaltOre extends BlockBase {
     private boolean isFancyGraphics() {
         return !Blocks.LEAVES.isOpaqueCube(Blocks.LEAVES.getDefaultState());
     }
-
 }

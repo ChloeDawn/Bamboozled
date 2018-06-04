@@ -14,7 +14,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 public class ItemBlockBase extends ItemBlock {
-
     public ItemBlockBase(Block block) {
         super(block);
     }
@@ -33,5 +32,4 @@ public class ItemBlockBase extends ItemBlock {
             tooltip.add(I18n.format(getUnlocalizedName(stack) + ".desc" + i));
         }
     }
-
 }

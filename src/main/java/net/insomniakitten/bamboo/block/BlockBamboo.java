@@ -47,7 +47,6 @@ import static net.minecraft.util.EnumFacing.UP;
 import static net.minecraft.util.EnumFacing.WEST;
 
 public final class BlockBamboo extends BlockBase implements IPlantable {
-
     public static final PropertyInteger PROP_AGE = PropertyInteger.create("age", 0, 15);
     public static final PropertyBool PROP_CANOPY = PropertyBool.create("canopy");
     public static final PropertyInteger PROP_LEAVES = PropertyInteger.create("leaves", 0, 3);
@@ -271,5 +270,4 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
     public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
         return world.getBlockState(pos);
     }
-
 }

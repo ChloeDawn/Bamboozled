@@ -17,7 +17,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemBlockSlabBase extends ItemBlockBase {
-
     private final BlockSlabBase slab;
 
     public ItemBlockSlabBase(Block slab) {
@@ -69,5 +68,4 @@ public class ItemBlockSlabBase extends ItemBlockBase {
         }
         return false;
     }
-
 }

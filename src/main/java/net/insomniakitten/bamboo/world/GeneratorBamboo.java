@@ -13,7 +13,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.Random;
 
 public final class GeneratorBamboo {
-
     private GeneratorBamboo() {}
 
     @SubscribeEvent
@@ -51,5 +50,4 @@ public final class GeneratorBamboo {
                 || target.getBlock().isFoliage(world, pos)
                 || target.getBlock().isWood(world, pos)));
     }
-
 }

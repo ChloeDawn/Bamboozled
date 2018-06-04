@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 
 public final class EntityThrownSaltPile extends EntityThrowable {
-
     public static final EntityEntryBuilder<Entity> ENTRY = EntityEntryBuilder.create()
             .entity(EntityThrownSaltPile.class)
             .id(Bamboozled.ID + ":thrown_salt_pile", 1)
@@ -49,5 +48,4 @@ public final class EntityThrownSaltPile extends EntityThrowable {
             }
         }
     }
-
 }

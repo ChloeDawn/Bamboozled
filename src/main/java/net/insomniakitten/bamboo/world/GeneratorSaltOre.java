@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -15,20 +16,19 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.Random;
 
 public final class GeneratorSaltOre {
-
     private static final int CLUSTER_SIZE = BamboozledConfig.WORLD.saltClusterSize;
 
     private GeneratorSaltOre() {}
 
     @SubscribeEvent
     public static void onChunkPopulation(PopulateChunkEvent.Post event) {
-        final int originX = event.getChunkX() << 4;
-        final int originZ = event.getChunkZ() << 4;
-        final MutableBlockPos pos = new MutableBlockPos(originX, 0, originZ);
-        final int x = event.getRand().nextInt(16) + 8;
-        final int z = event.getRand().nextInt(16) + 8;
-        findSurface(event.getWorld(), pos.setPos(originX + x, 0, originZ + z));
-        generateCluster(event.getWorld(), event.getRand(), pos);
+        final int x = event.getChunkX() << 4;
+        final int z = event.getChunkZ() << 4;
+        final MutableBlockPos pos = new MutableBlockPos(x, 0, z);
+        final int randX = event.getRand().nextInt(16) + 8;
+        final int randZ = event.getRand().nextInt(16) + 8;
+        findSurface(event.getWorld(), pos.setPos(x + randX, 0, z + randZ));
+        generateCluster(event.getWorld(), event.getRand(), pos.toImmutable());
     }
 
     private static void findSurface(World world, final MutableBlockPos pos) {
@@ -37,11 +37,10 @@ public final class GeneratorSaltOre {
         pos.setY(world.getHeight(pos.getX(), pos.getZ()));
         do {
             target = chunk.getBlockState(pos.move(EnumFacing.DOWN));
-        } while (!world.isOutsideBuildHeight(pos)
-                && target.getMaterial().isReplaceable());
+        } while (!world.isOutsideBuildHeight(pos) && target.getMaterial().isReplaceable());
     }
 
-    private static void generateCluster(World world, Random rand, MutableBlockPos pos) {
+    private static void generateCluster(World world, Random rand, BlockPos pos) {
         if (!world.getBlockState(pos.up()).getMaterial().isLiquid()) return;
         final MutableBlockPos target = new MutableBlockPos(pos);
         final int size = (rand.nextInt(Math.max(CLUSTER_SIZE - 2, 1)) + 2);
@@ -59,5 +58,4 @@ public final class GeneratorSaltOre {
             }
         }
     }
-
 }

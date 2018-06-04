@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.List;
 
 public final class BoundingBoxes {
-
     private BoundingBoxes() {}
 
     @SideOnly(Side.CLIENT)
@@ -82,5 +81,4 @@ public final class BoundingBoxes {
 
         return ret;
     }
-
 }

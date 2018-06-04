@@ -9,12 +9,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
 public class ItemBlockDoorBase extends ItemDoor {
+    private final Block doorBlock;
 
-    private final Block block;
-
-    public ItemBlockDoorBase(Block block) {
-        super(block);
-        this.block = block;
+    public ItemBlockDoorBase(Block doorBlock) {
+        super(doorBlock);
+        this.doorBlock = doorBlock;
     }
 
     @Override
@@ -24,12 +23,12 @@ public class ItemBlockDoorBase extends ItemDoor {
 
     @Override
     public String getUnlocalizedName() {
-        return block.getUnlocalizedName();
+        return doorBlock.getUnlocalizedName();
     }
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        return block.getUnlocalizedName();
+        return doorBlock.getUnlocalizedName();
     }
 
     @Override
@@ -39,7 +38,6 @@ public class ItemBlockDoorBase extends ItemDoor {
 
     @Override
     public CreativeTabs getCreativeTab() {
-        return block.getCreativeTabToDisplayOn();
+        return doorBlock.getCreativeTabToDisplayOn();
     }
-
 }

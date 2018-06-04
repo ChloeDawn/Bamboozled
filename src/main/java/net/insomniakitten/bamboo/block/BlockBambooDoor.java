@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Random;
 
 public final class BlockBambooDoor extends BlockDoor {
-
     protected static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB_LOWER, AABB_UPPER;
 
     static {
@@ -70,32 +69,16 @@ public final class BlockBambooDoor extends BlockDoor {
     public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
         state = state.getActualState(world, pos);
 
-        final  boolean lowerHalf = state.getValue(HALF) == EnumDoorHalf.LOWER;
-        final Map<EnumFacing, AxisAlignedBB> boxes = lowerHalf ? AABB_LOWER : AABB_UPPER;
+        final boolean open = state.getValue(OPEN);
+        final boolean left = state.getValue(HINGE) == EnumHingePosition.LEFT;
+        final boolean lower = state.getValue(HALF) == EnumDoorHalf.LOWER;
 
         EnumFacing facing = state.getValue(FACING);
 
-        if (state.getValue(OPEN)) {
-            boolean rightHinge = state.getValue(HINGE) == EnumHingePosition.RIGHT;
+        if (open) facing = facing.rotateYCCW();
+        if (left && open) facing = facing.getOpposite();
 
-            switch (facing) {
-                default:
-                case EAST:
-                    facing = rightHinge ? EnumFacing.NORTH : EnumFacing.SOUTH;
-                    break;
-                case SOUTH:
-                    facing = rightHinge ? EnumFacing.EAST : EnumFacing.WEST;
-                    break;
-                case WEST:
-                    facing = rightHinge ? EnumFacing.SOUTH : EnumFacing.NORTH;
-                    break;
-                case NORTH:
-                    facing = rightHinge ? EnumFacing.WEST : EnumFacing.EAST;
-                    break;
-            }
-        }
-
-        return boxes.get(facing).offset(pos);
+        return (lower ? AABB_LOWER : AABB_UPPER).get(facing).offset(pos);
     }
 
     @Override
@@ -112,6 +95,5 @@ public final class BlockBambooDoor extends BlockDoor {
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         return new ItemStack(BamboozledItems.BAMBOO_DOOR);
     }
-
 }
 

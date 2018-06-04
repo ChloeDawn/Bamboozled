@@ -24,7 +24,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Random;
 
 public final class BlockSalt extends BlockFallingBase {
-
     private final boolean dropBlock;
     private final boolean saltHurtsUndead;
 
@@ -70,16 +69,17 @@ public final class BlockSalt extends BlockFallingBase {
         if ((world.isAirBlock(pos.down()) || canFallThrough(world.getBlockState(pos.down()))) && pos.getY() >= 0) {
             if (!fallInstantly && world.isAreaLoaded(pos.add(-32, -32, -32), pos.add(32, 32, 32))) {
                 if (!world.isRemote) {
-                    world.spawnEntity(new EntityFallingSaltBlock(world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D));
+                    final double x = pos.getX() + 0.5D;
+                    final double y = pos.getY();
+                    final double z = pos.getZ() + 0.5D;
+                    world.spawnEntity(new EntityFallingSaltBlock(world, x, y, z));
                 }
             } else {
                 world.setBlockToAir(pos);
 
-                BlockPos target;
+                BlockPos target = pos.down();
 
-                target = pos.down();
-
-                while ((world.isAirBlock(target) || canFallThrough(world.getBlockState(target))) && target.getY() > 0) {
+                while (target.getY() > 0 && (world.isAirBlock(target) || canFallThrough(world.getBlockState(target)))) {
                     target = target.down();
                 }
 
@@ -89,5 +89,4 @@ public final class BlockSalt extends BlockFallingBase {
             }
         }
     }
-
 }

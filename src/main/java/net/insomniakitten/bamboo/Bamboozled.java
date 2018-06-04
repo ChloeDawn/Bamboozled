@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.LogManager;
@@ -16,15 +15,11 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Bamboozled.ID, name = Bamboozled.NAME, version = Bamboozled.VERSION)
 public final class Bamboozled {
-
     public static final String ID = "bamboozled";
     public static final String NAME = "Bamboozled";
     public static final String VERSION = "%VERSION%";
 
     public static final Logger LOGGER = LogManager.getLogger(ID);
-
-    @GameRegistry.ItemStackHolder(ID + ":bamboo")
-    public static final ItemStack ICON = ItemStack.EMPTY;
 
     public static final CreativeTabs TAB = new CreativeTabs(ID) {
         @Override
@@ -36,7 +31,7 @@ public final class Bamboozled {
         @Override
         @SideOnly(Side.CLIENT)
         public ItemStack getTabIconItem() {
-            return ICON;
+            return new ItemStack(BamboozledItems.BAMBOO);
         }
     };
 
@@ -52,5 +47,4 @@ public final class Bamboozled {
             MinecraftForge.EVENT_BUS.register(BlockBamboo.class);
         }
     }
-
 }

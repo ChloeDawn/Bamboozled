@@ -12,7 +12,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 public class ItemBase extends Item {
-
     public ItemBase() {
         setCreativeTab(Bamboozled.TAB);
     }
@@ -31,5 +30,4 @@ public class ItemBase extends Item {
             tooltip.add(I18n.format(getUnlocalizedName(stack) + ".desc" + i));
         }
     }
-
 }

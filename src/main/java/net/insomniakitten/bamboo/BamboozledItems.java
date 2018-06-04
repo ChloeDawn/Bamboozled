@@ -6,7 +6,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @GameRegistry.ObjectHolder(Bamboozled.ID)
 public final class BamboozledItems {
-
     public static final Item BAMBOO = Items.AIR;
     public static final Item BAMBOO_DRIED = Items.AIR;
     public static final Item BAMBOO_BUNDLE = Items.AIR;
@@ -28,5 +27,4 @@ public final class BamboozledItems {
     public static final Item ROPE = Items.AIR;
 
     private BamboozledItems() {}
-
 }

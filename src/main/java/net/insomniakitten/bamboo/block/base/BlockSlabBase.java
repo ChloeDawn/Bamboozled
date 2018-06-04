@@ -27,7 +27,6 @@ import java.util.Random;
 import java.util.function.Predicate;
 
 public class BlockSlabBase extends BlockBase {
-
     public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
 
     public BlockSlabBase(Material material, MapColor mapColor, SoundType sound, float hardness, float resistance) {
@@ -215,5 +214,4 @@ public class BlockSlabBase extends BlockBase {
             return name().toLowerCase(Locale.ROOT);
         }
     }
-
 }

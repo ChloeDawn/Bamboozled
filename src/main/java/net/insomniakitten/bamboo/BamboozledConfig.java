@@ -1,16 +1,18 @@
 package net.insomniakitten.bamboo;
 
 import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.Config.Comment;
+import net.minecraftforge.common.config.Config.Name;
+import net.minecraftforge.common.config.Config.RequiresMcRestart;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@EventBusSubscriber(modid = Bamboozled.ID)
 @Config(modid = Bamboozled.ID, name = Bamboozled.ID, category = "")
-@Mod.EventBusSubscriber(modid = Bamboozled.ID)
 public final class BamboozledConfig {
-
     public static final Client CLIENT = new Client();
     public static final General GENERAL = new General();
     public static final World WORLD = new World();
@@ -30,68 +32,67 @@ public final class BamboozledConfig {
     }
 
     public static final class Client {
-        @Config.Name("force_fancy_salt_ore")
-        @Config.Comment({ "Should halite always render as a translucent block?",
-                          "If false, halite will render solid on Fast graphics." })
+        @Name("force_fancy_salt_ore")
+        @Comment({ "Should halite always render as a translucent block?",
+                   "If false, halite will render solid on Fast graphics." })
         public boolean forceFancySaltOre = false;
 
         private Client() {}
     }
 
     public static final class General {
-        @Config.Name("in_world_bamboo_drying")
-        @Config.Comment("Should bundles of bamboo dry out over time when placed outside under the sun?")
-        @Config.RequiresMcRestart
+        @Name("in_world_bamboo_drying")
+        @Comment("Should bundles of bamboo dry out over time when placed outside under the sun?")
+        @RequiresMcRestart
         public boolean inWorldBambooDrying = true;
 
-        @Config.Name("salt_block_drops_itself")
-        @Config.Comment("Should salt blocks drop themselves when broken? If false, they will drop 9 salt piles")
-        @Config.RequiresMcRestart
+        @Name("salt_block_drops_itself")
+        @Comment("Should salt blocks drop themselves when broken? If false, they will drop 9 salt piles")
+        @RequiresMcRestart
         public boolean saltBlockDropsItself = false;
 
-        @Config.Name("salt_hurts_undead")
-        @Config.Comment("Should salt hurt undead mobs that walk on it?")
-        @Config.RequiresMcRestart
+        @Name("salt_hurts_undead")
+        @Comment("Should salt hurt undead mobs that walk on it?")
+        @RequiresMcRestart
         public boolean saltHurtsUndead = true;
 
-        @Config.Name("throwable_salt_piles")
-        @Config.Comment({ "Should piles of salt be throwable?",
-                          "If \"salt_hurts_undead\" is enabled, thrown salt will also deal damage" })
-        @Config.RequiresMcRestart
+        @Name("throwable_salt_piles")
+        @Comment({ "Should piles of salt be throwable?",
+                   "If \"salt_hurts_undead\" is enabled, thrown salt will also deal damage" })
+        @RequiresMcRestart
         public boolean throwableSaltPiles = true;
 
-        @Config.Name("throw_requires_sneaking")
-        @Config.Comment({ "Should sneaking be required to throw salt piles?",
-                          "This config is unused if \"throwable_salt_piles\" is disabled" })
-        @Config.RequiresMcRestart
+        @Name("throw_requires_sneaking")
+        @Comment({ "Should sneaking be required to throw salt piles?",
+                   "This config is unused if \"throwable_salt_piles\" is disabled" })
+        @RequiresMcRestart
         public boolean throwRequiresSneaking = false;
 
-        @Config.Name("fancy_bamboo")
-        @Config.Comment({ "Should the bounding box of bamboo be fancy and detailed?",
-                          "When false, collision logic will also be simplified" })
-        @Config.RequiresMcRestart
+        @Name("fancy_bamboo")
+        @Comment({ "Should the bounding box of bamboo be fancy and detailed?",
+                   "When false, collision logic will also be simplified" })
+        @RequiresMcRestart
         public boolean fancyBamboo = true;
 
         private General() {}
     }
 
     public static final class World {
-        @Config.Name("generate_bamboo")
-        @Config.Comment("Should bamboo stalks be generated in tropical biomes?")
-        @Config.RequiresMcRestart
+        @Name("generate_bamboo")
+        @Comment("Should bamboo stalks be generated in tropical biomes?")
+        @RequiresMcRestart
         public boolean generateBamboo = true;
 
-        @Config.Name("generate_salt_ore")
-        @Config.Comment("Should halite clusters be generated underground?")
-        @Config.RequiresMcRestart
+        @Name("generate_salt_ore")
+        @Comment("Should halite clusters be generated underground?")
+        @RequiresMcRestart
         public boolean generateSaltOre = true;
 
-        @Config.Name("salt_ore_cluster_size")
-        @Config.Comment("The size of generated halite clusters")
-        @Config.RequiresMcRestart
+        @Name("salt_ore_cluster_size")
+        @Comment("The size of generated halite clusters")
+        @RequiresMcRestart
         public int saltClusterSize = 8;
 
         private World() {}
     }
-
 }

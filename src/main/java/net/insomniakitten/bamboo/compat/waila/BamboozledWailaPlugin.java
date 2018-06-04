@@ -18,7 +18,6 @@ import java.util.List;
 
 @WailaPlugin
 public final class BamboozledWailaPlugin implements IWailaPlugin {
-
     public static final IWailaDataProvider BAMBOO_BUNDLE_PROVIDER = new IWailaDataProvider() {
         @Override
         @SideOnly(Side.CLIENT)
@@ -40,5 +39,4 @@ public final class BamboozledWailaPlugin implements IWailaPlugin {
         Bamboozled.LOGGER.debug("Registering Hwyla data providers...");
         registrar.registerBodyProvider(BAMBOO_BUNDLE_PROVIDER, BlockBambooBundle.class);
     }
-
 }

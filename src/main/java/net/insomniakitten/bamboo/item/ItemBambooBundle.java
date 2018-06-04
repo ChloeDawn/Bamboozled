@@ -12,7 +12,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 public final class ItemBambooBundle extends ItemSubBlockBase {
-
     public ItemBambooBundle(Block block) {
         super(block);
     }
@@ -42,5 +41,4 @@ public final class ItemBambooBundle extends ItemSubBlockBase {
     BlockBambooBundle getBambooBundle() {
         return (BlockBambooBundle) BamboozledBlocks.BAMBOO_BUNDLE;
     }
-
 }
