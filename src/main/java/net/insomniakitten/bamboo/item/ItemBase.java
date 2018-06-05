@@ -12,10 +12,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 public class ItemBase extends Item {
-    public ItemBase() {
-        setCreativeTab(Bamboozled.TAB);
-    }
-
     @Override
     public Item setUnlocalizedName(String name) {
         return super.setUnlocalizedName(Bamboozled.ID + "." + name);

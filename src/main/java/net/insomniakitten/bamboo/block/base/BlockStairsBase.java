@@ -1,5 +1,6 @@
 package net.insomniakitten.bamboo.block.base;
 
+import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
@@ -34,7 +35,6 @@ public class BlockStairsBase extends BlockStairs {
         setHardness(hardness);
         setResistance(resistance);
         setSoundType(sound);
-        setCreativeTab(Bamboozled.TAB);
         useNeighborBrightness = true;
         this.material = material;
         this.mapColor = mapColor;
@@ -79,7 +79,7 @@ public class BlockStairsBase extends BlockStairs {
     @Override
     @SideOnly(Side.CLIENT)
     public int getPackedLightmapCoords(IBlockState state, IBlockAccess world, BlockPos pos) {
-        final int light = world.getCombinedLight(pos, state.getLightValue(world, pos));
+        val light = world.getCombinedLight(pos, state.getLightValue(world, pos));
         if (light == 0 && state.getBlock() instanceof BlockSlab) {
             pos = pos.down();
             state = world.getBlockState(pos);

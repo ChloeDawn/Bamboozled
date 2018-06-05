@@ -2,6 +2,8 @@ package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import lombok.experimental.var;
+import lombok.val;
 import net.insomniakitten.bamboo.block.base.BlockBase;
 import net.insomniakitten.bamboo.util.BoundingBoxes;
 import net.minecraft.block.SoundType;
@@ -69,8 +71,8 @@ public final class BlockBambooWall extends BlockBase {
     }
 
     private int getBoundingBoxIndex(IBlockState state) {
-        int i = 0;
-        for (EnumFacing side : EnumFacing.HORIZONTALS) {
+        var i = 0;
+        for (val side : EnumFacing.HORIZONTALS) {
             if (state.getValue(CONNECTION.get(side))) {
                 i |= 1 << side.getHorizontalIndex();
             }
@@ -79,16 +81,16 @@ public final class BlockBambooWall extends BlockBase {
     }
 
     public boolean canConnectTo(IBlockAccess world, BlockPos pos, EnumFacing side) {
-        final BlockFaceShape shape = world.getBlockState(pos).getBlockFaceShape(world, pos, side);
-        final boolean isValidShape = shape == BlockFaceShape.SOLID || shape == BlockFaceShape.MIDDLE_POLE;
+        val shape = world.getBlockState(pos).getBlockFaceShape(world, pos, side);
+        val isValidShape = shape == BlockFaceShape.SOLID || shape == BlockFaceShape.MIDDLE_POLE;
         return isValidShape || world.getBlockState(pos).getBlock() == this;
     }
 
     @Override
     @Deprecated
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        for (EnumFacing side : EnumFacing.HORIZONTALS) {
-            final boolean canConnect = canConnectTo(world, pos.offset(side), side);
+        for (val side : EnumFacing.HORIZONTALS) {
+            val canConnect = canConnectTo(world, pos.offset(side), side);
             state = state.withProperty(CONNECTION.get(side), canConnect);
         }
         return state;
@@ -98,17 +100,17 @@ public final class BlockBambooWall extends BlockBase {
     @Deprecated
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        final IBlockState actualState = state.getActualState(world, pos);
-        final IBlockState actualStateAt = world.getBlockState(pos.offset(side)).getActualState(world, pos.offset(side));
-        final boolean matchState = actualState != actualStateAt;
-        final boolean matchBlock = actualState.getBlock() != actualStateAt.getBlock();
+        val actualState = state.getActualState(world, pos);
+        val actualStateAt = world.getBlockState(pos.offset(side)).getActualState(world, pos.offset(side));
+        val matchState = actualState != actualStateAt;
+        val matchBlock = actualState.getBlock() != actualStateAt.getBlock();
         return (side.getAxis().isVertical() ? matchState : matchBlock)
                 && super.shouldSideBeRendered(state, world, pos, side);
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        final Builder builder = new Builder(this);
+        val builder = new Builder(this);
         CONNECTION.values().forEach(builder::add);
         return builder.build();
     }
@@ -117,7 +119,7 @@ public final class BlockBambooWall extends BlockBase {
     public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
         state = state.getActualState(world, pos);
         boxes.add(AABB_COLLISION.get(0));
-        for (EnumFacing side : EnumFacing.HORIZONTALS) {
+        for (val side : EnumFacing.HORIZONTALS) {
             if (state.getValue(CONNECTION.get(side))) {
                 boxes.add(AABB_COLLISION.get(1 << side.getHorizontalIndex()));
             }
@@ -140,19 +142,19 @@ public final class BlockBambooWall extends BlockBase {
     @Deprecated
     @Nullable
     public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
-        final List<AxisAlignedBB> boxes = new ArrayList<>();
+        val boxes = new ArrayList<AxisAlignedBB>();
         state = state.getActualState(world, pos);
 
         boxes.add(AABB_SELECTION.get(0));
 
-        for (EnumFacing side : EnumFacing.HORIZONTALS) {
+        for (val side : EnumFacing.HORIZONTALS) {
             if (state.getValue(CONNECTION.get(side))) {
                 boxes.add(AABB_SELECTION.get(1 << side.getHorizontalIndex()));
             }
         }
 
         if (boxes.size() <= 1) {
-            final AxisAlignedBB box = !boxes.isEmpty() ? boxes.get(0) : FULL_BLOCK_AABB;
+            val box = !boxes.isEmpty() ? boxes.get(0) : FULL_BLOCK_AABB;
             return rayTrace(pos, start, end, box);
         }
 

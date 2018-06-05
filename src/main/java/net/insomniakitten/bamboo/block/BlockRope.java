@@ -1,6 +1,7 @@
 package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableMap;
+import lombok.val;
 import net.insomniakitten.bamboo.BamboozledItems;
 import net.insomniakitten.bamboo.block.base.BlockBase;
 import net.minecraft.block.Block;
@@ -14,7 +15,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
@@ -24,7 +24,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -51,17 +50,17 @@ public final class BlockRope extends BlockBase {
         return getDefaultState().withProperty(FACING, facing);
     }
 
-    private boolean doFacingsMatch(IBlockState a, IBlockState b) {
-        final boolean matchBlock = a.getBlock() == this && b.getBlock() == this;
-        return matchBlock && a.getValue(FACING) == b.getValue(FACING);
+    private boolean doFacingsMatch(IBlockState first, IBlockState second) {
+        return first.getBlock() == this && second.getBlock() == this
+                && first.getValue(FACING) == second.getValue(FACING);
     }
 
     public boolean canPlaceAt(World world, BlockPos pos, EnumFacing facing) {
         pos = pos.offset(facing.getOpposite());
-        final IBlockState state = world.getBlockState(pos);
-        final BlockFaceShape shape = state.getBlockFaceShape(world, pos, facing);
-        final IBlockState above = world.getBlockState(pos.offset(facing).up());
-        final boolean isValidSide = FACING.getAllowedValues().contains(facing);
+        val state = world.getBlockState(pos);
+        val shape = state.getBlockFaceShape(world, pos, facing);
+        val above = world.getBlockState(pos.offset(facing).up());
+        val isValidSide = FACING.getAllowedValues().contains(facing);
         return isValidSide && (above.getBlock() == this || shape == BlockFaceShape.SOLID);
     }
 
@@ -94,7 +93,7 @@ public final class BlockRope extends BlockBase {
     @Deprecated
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        final IBlockState offset = world.getBlockState(pos.offset(side));
+        val offset = world.getBlockState(pos.offset(side));
         return (offset.getBlock() != this || !doFacingsMatch(state, offset))
                 && super.shouldSideBeRendered(state, world, pos, side);
     }
@@ -112,7 +111,7 @@ public final class BlockRope extends BlockBase {
 
     @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        for (EnumFacing side : FACING.getAllowedValues()) {
+        for (val side : FACING.getAllowedValues()) {
             if (canPlaceAt(world, pos, side)) {
                 return true;
             }
@@ -122,10 +121,10 @@ public final class BlockRope extends BlockBase {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        final ItemStack stack = player.getHeldItem(hand);
+        val stack = player.getHeldItem(hand);
         if (!stack.isEmpty() && stack.getItem() == BamboozledItems.ROPE) {
-            final Chunk chunk = world.getChunkFromBlockCoords(pos);
-            final BlockPos.MutableBlockPos target = new BlockPos.MutableBlockPos(pos);
+            val chunk = world.getChunkFromBlockCoords(pos);
+            val target = new BlockPos.MutableBlockPos(pos);
 
             do {
                 target.move(EnumFacing.DOWN);
@@ -152,8 +151,8 @@ public final class BlockRope extends BlockBase {
 
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        final EnumFacing placerFacing = placer.getHorizontalFacing().getOpposite();
-        final IBlockState above = world.getBlockState(pos.up());
+        val placerFacing = placer.getHorizontalFacing().getOpposite();
+        val above = world.getBlockState(pos.up());
         if (above.getBlock() == this) {
             return withFacing(above.getValue(FACING));
         }
@@ -163,7 +162,7 @@ public final class BlockRope extends BlockBase {
         if (canPlaceAt(world, pos, placerFacing)) {
             return withFacing(placerFacing);
         }
-        for (EnumFacing facing : FACING.getAllowedValues()) {
+        for (val facing : FACING.getAllowedValues()) {
             if (canPlaceAt(world, pos, facing)) {
                 return withFacing(facing);
             }

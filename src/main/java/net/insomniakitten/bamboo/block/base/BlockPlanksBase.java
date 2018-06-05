@@ -71,8 +71,7 @@ public class BlockPlanksBase extends BlockBase {
     }
 
     private enum Orientation implements IStringSerializable {
-        HORIZONTAL,
-        VERTICAL;
+        HORIZONTAL, VERTICAL;
 
         private static final Orientation[] VALUES = values();
 

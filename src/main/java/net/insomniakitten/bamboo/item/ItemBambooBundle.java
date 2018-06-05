@@ -1,6 +1,7 @@
 package net.insomniakitten.bamboo.item;
 
-import net.insomniakitten.bamboo.BamboozledBlocks;
+import lombok.experimental.var;
+import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.block.BlockBambooBundle;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
@@ -19,26 +20,22 @@ public final class ItemBambooBundle extends ItemSubBlockBase {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
-        if (getBambooBundle().isDryingEnabled() || getBambooBundle().isDry(stack.getMetadata())) {
+        if (Bamboozled.getConfig().isInWorldBambooDryingEnabled() || BlockBambooBundle.isDry(stack.getMetadata())) {
             super.addInformation(stack, world, tooltip, flag);
         }
     }
 
     @Override
     public int getItemBurnTime(ItemStack stack) {
-        return getBambooBundle().isDry(stack.getMetadata()) ? 288 : -1;
+        return BlockBambooBundle.isDry(stack.getMetadata()) ? 288 : -1;
     }
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        String name = super.getUnlocalizedName(stack);
-        if (getBambooBundle().isDry(stack.getMetadata())) {
+        var name = super.getUnlocalizedName(stack);
+        if (BlockBambooBundle.isDry(stack.getMetadata())) {
             name += "_dried";
         }
         return name;
-    }
-
-    BlockBambooBundle getBambooBundle() {
-        return (BlockBambooBundle) BamboozledBlocks.BAMBOO_BUNDLE;
     }
 }

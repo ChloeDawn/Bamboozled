@@ -1,6 +1,7 @@
 package net.insomniakitten.bamboo.block;
 
-import net.insomniakitten.bamboo.BamboozledConfig;
+import lombok.val;
+import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.block.base.BlockBase;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -15,6 +16,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
@@ -27,31 +29,24 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public final class BlockBambooBundle extends BlockBase {
-    private static final PropertyEnum<EnumFacing.Axis> AXIS = PropertyEnum.create("axis", EnumFacing.Axis.class);
+    private static final PropertyEnum<Axis> AXIS = PropertyEnum.create("axis", Axis.class);
     private static final PropertyInteger DRIED = PropertyInteger.create("dried", 0, 3);
-
-    private final boolean isDryingEnabled;
 
     public BlockBambooBundle() {
         super(Material.PLANTS, SoundType.WOOD, 1.0F, 5.0F);
-        isDryingEnabled = BamboozledConfig.GENERAL.inWorldBambooDrying;
         setHarvestLevel("axe", 0);
         setTickRandomly(true);
     }
 
-    private boolean isDry(IBlockState state) {
+    private static boolean isDry(IBlockState state) {
         return state.getValue(DRIED) == 3;
     }
 
-    public boolean isDry(int meta) {
+    public static boolean isDry(int meta) {
         return meta == 1;
     }
 
-    public boolean isDryingEnabled() {
-        return isDryingEnabled;
-    }
-
-    public int getDryProgress(IBlockState state) {
+    public static int getDryProgress(IBlockState state) {
         return state.getValue(DRIED);
     }
 
@@ -70,8 +65,7 @@ public final class BlockBambooBundle extends BlockBase {
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(int meta) {
-        EnumFacing.Axis axis = EnumFacing.Axis.values()[meta & 3];
-        return getDefaultState().withProperty(AXIS, axis).withProperty(DRIED, meta >> 2);
+        return getDefaultState().withProperty(AXIS, Axis.values()[meta & 3]).withProperty(DRIED, meta >> 2);
     }
 
     @Override
@@ -81,22 +75,21 @@ public final class BlockBambooBundle extends BlockBase {
             case COUNTERCLOCKWISE_90:
             case CLOCKWISE_90:
                 switch (state.getValue(AXIS)) {
-                    case X:
-                        return state.withProperty(AXIS, EnumFacing.Axis.Z);
-                    case Z:
-                        return state.withProperty(AXIS, EnumFacing.Axis.X);
-                    default:
-                        return state;
+                    case X: return state.withProperty(AXIS, Axis.Z);
+                    case Z: return state.withProperty(AXIS, Axis.X);
+                    default: return state;
                 }
-            default:
-                return state;
+            default: return state;
         }
     }
 
     @Override
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
-        final boolean hasSunlight = world.isDaytime() && world.canBlockSeeSky(pos.up());
-        if (isDryingEnabled && !world.isRemote && !isDry(state) && hasSunlight) {
+        if (Bamboozled.getConfig().isInWorldBambooDryingEnabled()
+                && !world.isRemote
+                && !isDry(state)
+                && world.isDaytime()
+                && world.canBlockSeeSky(pos.up())) {
             world.setBlockState(pos, state.cycleProperty(DRIED));
         }
     }
@@ -134,8 +127,8 @@ public final class BlockBambooBundle extends BlockBase {
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        final int axis = state.getValue(AXIS).ordinal();
-        final int dried = state.getValue(DRIED) << 2;
+        val axis = state.getValue(AXIS).ordinal();
+        val dried = state.getValue(DRIED) << 2;
         return axis | dried;
     }
 }

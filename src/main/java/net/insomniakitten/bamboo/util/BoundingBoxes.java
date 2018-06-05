@@ -1,5 +1,8 @@
 package net.insomniakitten.bamboo.util;
 
+import lombok.experimental.UtilityClass;
+import lombok.experimental.var;
+import lombok.val;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
@@ -13,14 +16,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public final class BoundingBoxes {
-    private BoundingBoxes() {}
-
+@UtilityClass
+public class BoundingBoxes {
     @SideOnly(Side.CLIENT)
-    public static void renderAt(List<AxisAlignedBB> boxes, Entity entity, BlockPos pos, float partialTicks) {
+    public void renderAt(List<AxisAlignedBB> boxes, Entity entity, BlockPos pos, float partialTicks) {
         GlStateManager.disableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(
@@ -30,15 +31,12 @@ public final class BoundingBoxes {
         GlStateManager.disableTexture2D();
         GlStateManager.depthMask(false);
 
-        final double offsetX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks;
-        final double offsetY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks;
-        final double offsetZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
+        val offsetX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks;
+        val offsetY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks;
+        val offsetZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
 
-        for (AxisAlignedBB box : boxes) {
-            final AxisAlignedBB target = box
-                    .grow(0.002D)
-                    .offset(pos)
-                    .offset(-offsetX, -offsetY, -offsetZ);
+        for (val box : boxes) {
+            val target = box.grow(0.002D).offset(pos).offset(-offsetX, -offsetY, -offsetZ);
             RenderGlobal.drawSelectionBoundingBox(target, 0.0F, 0.0F, 0.0F, 0.4F);
         }
 
@@ -48,31 +46,27 @@ public final class BoundingBoxes {
         GlStateManager.enableAlpha();
     }
 
-    @SideOnly(Side.CLIENT)
-    public static void renderAt(AxisAlignedBB box, Entity entity, BlockPos pos, float partialTicks) {
-        renderAt(Collections.singletonList(box), entity, pos, partialTicks);
-    }
+    public RayTraceResult rayTrace(List<AxisAlignedBB> boxes, BlockPos pos, Vec3d start, Vec3d end) {
+        val results = new ArrayList<RayTraceResult>();
+        val x = pos.getX();
+        val y = pos.getY();
+        val z = pos.getZ();
+        val a = start.subtract(x, y, z);
+        val b = end.subtract(x, y, z);
 
-    public static RayTraceResult rayTrace(List<AxisAlignedBB> boxes, BlockPos pos, Vec3d start, Vec3d end) {
-        final List<RayTraceResult> results = new ArrayList<>();
-
-        final double x = pos.getX(), y = pos.getY(), z = pos.getZ();
-        final Vec3d a = start.subtract(x, y, z);
-        final Vec3d b = end.subtract(x, y, z);
-
-        for (AxisAlignedBB box : boxes) {
-            final RayTraceResult result = box.calculateIntercept(a, b);
+        for (val box : boxes) {
+            val result = box.calculateIntercept(a, b);
             if (result != null) {
-                final Vec3d vec = result.hitVec.addVector(x, y, z);
+                val vec = result.hitVec.addVector(x, y, z);
                 results.add(new RayTraceResult(vec, result.sideHit, pos));
             }
         }
 
         RayTraceResult ret = null;
-        double sqrDis = 0.0D;
+        var sqrDis = 0.0D;
 
-        for (RayTraceResult result : results) {
-            final double newSqrDis = result.hitVec.squareDistanceTo(end);
+        for (val result : results) {
+            val newSqrDis = result.hitVec.squareDistanceTo(end);
             if (newSqrDis > sqrDis) {
                 ret = result;
                 sqrDis = newSqrDis;

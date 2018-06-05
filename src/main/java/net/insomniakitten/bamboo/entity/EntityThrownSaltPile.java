@@ -1,7 +1,7 @@
 package net.insomniakitten.bamboo.entity;
 
+import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
-import net.insomniakitten.bamboo.BamboozledConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -18,30 +18,25 @@ public final class EntityThrownSaltPile extends EntityThrowable {
             .name(Bamboozled.ID + ".thrown_salt_pile")
             .tracker(64, 1, true);
 
-    private final boolean saltHurtsUndead;
-
     @SuppressWarnings("unused")
     public EntityThrownSaltPile(World world) {
         super(world);
-        saltHurtsUndead = BamboozledConfig.GENERAL.saltHurtsUndead;
     }
 
     @SuppressWarnings("unused")
     public EntityThrownSaltPile(World world, double x, double y, double z) {
         super(world, x, y, z);
-        saltHurtsUndead = BamboozledConfig.GENERAL.saltHurtsUndead;
     }
 
     public EntityThrownSaltPile(World world, EntityLivingBase thrower) {
         super(world, thrower);
-        saltHurtsUndead = BamboozledConfig.GENERAL.saltHurtsUndead;
     }
 
     @Override
     protected void onImpact(RayTraceResult result) {
-        if (saltHurtsUndead && result.typeOfHit == RayTraceResult.Type.ENTITY) {
+        if (Bamboozled.getConfig().isSaltUndeadDamageEnabled() && result.typeOfHit == RayTraceResult.Type.ENTITY) {
             if (result.entityHit instanceof EntityLivingBase) {
-                final EntityLivingBase living = (EntityLivingBase) result.entityHit;
+                val living = (EntityLivingBase) result.entityHit;
                 if (living.getCreatureAttribute() == EnumCreatureAttribute.UNDEAD) {
                     living.attackEntityFrom(DamageSource.MAGIC, 2);
                 }

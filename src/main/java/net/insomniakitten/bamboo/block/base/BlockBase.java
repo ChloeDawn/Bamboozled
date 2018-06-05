@@ -1,5 +1,6 @@
 package net.insomniakitten.bamboo.block.base;
 
+import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.util.BoundingBoxes;
 import net.minecraft.block.Block;
@@ -31,7 +32,6 @@ public class BlockBase extends Block {
         setHardness(hardness);
         setResistance(resistance);
         setSoundType(sound);
-        setCreativeTab(Bamboozled.TAB);
     }
 
     public BlockBase(Material material, SoundType sound, float hardness, float resistance) {
@@ -64,7 +64,7 @@ public class BlockBase extends Block {
     @Override
     @Deprecated
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-        final List<AxisAlignedBB> boxes = new ArrayList<>();
+        val boxes = new ArrayList<AxisAlignedBB>();
         getCollisionBoxes(state, world, pos, boxes);
         return !boxes.isEmpty() ? boxes.get(0) : FULL_BLOCK_AABB;
     }
@@ -79,9 +79,9 @@ public class BlockBase extends Block {
     @Deprecated
     public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entity, boolean isActualState) {
         if (!isActualState) state = state.getActualState(world, pos);
-        final List<AxisAlignedBB> boxes = new ArrayList<>();
+        val boxes = new ArrayList<AxisAlignedBB>();
         getCollisionBoxes(state, world, pos, boxes);
-        for (AxisAlignedBB box : boxes) {
+        for (val box : boxes) {
             addCollisionBoxToList(pos, entityBox, collidingBoxes, box);
         }
     }
@@ -96,12 +96,11 @@ public class BlockBase extends Block {
     @Deprecated
     @Nullable
     public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
-        final List<AxisAlignedBB> boxes = new ArrayList<>();
+        val boxes = new ArrayList<AxisAlignedBB>();
         getCollisionBoxes(state, world, pos, boxes);
 
         if (boxes.size() <= 1) {
-            final AxisAlignedBB box = !boxes.isEmpty() ? boxes.get(0) : Block.FULL_BLOCK_AABB;
-            return rayTrace(pos, start, end, box);
+            return rayTrace(pos, start, end, !boxes.isEmpty() ? boxes.get(0) : Block.FULL_BLOCK_AABB);
         }
 
         return BoundingBoxes.rayTrace(boxes, pos, start, end);

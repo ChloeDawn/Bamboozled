@@ -2,16 +2,18 @@ package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.insomniakitten.bamboo.BamboozledConfig;
+import lombok.experimental.var;
+import lombok.val;
+import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.block.base.BlockBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.BlockStateContainer.Builder;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -63,13 +65,10 @@ public final class BlockSaltPile extends BlockBase {
             new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D)
     );
 
-    private final boolean saltHurtsUndead;
-
     public BlockSaltPile() {
         super(Material.CIRCUITS, MapColor.SNOW, SoundType.SAND, 0.0F, 0.0F);
         setFullBlock(false);
         setOpaqueBlock(false);
-        saltHurtsUndead = BamboozledConfig.GENERAL.saltHurtsUndead;
     }
 
     private boolean canConnectTo(IBlockAccess world, BlockPos pos) {
@@ -81,11 +80,11 @@ public final class BlockSaltPile extends BlockBase {
     }
 
     private int getAABBIndex(IBlockState state) {
-        final boolean north = isConnectedAt(state, NORTH);
-        final boolean south = isConnectedAt(state, SOUTH);
-        final boolean east = isConnectedAt(state, EAST);
-        final boolean west = isConnectedAt(state, WEST);
-        int index = 0;
+        val north = isConnectedAt(state, NORTH);
+        val south = isConnectedAt(state, SOUTH);
+        val east = isConnectedAt(state, EAST);
+        val west = isConnectedAt(state, WEST);
+        var index = 0;
         if (north || south && !east && !west) {
             index |= 1 << NORTH.getHorizontalIndex();
         }
@@ -114,7 +113,7 @@ public final class BlockSaltPile extends BlockBase {
 
     private ConnectionType getAttachPosition(IBlockAccess world, BlockPos pos, EnumFacing direction) {
         pos = pos.offset(direction);
-        final IBlockState state = world.getBlockState(pos);
+        val state = world.getBlockState(pos);
         if (canConnectTo(world, pos) || (!state.isNormalCube() && canConnectTo(world, pos.down()))) {
             return ConnectionType.SIDE;
         }
@@ -127,7 +126,7 @@ public final class BlockSaltPile extends BlockBase {
     @Override
     @Deprecated
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        for (EnumFacing side : EnumFacing.HORIZONTALS) {
+        for (val side : EnumFacing.HORIZONTALS) {
             state = state.withProperty(CONNECTION.get(side), getAttachPosition(world, pos, side));
         }
         return state;
@@ -168,8 +167,8 @@ public final class BlockSaltPile extends BlockBase {
 
     @Override
     public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
-        if (saltHurtsUndead && entity instanceof EntityLiving) {
-            final EntityLivingBase living = (EntityLivingBase) entity;
+        if (Bamboozled.getConfig().isInWorldBambooDryingEnabled() && entity instanceof EntityLiving) {
+            val living = (EntityLivingBase) entity;
             if (living.getCreatureAttribute() == EnumCreatureAttribute.UNDEAD) {
                 if (world.getTotalWorldTime() % 20 == 0) {
                     living.attackEntityFrom(DamageSource.MAGIC, 1);
@@ -180,10 +179,8 @@ public final class BlockSaltPile extends BlockBase {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
-        for (IProperty<?> property : CONNECTION.values()) {
-            builder.add(property);
-        }
+        val builder = new Builder(this);
+        CONNECTION.values().forEach(builder::add);
         return builder.build();
     }
 
@@ -197,9 +194,7 @@ public final class BlockSaltPile extends BlockBase {
     public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entity, boolean isActualState) {}
 
     public enum ConnectionType implements IStringSerializable {
-        UP,
-        SIDE,
-        NONE;
+        UP, SIDE, NONE;
 
         public String getName() {
             return name().toLowerCase(Locale.ROOT);

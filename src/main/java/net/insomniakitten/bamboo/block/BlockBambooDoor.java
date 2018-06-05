@@ -2,6 +2,8 @@ package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import lombok.experimental.var;
+import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.BamboozledItems;
 import net.minecraft.block.Block;
@@ -48,7 +50,6 @@ public final class BlockBambooDoor extends BlockDoor {
         super(Material.WOOD);
         setHardness(3.0F);
         setSoundType(SoundType.WOOD);
-        setCreativeTab(Bamboozled.TAB);
         disableStats();
     }
 
@@ -69,11 +70,11 @@ public final class BlockBambooDoor extends BlockDoor {
     public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
         state = state.getActualState(world, pos);
 
-        final boolean open = state.getValue(OPEN);
-        final boolean left = state.getValue(HINGE) == EnumHingePosition.LEFT;
-        final boolean lower = state.getValue(HALF) == EnumDoorHalf.LOWER;
+        val open = state.getValue(OPEN);
+        val left = state.getValue(HINGE) == EnumHingePosition.LEFT;
+        val lower = state.getValue(HALF) == EnumDoorHalf.LOWER;
 
-        EnumFacing facing = state.getValue(FACING);
+        var facing = state.getValue(FACING);
 
         if (open) facing = facing.rotateYCCW();
         if (left && open) facing = facing.getOpposite();

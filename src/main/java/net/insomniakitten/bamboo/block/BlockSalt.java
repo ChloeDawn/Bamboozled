@@ -1,6 +1,8 @@
 package net.insomniakitten.bamboo.block;
 
-import net.insomniakitten.bamboo.BamboozledConfig;
+import lombok.experimental.var;
+import lombok.val;
+import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.BamboozledItems;
 import net.insomniakitten.bamboo.block.base.BlockFallingBase;
 import net.insomniakitten.bamboo.entity.EntityFallingSaltBlock;
@@ -24,17 +26,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Random;
 
 public final class BlockSalt extends BlockFallingBase {
-    private final boolean dropBlock;
-    private final boolean saltHurtsUndead;
 
     public BlockSalt() {
         super(Material.SAND, MapColor.SNOW, SoundType.SAND, 0.5F, 2.5F);
-        dropBlock = BamboozledConfig.GENERAL.saltBlockDropsItself;
-        saltHurtsUndead = BamboozledConfig.GENERAL.saltHurtsUndead;
-    }
-
-    public boolean shouldDropBlock() {
-        return dropBlock;
     }
 
     @Override
@@ -50,8 +44,8 @@ public final class BlockSalt extends BlockFallingBase {
 
     @Override
     public void onEntityWalk(World world, BlockPos pos, Entity entity) {
-        if (saltHurtsUndead && entity instanceof EntityLiving) {
-            final EntityLivingBase living = (EntityLivingBase) entity;
+        if (Bamboozled.getConfig().isSaltUndeadDamageEnabled() && entity instanceof EntityLiving) {
+            val living = (EntityLivingBase) entity;
             if (living.getCreatureAttribute() == EnumCreatureAttribute.UNDEAD) {
                 if (world.getTotalWorldTime() % 20 == 0) {
                     living.attackEntityFrom(DamageSource.MAGIC, 1);
@@ -62,22 +56,22 @@ public final class BlockSalt extends BlockFallingBase {
 
     @Override
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        drops.add(dropBlock ? new ItemStack(this) : new ItemStack(BamboozledItems.SALT_PILE, 9));
+        drops.add(Bamboozled.getConfig().isSaltBlockDropsEnabled() ? new ItemStack(this) : new ItemStack(BamboozledItems.SALT_PILE, 9));
     }
 
     private void checkForFall(World world, BlockPos pos) {
         if ((world.isAirBlock(pos.down()) || canFallThrough(world.getBlockState(pos.down()))) && pos.getY() >= 0) {
             if (!fallInstantly && world.isAreaLoaded(pos.add(-32, -32, -32), pos.add(32, 32, 32))) {
                 if (!world.isRemote) {
-                    final double x = pos.getX() + 0.5D;
-                    final double y = pos.getY();
-                    final double z = pos.getZ() + 0.5D;
+                    val x = pos.getX() + 0.5D;
+                    val y = pos.getY();
+                    val z = pos.getZ() + 0.5D;
                     world.spawnEntity(new EntityFallingSaltBlock(world, x, y, z));
                 }
             } else {
                 world.setBlockToAir(pos);
 
-                BlockPos target = pos.down();
+                var target = pos.down();
 
                 while (target.getY() > 0 && (world.isAirBlock(target) || canFallThrough(world.getBlockState(target)))) {
                     target = target.down();

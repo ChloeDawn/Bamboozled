@@ -19,13 +19,13 @@ public final class Bamboozled {
     public static final String NAME = "Bamboozled";
     public static final String VERSION = "%VERSION%";
 
-    public static final Logger LOGGER = LogManager.getLogger(ID);
+    public static final Logger LOGGER = LogManager.getLogger(Bamboozled.ID);
 
-    public static final CreativeTabs TAB = new CreativeTabs(ID) {
+    public static final CreativeTabs TAB = new CreativeTabs(Bamboozled.ID) {
         @Override
         @SideOnly(Side.CLIENT)
         public String getTranslatedTabLabel() {
-            return "item_group." + ID + ".label";
+            return "item_group." + Bamboozled.ID + ".label";
         }
 
         @Override
@@ -35,15 +35,27 @@ public final class Bamboozled {
         }
     };
 
+    public static BamboozledConfig.General getConfig() {
+        return BamboozledConfig.GENERAL;
+    }
+
+    public static BamboozledConfig.Client getClientConfig() {
+        return BamboozledConfig.CLIENT;
+    }
+
+    public static BamboozledConfig.World getWorldConfig() {
+        return BamboozledConfig.WORLD;
+    }
+
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
-        if (BamboozledConfig.WORLD.generateBamboo) {
+        if (Bamboozled.getWorldConfig().isBambooGenerationEnabled()) {
             MinecraftForge.EVENT_BUS.register(GeneratorBamboo.class);
         }
-        if (BamboozledConfig.WORLD.generateSaltOre) {
+        if (Bamboozled.getWorldConfig().isSaltOreGenerationEnabled()) {
             MinecraftForge.EVENT_BUS.register(GeneratorSaltOre.class);
         }
-        if (BamboozledConfig.GENERAL.fancyBamboo) {
+        if (Bamboozled.getConfig().isFancyBambooEnabled()) {
             MinecraftForge.EVENT_BUS.register(BlockBamboo.class);
         }
     }

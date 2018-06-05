@@ -1,5 +1,7 @@
 package net.insomniakitten.bamboo;
 
+import lombok.experimental.UtilityClass;
+import lombok.val;
 import net.insomniakitten.bamboo.block.BlockBamboo;
 import net.insomniakitten.bamboo.block.BlockBambooBundle;
 import net.insomniakitten.bamboo.block.BlockBambooDoor;
@@ -27,18 +29,16 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.entity.RenderFallingBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -48,49 +48,48 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.Objects;
 
-@Mod.EventBusSubscriber(modid = Bamboozled.ID)
-public final class BamboozledRegistry {
-    private BamboozledRegistry() {}
-
+@UtilityClass
+@EventBusSubscriber(modid = Bamboozled.ID)
+public class BamboozledRegistry {
     @SubscribeEvent
-    public static void onBlockRegistry(RegistryEvent.Register<Block> event) {
+    protected void onBlockRegistry(RegistryEvent.Register<Block> event) {
         Bamboozled.LOGGER.debug("Registering blocks...");
-        register(event, "bamboo", new BlockBamboo());
-        register(event, "bamboo_bundle", new BlockBambooBundle());
-        register(event, "bamboo_dried_stairs", new BlockStairsBase(Material.WOOD, SoundType.WOOD, 1.0F, 5.0F));
-        register(event, "bamboo_dried_slab", new BlockSlabBase(Material.WOOD, SoundType.WOOD, 1.0F, 5.0F));
-        register(event, "bamboo_planks", new BlockPlanksBase());
-        register(event, "bamboo_planks_stairs", new BlockStairsBase(Material.WOOD, SoundType.WOOD, 2.0F, 15.0F));
-        register(event, "bamboo_planks_slab", new BlockSlabBase(Material.WOOD, SoundType.WOOD, 2.0F, 15.0F));
-        register(event, "bamboo_wall", new BlockBambooWall());
-        register(event, "bamboo_door", new BlockBambooDoor());
-        register(event, "salt_ore", new BlockSaltOre());
-        register(event, "salt_pile", new BlockSaltPile());
-        register(event, "salt_block", new BlockSalt());
-        register(event, "rope", new BlockRope());
+        registerBlock(event, "bamboo", new BlockBamboo());
+        registerBlock(event, "bamboo_bundle", new BlockBambooBundle());
+        registerBlock(event, "bamboo_dried_stairs", new BlockStairsBase(Material.WOOD, SoundType.WOOD, 1.0F, 5.0F));
+        registerBlock(event, "bamboo_dried_slab", new BlockSlabBase(Material.WOOD, SoundType.WOOD, 1.0F, 5.0F));
+        registerBlock(event, "bamboo_planks", new BlockPlanksBase());
+        registerBlock(event, "bamboo_planks_stairs", new BlockStairsBase(Material.WOOD, SoundType.WOOD, 2.0F, 15.0F));
+        registerBlock(event, "bamboo_planks_slab", new BlockSlabBase(Material.WOOD, SoundType.WOOD, 2.0F, 15.0F));
+        registerBlock(event, "bamboo_wall", new BlockBambooWall());
+        registerBlock(event, "bamboo_door", new BlockBambooDoor());
+        registerBlock(event, "salt_ore", new BlockSaltOre());
+        registerBlock(event, "salt_pile", new BlockSaltPile());
+        registerBlock(event, "salt_block", new BlockSalt());
+        registerBlock(event, "rope", new BlockRope());
     }
 
     @SubscribeEvent
-    public static void onItemRegistry(RegistryEvent.Register<Item> event) {
+    protected void onItemRegistry(RegistryEvent.Register<Item> event) {
         Bamboozled.LOGGER.debug("Registering items...");
-        register(event, "bamboo", new ItemBlockBase(BamboozledBlocks.BAMBOO));
-        register(event, "bamboo_dried", new ItemBase());
-        register(event, "bamboo_bundle", new ItemBambooBundle(BamboozledBlocks.BAMBOO_BUNDLE));
-        register(event, "bamboo_dried_stairs", new ItemBlockBase(BamboozledBlocks.BAMBOO_DRIED_STAIRS));
-        register(event, "bamboo_dried_slab", new ItemBlockSlabBase(BamboozledBlocks.BAMBOO_DRIED_SLAB));
-        register(event, "bamboo_planks", new ItemBlockPlanksBase(BamboozledBlocks.BAMBOO_PLANKS));
-        register(event, "bamboo_planks_stairs", new ItemBlockBase(BamboozledBlocks.BAMBOO_PLANKS_STAIRS));
-        register(event, "bamboo_planks_slab", new ItemBlockSlabBase(BamboozledBlocks.BAMBOO_PLANKS_SLAB));
-        register(event, "bamboo_wall", new ItemBlockBase(BamboozledBlocks.BAMBOO_WALL));
-        register(event, "bamboo_door", new ItemBlockDoorBase(BamboozledBlocks.BAMBOO_DOOR));
-        register(event, "salt_ore", new ItemBlockBase(BamboozledBlocks.SALT_ORE));
-        register(event, "salt_pile", new ItemSaltPile(BamboozledBlocks.SALT_PILE));
-        register(event, "salt_block", new ItemBlockBase(BamboozledBlocks.SALT_BLOCK));
-        register(event, "rope", new ItemBlockBase(BamboozledBlocks.ROPE));
+        registerItem(event, "bamboo", new ItemBlockBase(BamboozledBlocks.BAMBOO));
+        registerItem(event, "bamboo_dried", new ItemBase());
+        registerItem(event, "bamboo_bundle", new ItemBambooBundle(BamboozledBlocks.BAMBOO_BUNDLE));
+        registerItem(event, "bamboo_dried_stairs", new ItemBlockBase(BamboozledBlocks.BAMBOO_DRIED_STAIRS));
+        registerItem(event, "bamboo_dried_slab", new ItemBlockSlabBase(BamboozledBlocks.BAMBOO_DRIED_SLAB));
+        registerItem(event, "bamboo_planks", new ItemBlockPlanksBase(BamboozledBlocks.BAMBOO_PLANKS));
+        registerItem(event, "bamboo_planks_stairs", new ItemBlockBase(BamboozledBlocks.BAMBOO_PLANKS_STAIRS));
+        registerItem(event, "bamboo_planks_slab", new ItemBlockSlabBase(BamboozledBlocks.BAMBOO_PLANKS_SLAB));
+        registerItem(event, "bamboo_wall", new ItemBlockBase(BamboozledBlocks.BAMBOO_WALL));
+        registerItem(event, "bamboo_door", new ItemBlockDoorBase(BamboozledBlocks.BAMBOO_DOOR));
+        registerItem(event, "salt_ore", new ItemBlockBase(BamboozledBlocks.SALT_ORE));
+        registerItem(event, "salt_pile", new ItemSaltPile(BamboozledBlocks.SALT_PILE));
+        registerItem(event, "salt_block", new ItemBlockBase(BamboozledBlocks.SALT_BLOCK));
+        registerItem(event, "rope", new ItemBlockBase(BamboozledBlocks.ROPE));
     }
 
     @SubscribeEvent
-    public static void onEntityRegistry(RegistryEvent.Register<EntityEntry> event) {
+    protected void onEntityRegistry(RegistryEvent.Register<EntityEntry> event) {
         Bamboozled.LOGGER.debug("Registering entity entries...");
         event.getRegistry().register(EntityFallingSaltBlock.ENTRY.build());
         event.getRegistry().register(EntityThrownSaltPile.ENTRY.build());
@@ -99,7 +98,7 @@ public final class BamboozledRegistry {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     @SuppressWarnings("ConstantConditions")
-    public static void onModelRegistry(ModelRegistryEvent event) {
+    protected void onModelRegistry(ModelRegistryEvent event) {
         Bamboozled.LOGGER.debug("Registering entity renderers...");
         RenderingRegistry.registerEntityRenderingHandler(EntityFallingSaltBlock.class, RenderFallingBlock::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityThrownSaltPile.class, RenderThrownSaltPile::new);
@@ -128,7 +127,7 @@ public final class BamboozledRegistry {
     }
 
     @SubscribeEvent
-    public static void onRecipeRegistry(RegistryEvent.Register<IRecipe> event) {
+    protected void onRecipeRegistry(RegistryEvent.Register<IRecipe> event) {
         Bamboozled.LOGGER.debug("Registering ore dictionary entries...");
         registerOre(BamboozledItems.BAMBOO, 0, "bamboo");
         registerOre(BamboozledItems.BAMBOO_BUNDLE, 0, "blockBamboo");
@@ -150,32 +149,36 @@ public final class BamboozledRegistry {
         GameRegistry.addSmelting(BamboozledBlocks.SALT_ORE, new ItemStack(BamboozledItems.SALT_PILE, 4), 0.0F);
     }
 
-    private static void register(RegistryEvent.Register<Block> event, String name, Block block) {
-        final ResourceLocation registryName = new ResourceLocation(Bamboozled.ID, name);
-        event.getRegistry().register(block.setRegistryName(registryName).setUnlocalizedName(name));
+    private void registerBlock(RegistryEvent.Register<Block> event, String name, Block block) {
+        block.setRegistryName(Bamboozled.ID, name);
+        block.setUnlocalizedName(name);
+        block.setCreativeTab(Bamboozled.TAB);
+        event.getRegistry().register(block);
     }
 
-    private static void register(RegistryEvent.Register<Item> event, String name, Item item) {
-        final ResourceLocation registryName = new ResourceLocation(Bamboozled.ID, name);
-        event.getRegistry().register(item.setRegistryName(registryName).setUnlocalizedName(name));
+    private void registerItem(RegistryEvent.Register<Item> event, String name, Item item) {
+        item.setRegistryName(Bamboozled.ID, name);
+        item.setUnlocalizedName(name);
+        item.setCreativeTab(Bamboozled.TAB);
+        event.getRegistry().register(item);
     }
 
     @SideOnly(Side.CLIENT)
-    private static void registerMapper(Block block, IProperty property) {
-        final IStateMapper mapper = new StateMap.Builder().ignore(property).build();
+    private void registerMapper(Block block, IProperty property) {
+        val mapper = new StateMap.Builder().ignore(property).build();
         ModelLoader.setCustomStateMapper(block, mapper);
     }
 
     @SideOnly(Side.CLIENT)
-    private static void registerModel(Item item, int meta, String variant) {
-        final ResourceLocation name = Objects.requireNonNull(item.getRegistryName());
-        final ModelResourceLocation model = new ModelResourceLocation(name, variant);
+    private void registerModel(Item item, int meta, String variant) {
+        val name = Objects.requireNonNull(item.getRegistryName());
+        val model = new ModelResourceLocation(name, variant);
         ModelLoader.setCustomModelResourceLocation(item, meta, model);
     }
 
-    private static void registerOre(Item item, int meta, String... ores) {
-        final ItemStack stack = new ItemStack(item, 1, meta);
-        for (final String ore : ores) {
+    private void registerOre(Item item, int meta, String... ores) {
+        val stack = new ItemStack(item, 1, meta);
+        for (val ore : ores) {
             OreDictionary.registerOre(ore, stack);
         }
     }

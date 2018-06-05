@@ -1,6 +1,7 @@
 package net.insomniakitten.bamboo.block;
 
-import net.insomniakitten.bamboo.BamboozledConfig;
+import lombok.val;
+import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.BamboozledItems;
 import net.insomniakitten.bamboo.block.base.BlockBase;
 import net.minecraft.block.Block;
@@ -35,22 +36,22 @@ public final class BlockSaltOre extends BlockBase {
     @Override
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer() {
-        return BamboozledConfig.CLIENT.forceFancySaltOre || isFancyGraphics()
+        return Bamboozled.getClientConfig().isFancySaltOreForced() || isFancyGraphics()
                ? BlockRenderLayer.TRANSLUCENT
                : BlockRenderLayer.SOLID;
     }
 
     @Override
     public void onLanded(World world, Entity entity) {
-        final double motion = entity.motionY;
+        val motion = entity.motionY;
 
         super.onLanded(world, entity);
 
         if (!entity.onGround || motion >= 0) return;
         if (!(entity instanceof EntityFallingBlock)) return;
 
-        final BlockPos pos = new BlockPos(entity);
-        final IBlockState state = ((EntityFallingBlock) entity).getBlock();
+        val pos = new BlockPos(entity);
+        val state = ((EntityFallingBlock) entity).getBlock();
 
         if (ReflectionHelper.getPrivateValue(
                 EntityFallingBlock.class,
@@ -62,22 +63,22 @@ public final class BlockSaltOre extends BlockBase {
 
         world.destroyBlock(pos.down(), false);
 
-        final int amount = 4 + world.rand.nextInt(5);
-        final ItemStack stack = new ItemStack(BamboozledItems.SALT_PILE, amount);
+        val amount = 4 + world.rand.nextInt(5);
+        val stack = new ItemStack(BamboozledItems.SALT_PILE, amount);
 
         Block.spawnAsEntity(world, pos.down(), stack);
     }
 
     @Override
     public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
-        return !BamboozledConfig.CLIENT.forceFancySaltOre && !isFancyGraphics()
+        return !Bamboozled.getClientConfig().isFancySaltOreForced() && !isFancyGraphics()
                 || world.getBlockState(pos.offset(face)).getBlock() == this;
     }
 
     @Override
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        final Random rand = world instanceof World ? ((World) world).rand : new Random();
-        final int amount = 4 + rand.nextInt(5) * (Math.max(0, rand.nextInt(fortune + 2) - 1) + 1);
+        val rand = world instanceof World ? ((World) world).rand : new Random();
+        val amount = 4 + rand.nextInt(5) * (Math.max(0, rand.nextInt(fortune + 2) - 1) + 1);
         drops.add(new ItemStack(BamboozledItems.SALT_PILE, amount));
     }
 

@@ -1,5 +1,6 @@
 package net.insomniakitten.bamboo.block.base;
 
+import lombok.val;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockSlab.EnumBlockHalf;
 import net.minecraft.block.SoundType;
@@ -77,14 +78,13 @@ public class BlockSlabBase extends BlockBase {
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(int meta) {
-        final Variant variant = Variant.VALUES[meta];
-        return getDefaultState().withProperty(VARIANT, variant);
+        return getDefaultState().withProperty(VARIANT, Variant.VALUES[meta]);
     }
 
     @Deprecated
     @SideOnly(Side.CLIENT)
     public int getPackedLightmapCoords(IBlockState state, IBlockAccess world, BlockPos pos) {
-        final int light = world.getCombinedLight(pos, state.getLightValue(world, pos));
+        val light = world.getCombinedLight(pos, state.getLightValue(world, pos));
         if (light == 0) {
             pos = pos.down();
             state = world.getBlockState(pos);
@@ -97,16 +97,17 @@ public class BlockSlabBase extends BlockBase {
     @Deprecated
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        final IBlockState target = world.getBlockState(pos.offset(side));
+        val target = world.getBlockState(pos.offset(side));
         if (side.getAxis().isHorizontal()) {
-            if (target.getBlock() instanceof BlockSlabBase
-                    && target.getPropertyKeys().contains(VARIANT)) {
-                if (state.getValue(VARIANT) == target.getValue(VARIANT)) return false;
+            if (target.getBlock() instanceof BlockSlabBase && target.getPropertyKeys().contains(VARIANT)) {
+                if (state.getValue(VARIANT) == target.getValue(VARIANT)) {
+                    return false;
+                }
             }
-            if (target.getBlock() instanceof BlockSlab
-                    && target.getPropertyKeys().contains(BlockSlab.HALF)) {
-                final EnumBlockHalf half = target.getValue(BlockSlab.HALF);
-                if (state.getValue(VARIANT).doesMatchHalf(half)) return false;
+            if (target.getBlock() instanceof BlockSlab && target.getPropertyKeys().contains(BlockSlab.HALF)) {
+                if (state.getValue(VARIANT).doesMatchHalf(target.getValue(BlockSlab.HALF))) {
+                    return false;
+                }
             }
         }
         return super.shouldSideBeRendered(state, world, pos, side);
@@ -147,9 +148,11 @@ public class BlockSlabBase extends BlockBase {
 
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        if (side == EnumFacing.UP) return getLower();
-        if (side == EnumFacing.DOWN) return getUpper();
-        return hitY > 0.5D ? getUpper() : getLower();
+        switch (side) {
+            case UP: return getLower();
+            case DOWN: return getUpper();
+            default: return hitY > 0.5D ? getUpper() : getLower();
+        }
     }
 
     @Override

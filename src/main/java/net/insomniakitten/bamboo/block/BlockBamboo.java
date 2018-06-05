@@ -2,9 +2,10 @@ package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import lombok.experimental.var;
+import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.BamboozledBlocks;
-import net.insomniakitten.bamboo.BamboozledConfig;
 import net.insomniakitten.bamboo.block.base.BlockBase;
 import net.insomniakitten.bamboo.util.BoundingBoxes;
 import net.minecraft.block.Block;
@@ -12,17 +13,16 @@ import net.minecraft.block.BlockSapling;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.BlockStateContainer.Builder;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -35,7 +35,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -91,11 +91,8 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
 
     private static EnumPlantType plantTypeTropical;
 
-    private final boolean advancedBamboo;
-
     public BlockBamboo() {
         super(Material.WOOD, MapColor.GREEN, SoundType.PLANT, 0.2F, 1.0F);
-        advancedBamboo = BamboozledConfig.GENERAL.fancyBamboo;
         setSoundType(SoundType.PLANT);
         setHarvestLevel("shears", 0);
         setFullBlock(false);
@@ -109,14 +106,14 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
         if (event.getTarget() == null) return;
         if (event.getTarget().typeOfHit != RayTraceResult.Type.BLOCK) return;
 
-        final BlockPos pos = event.getTarget().getBlockPos();
-        final EntityPlayer player = event.getPlayer();
-        final World world = player.world;
-        final IBlockState state = world.getBlockState(pos);
+        val pos = event.getTarget().getBlockPos();
+        val player = event.getPlayer();
+        val world = player.world;
+        val state = world.getBlockState(pos);
 
         if (state.getBlock() != BamboozledBlocks.BAMBOO) return;
 
-        final List<AxisAlignedBB> boxes = new LinkedList<>();
+        val boxes = new ArrayList<AxisAlignedBB>();
 
         ((BlockBamboo) state.getBlock()).getCollisionBoxes(
                 state.getActualState(world, pos), world, pos, boxes);
@@ -127,16 +124,18 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
     }
 
     private IBlockState getConnectionsForPos(IBlockState state, IBlockAccess world, BlockPos pos) {
-        for (EnumFacing side : PROPS_SIDES.keySet()) {
-            final Block block = world.getBlockState(pos.offset(side)).getBlock();
+        for (val side : PROPS_SIDES.keySet()) {
+            val block = world.getBlockState(pos.offset(side)).getBlock();
             state = state.withProperty(PROPS_SIDES.get(side), block == this);
         }
         return state;
     }
 
     private IBlockState getLeavesForPos(IBlockState state, BlockPos pos) {
-        final int x = pos.getX(), y = pos.getY(), z = pos.getZ();
-        final Random rand = new Random(MathHelper.getCoordinateRandom(x, y, z));
+        val x = pos.getX();
+        val y = pos.getY();
+        val z = pos.getZ();
+        val rand = new Random(MathHelper.getCoordinateRandom(x, y, z));
         return state.withProperty(PROP_LEAVES, rand.nextInt(4));
     }
 
@@ -145,8 +144,8 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
             return state.withProperty(PROP_CANOPY, false);
         }
 
-        final BlockPos.MutableBlockPos target = new BlockPos.MutableBlockPos(pos);
-        int height = 0;
+        val target = new MutableBlockPos(pos);
+        var height = 0;
 
         do {
             target.move(DOWN);
@@ -175,8 +174,8 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
     @Deprecated
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        final boolean renderUp = side == EnumFacing.UP && world.getBlockState(pos.up()).getBlock() != this;
-        final boolean renderDown = side == EnumFacing.DOWN && world.getBlockState(pos.down()).getBlock() != this;
+        val renderUp = side == UP && world.getBlockState(pos.up()).getBlock() != this;
+        val renderDown = side == DOWN && world.getBlockState(pos.down()).getBlock() != this;
         return (renderUp || renderDown) && super.shouldSideBeRendered(state, world, pos, side);
     }
 
@@ -184,10 +183,10 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
         checkForDrop(state, world, pos);
         if (world.isAirBlock(pos.up())) {
-            int i = 1;
+            var i = 1;
             while (world.getBlockState(pos.down(i)).getBlock() == this) ++i;
             if (i < 6 && ForgeHooks.onCropsGrowPre(world, pos, state, true)) {
-                int age = state.getValue(PROP_AGE);
+                val age = state.getValue(PROP_AGE);
                 if (age == 15) {
                     world.setBlockState(pos.up(), getDefaultState());
                     world.setBlockState(pos, state.withProperty(PROP_AGE, 0), 4);
@@ -210,23 +209,21 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
 
     @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        final IBlockState state = world.getBlockState(pos.down());
-        final boolean canSustainPlant = state.getBlock().canSustainPlant(state, world, pos.down(), UP, (BlockSapling) Blocks.SAPLING);
+        val state = world.getBlockState(pos.down());
+        val canSustainPlant = state.getBlock().canSustainPlant(state, world, pos.down(), UP, (BlockSapling) Blocks.SAPLING);
         return state.getBlock() == this || canSustainPlant;
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        final Builder builder = new Builder(this);
-        for (IProperty<?> property : PROPS_SIDES.values()) {
-            builder.add(property);
-        }
+        val builder = new Builder(this);
+        PROPS_SIDES.values().forEach(builder::add);
         return builder.add(PROP_AGE, PROP_CANOPY, PROP_LEAVES).build();
     }
 
     @Override
     public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
-        if (!advancedBamboo) {
+        if (!Bamboozled.getConfig().isFancyBambooEnabled()) {
             boxes.add(AABB_SIMPLE);
             return;
         }
@@ -237,7 +234,7 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
             boxes.addAll(AABB_NORMAL);
         } else boxes.addAll(AABB_NORMAL_TOP);
 
-        for (EnumFacing side : AABB_SIDE.keySet()) {
+        for (val side : AABB_SIDE.keySet()) {
             if (state.getValue(PROPS_SIDES.get(side))) {
                 boxes.add(AABB_SIDE.get(side));
             }
@@ -259,7 +256,7 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
     @Override
     public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
         if (plantTypeTropical == null) {
-            final String name = "Tropical";
+            val name = "Tropical";
             Bamboozled.LOGGER.debug("Registering new PlantType \"{}\"", name);
             plantTypeTropical = EnumPlantType.getPlantType(name);
         }
