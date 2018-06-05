@@ -1,7 +1,6 @@
 package net.insomniakitten.bamboo.block.base;
 
 import lombok.val;
-import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.util.BoundingBoxes;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -104,16 +103,6 @@ public class BlockBase extends Block {
         }
 
         return BoundingBoxes.rayTrace(boxes, pos, start, end);
-    }
-
-    @Override
-    public final Block setUnlocalizedName(String name) {
-        return super.setUnlocalizedName(Bamboozled.ID + "." + name);
-    }
-
-    @Override
-    public final String getUnlocalizedName() {
-        return super.getUnlocalizedName().replace("tile.", "block.");
     }
 
     @Override

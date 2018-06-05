@@ -1,10 +1,8 @@
 package net.insomniakitten.bamboo.item;
 
-import net.insomniakitten.bamboo.Bamboozled;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -16,11 +14,6 @@ import java.util.List;
 public class ItemBlockBase extends ItemBlock {
     public ItemBlockBase(Block block) {
         super(block);
-    }
-
-    @Override
-    public Item setUnlocalizedName(String name) {
-        return super.setUnlocalizedName(Bamboozled.ID + "." + name);
     }
 
     @Override

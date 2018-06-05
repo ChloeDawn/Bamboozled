@@ -1,9 +1,7 @@
 package net.insomniakitten.bamboo.item;
 
-import net.insomniakitten.bamboo.Bamboozled;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -14,11 +12,6 @@ public class ItemBlockDoorBase extends ItemDoor {
     public ItemBlockDoorBase(Block door) {
         super(door);
         this.door = door;
-    }
-
-    @Override
-    public Item setUnlocalizedName(String name) {
-        return super.setUnlocalizedName(Bamboozled.ID + "." + name);
     }
 
     @Override

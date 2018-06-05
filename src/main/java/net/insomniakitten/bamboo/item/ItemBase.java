@@ -1,6 +1,5 @@
 package net.insomniakitten.bamboo.item;
 
-import net.insomniakitten.bamboo.Bamboozled;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -12,11 +11,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 public class ItemBase extends Item {
-    @Override
-    public Item setUnlocalizedName(String name) {
-        return super.setUnlocalizedName(Bamboozled.ID + "." + name);
-    }
-
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {

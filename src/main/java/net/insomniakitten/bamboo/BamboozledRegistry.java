@@ -151,14 +151,14 @@ public class BamboozledRegistry {
 
     private void registerBlock(RegistryEvent.Register<Block> event, String name, Block block) {
         block.setRegistryName(Bamboozled.ID, name);
-        block.setUnlocalizedName(name);
+        block.setUnlocalizedName(Bamboozled.ID + "." + name);
         block.setCreativeTab(Bamboozled.TAB);
         event.getRegistry().register(block);
     }
 
     private void registerItem(RegistryEvent.Register<Item> event, String name, Item item) {
         item.setRegistryName(Bamboozled.ID, name);
-        item.setUnlocalizedName(name);
+        item.setUnlocalizedName(Bamboozled.ID + "." + name);
         item.setCreativeTab(Bamboozled.TAB);
         event.getRegistry().register(item);
     }

@@ -1,8 +1,6 @@
 package net.insomniakitten.bamboo.block.base;
 
 import lombok.val;
-import net.insomniakitten.bamboo.Bamboozled;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.SoundType;
@@ -48,16 +46,6 @@ public class BlockStairsBase extends BlockStairs {
     @Deprecated
     public Material getMaterial(IBlockState state) {
         return material;
-    }
-
-    @Override
-    public final Block setUnlocalizedName(String name) {
-        return super.setUnlocalizedName(Bamboozled.ID + "." + name);
-    }
-
-    @Override
-    public final String getUnlocalizedName() {
-        return super.getUnlocalizedName().replace("tile.", "block.");
     }
 
     @Override
