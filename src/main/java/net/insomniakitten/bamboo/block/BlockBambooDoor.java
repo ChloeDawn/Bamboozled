@@ -23,21 +23,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Random;
 
 public final class BlockBambooDoor extends BlockDoor {
-    protected static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB_LOWER =
-            ImmutableMap.<EnumFacing, AxisAlignedBB>builder()
-                    .put(EnumFacing.NORTH, new AxisAlignedBB(0.0D, 0.0D, 0.8125D, 1.0D, 2.0D, 1.0D))
-                    .put(EnumFacing.SOUTH, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 2.0D, 0.1875D))
-                    .put(EnumFacing.WEST, new AxisAlignedBB(0.8125D, 0.0D, 0.0D, 1.0D, 2.0D, 1.0D))
-                    .put(EnumFacing.EAST, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.1875D, 2.0D, 1.0D))
-                    .build();
+    protected static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB_LOWER = ImmutableMap.of(
+            EnumFacing.NORTH, new AxisAlignedBB(0.0D, 0.0D, 0.8125D, 1.0D, 2.0D, 1.0D),
+            EnumFacing.SOUTH, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 2.0D, 0.1875D),
+            EnumFacing.WEST, new AxisAlignedBB(0.8125D, 0.0D, 0.0D, 1.0D, 2.0D, 1.0D),
+            EnumFacing.EAST, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.1875D, 2.0D, 1.0D)
+    );
 
-    protected static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB_UPPER =
-            ImmutableMap.<EnumFacing, AxisAlignedBB>builder()
-                    .put(EnumFacing.NORTH, new AxisAlignedBB(0.0D, -1.0D, 0.8125D, 1.0D, 1.0D, 1.0D))
-                    .put(EnumFacing.SOUTH, new AxisAlignedBB(0.0D, -1.0D, 0.0D, 1.0D, 1.0D, 0.1875D))
-                    .put(EnumFacing.WEST, new AxisAlignedBB(0.8125D, -1.0D, 0.0D, 1.0D, 1.0D, 1.0D))
-                    .put(EnumFacing.EAST, new AxisAlignedBB(0.0D, -1.0D, 0.0D, 0.1875D, 1.0D, 1.0D))
-                    .build();
+    protected static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB_UPPER = ImmutableMap.of(
+            EnumFacing.NORTH, new AxisAlignedBB(0.0D, -1.0D, 0.8125D, 1.0D, 1.0D, 1.0D),
+            EnumFacing.SOUTH, new AxisAlignedBB(0.0D, -1.0D, 0.0D, 1.0D, 1.0D, 0.1875D),
+            EnumFacing.WEST, new AxisAlignedBB(0.8125D, -1.0D, 0.0D, 1.0D, 1.0D, 1.0D),
+            EnumFacing.EAST, new AxisAlignedBB(0.0D, -1.0D, 0.0D, 0.1875D, 1.0D, 1.0D)
+    );
 
     public BlockBambooDoor() {
         super(Material.WOOD);
