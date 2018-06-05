@@ -3,9 +3,7 @@ package net.insomniakitten.bamboo.util;
 import lombok.experimental.UtilityClass;
 import lombok.experimental.var;
 import lombok.val;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
-import net.minecraft.client.renderer.GlStateManager.SourceFactor;
+import net.minecraft.client.renderer.GlStateManager.*;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -18,46 +16,45 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.minecraft.client.renderer.GlStateManager.*;
+
 @UtilityClass
 public class BoundingBoxes {
     @SideOnly(Side.CLIENT)
     public void renderAt(List<AxisAlignedBB> boxes, Entity entity, BlockPos pos, float partialTicks) {
-        GlStateManager.disableAlpha();
-        GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(
+        disableAlpha();
+        enableBlend();
+        tryBlendFuncSeparate(
                 SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA,
-                SourceFactor.ONE, DestFactor.ZERO);
-        GlStateManager.glLineWidth(2.0F);
-        GlStateManager.disableTexture2D();
-        GlStateManager.depthMask(false);
+                SourceFactor.ONE, DestFactor.ZERO
+        );
+        glLineWidth(2.0F);
+        disableTexture2D();
+        depthMask(false);
 
-        val offsetX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks;
-        val offsetY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks;
-        val offsetZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
+        val x = pos.getX() - (entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks);
+        val y = pos.getY() - (entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks);
+        val z = pos.getZ() - (entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks);
 
         for (val box : boxes) {
-            val target = box.grow(0.002D).offset(pos).offset(-offsetX, -offsetY, -offsetZ);
-            RenderGlobal.drawSelectionBoundingBox(target, 0.0F, 0.0F, 0.0F, 0.4F);
+            RenderGlobal.drawSelectionBoundingBox(box.grow(0.002D).offset(x, y, z), 0.0F, 0.0F, 0.0F, 0.4F);
         }
 
-        GlStateManager.depthMask(true);
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
+        depthMask(true);
+        enableTexture2D();
+        disableBlend();
+        enableAlpha();
     }
 
     public RayTraceResult rayTrace(List<AxisAlignedBB> boxes, BlockPos pos, Vec3d start, Vec3d end) {
         val results = new ArrayList<RayTraceResult>();
-        val x = pos.getX();
-        val y = pos.getY();
-        val z = pos.getZ();
-        val a = start.subtract(x, y, z);
-        val b = end.subtract(x, y, z);
+        val a = start.subtract(pos.getX(), pos.getY(), pos.getZ());
+        val b = end.subtract(pos.getX(), pos.getY(), pos.getZ());
 
         for (val box : boxes) {
             val result = box.calculateIntercept(a, b);
             if (result != null) {
-                val vec = result.hitVec.addVector(x, y, z);
+                val vec = result.hitVec.addVector(pos.getX(), pos.getY(), pos.getZ());
                 results.add(new RayTraceResult(vec, result.sideHit, pos));
             }
         }
