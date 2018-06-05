@@ -1,4 +1,4 @@
-package net.insomniakitten.bamboo.item;
+package net.insomniakitten.bamboo.item.base;
 
 import lombok.val;
 import net.insomniakitten.bamboo.block.base.BlockSlabBase;

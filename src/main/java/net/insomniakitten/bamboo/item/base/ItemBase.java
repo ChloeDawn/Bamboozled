@@ -1,4 +1,4 @@
-package net.insomniakitten.bamboo.item;
+package net.insomniakitten.bamboo.item.base;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;

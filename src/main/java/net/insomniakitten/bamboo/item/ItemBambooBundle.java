@@ -3,6 +3,7 @@ package net.insomniakitten.bamboo.item;
 import lombok.experimental.var;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.block.BlockBambooBundle;
+import net.insomniakitten.bamboo.item.base.ItemSubBlockBase;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
