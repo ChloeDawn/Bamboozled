@@ -23,18 +23,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Random;
 
 public final class BlockBambooDoor extends BlockDoor {
-    private static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB_LOWER = ImmutableMap.of(
+    private static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB = ImmutableMap.of(
             EnumFacing.NORTH, new AxisAlignedBB(0.0D, 0.0D, 0.8125D, 1.0D, 2.0D, 1.0D),
             EnumFacing.SOUTH, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 2.0D, 0.1875D),
             EnumFacing.WEST, new AxisAlignedBB(0.8125D, 0.0D, 0.0D, 1.0D, 2.0D, 1.0D),
             EnumFacing.EAST, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.1875D, 2.0D, 1.0D)
-    );
-
-    private static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB_UPPER = ImmutableMap.of(
-            EnumFacing.NORTH, new AxisAlignedBB(0.0D, -1.0D, 0.8125D, 1.0D, 1.0D, 1.0D),
-            EnumFacing.SOUTH, new AxisAlignedBB(0.0D, -1.0D, 0.0D, 1.0D, 1.0D, 0.1875D),
-            EnumFacing.WEST, new AxisAlignedBB(0.8125D, -1.0D, 0.0D, 1.0D, 1.0D, 1.0D),
-            EnumFacing.EAST, new AxisAlignedBB(0.0D, -1.0D, 0.0D, 0.1875D, 1.0D, 1.0D)
     );
 
     public BlockBambooDoor() {
@@ -58,18 +51,14 @@ public final class BlockBambooDoor extends BlockDoor {
     @Deprecated
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
-        state = state.getActualState(world, pos);
-
-        val open = state.getValue(OPEN);
-        val left = state.getValue(HINGE) == EnumHingePosition.LEFT;
-        val lower = state.getValue(HALF) == EnumDoorHalf.LOWER;
-
-        var facing = state.getValue(FACING);
-
+        val actual = state.getActualState(world, pos);
+        val open = actual.getValue(OPEN);
+        val left = actual.getValue(HINGE) == EnumHingePosition.LEFT;
+        val lower = actual.getValue(HALF) == EnumDoorHalf.LOWER;
+        var facing = actual.getValue(FACING);
         if (open) facing = facing.rotateYCCW();
         if (left && open) facing = facing.getOpposite();
-
-        return (lower ? AABB_LOWER : AABB_UPPER).get(facing).offset(pos);
+        return AABB.get(facing).offset(lower ? pos : pos.down());
     }
 
     @Override

@@ -3,12 +3,10 @@ package net.insomniakitten.bamboo.block;
 import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.BamboozledItems;
-import net.insomniakitten.bamboo.block.base.BlockBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityFallingBlock;
@@ -26,19 +24,25 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public final class BlockSaltOre extends BlockBase {
+public final class BlockSaltOre extends Block {
     public BlockSaltOre() {
-        super(Material.ROCK, MapColor.SNOW, SoundType.STONE, 1.5F, 17.5F);
-        setOpaqueBlock(false);
+        super(Material.ROCK, MapColor.SNOW);
+        setSoundType(SoundType.STONE);
+        setHardness(1.5F);
+        setResistance(17.5F);
         setLightOpacity(1);
+    }
+
+    @Override
+    @Deprecated
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer() {
-        return Bamboozled.getClientConfig().isFancySaltOreForced() || isFancyGraphics()
-               ? BlockRenderLayer.TRANSLUCENT
-               : BlockRenderLayer.SOLID;
+        return isFancy() ? BlockRenderLayer.TRANSLUCENT : BlockRenderLayer.SOLID;
     }
 
     @Override
@@ -56,7 +60,10 @@ public final class BlockSaltOre extends BlockBase {
         if (ReflectionHelper.getPrivateValue(
                 EntityFallingBlock.class,
                 ((EntityFallingBlock) entity),
-                "field_145808_f", "dontSetBlock")) return;
+                "field_145808_f",
+                "dontSetBlock")) {
+            return;
+        }
 
         if (state == null || state.getBlock() != Blocks.ANVIL) return;
         if (!world.mayPlace(state.getBlock(), pos, true, EnumFacing.UP, null)) return;
@@ -71,8 +78,7 @@ public final class BlockSaltOre extends BlockBase {
 
     @Override
     public boolean doesSideBlockRendering(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
-        return !Bamboozled.getClientConfig().isFancySaltOreForced() && !isFancyGraphics()
-                || access.getBlockState(pos.offset(side)).getBlock() == this;
+        return !isFancy() || access.getBlockState(pos.offset(side)).getBlock() == this;
     }
 
     @Override
@@ -82,13 +88,8 @@ public final class BlockSaltOre extends BlockBase {
         drops.add(new ItemStack(BamboozledItems.SALT_PILE, amount));
     }
 
-    @Override
-    @Deprecated
-    public BlockFaceShape getBlockFaceShape(IBlockAccess access, IBlockState state, BlockPos pos, EnumFacing face) {
-        return BlockFaceShape.SOLID;
-    }
-
-    private boolean isFancyGraphics() {
-        return !Blocks.LEAVES.isOpaqueCube(Blocks.LEAVES.getDefaultState());
+    private boolean isFancy() {
+        return Bamboozled.getClientConfig().isFancySaltOreForced()
+                || !Blocks.LEAVES.isOpaqueCube(Blocks.LEAVES.getDefaultState());
     }
 }

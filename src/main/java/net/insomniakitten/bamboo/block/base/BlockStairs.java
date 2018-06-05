@@ -1,8 +1,5 @@
 package net.insomniakitten.bamboo.block.base;
 
-import lombok.val;
-import net.minecraft.block.BlockSlab;
-import net.minecraft.block.BlockStairs;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -24,12 +21,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public class BlockStairsBase extends BlockStairs {
+public class BlockStairs extends net.minecraft.block.BlockStairs {
     private final Material material;
     private final MapColor mapColor;
 
-    public BlockStairsBase(Material material, MapColor mapColor, SoundType sound, float hardness, float resistance) {
-        super(Blocks.STONE.getDefaultState());
+    public BlockStairs(Material material, MapColor mapColor, SoundType sound, float hardness, float resistance) {
+        super(Blocks.AIR.getDefaultState());
         setHardness(hardness);
         setResistance(resistance);
         setSoundType(sound);
@@ -38,7 +35,7 @@ public class BlockStairsBase extends BlockStairs {
         this.mapColor = mapColor;
     }
 
-    public BlockStairsBase(Material material, SoundType sound, float hardness, float resistance) {
+    public BlockStairs(Material material, SoundType sound, float hardness, float resistance) {
         this(material, material.getMaterialMapColor(), sound, hardness, resistance);
     }
 
@@ -50,31 +47,18 @@ public class BlockStairsBase extends BlockStairs {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void randomDisplayTick(IBlockState state, World world, BlockPos pos, Random rand) {
-
-    }
+    public void randomDisplayTick(IBlockState state, World world, BlockPos pos, Random rand) {}
 
     @Override
-    public void onBlockClicked(World world, BlockPos pos, EntityPlayer player) {
-
-    }
+    public void onBlockClicked(World world, BlockPos pos, EntityPlayer player) {}
 
     @Override
-    public void onBlockDestroyedByPlayer(World world, BlockPos pos, IBlockState state) {
-
-    }
+    public void onBlockDestroyedByPlayer(World world, BlockPos pos, IBlockState state) {}
 
     @Override
     @SideOnly(Side.CLIENT)
     public int getPackedLightmapCoords(IBlockState state, IBlockAccess access, BlockPos pos) {
-        val light = access.getCombinedLight(pos, state.getLightValue(access, pos));
-        if (light == 0 && state.getBlock() instanceof BlockSlab) {
-            pos = pos.down();
-            state = access.getBlockState(pos);
-            return access.getCombinedLight(pos, state.getLightValue(access, pos));
-        } else {
-            return light;
-        }
+        return access.getCombinedLight(pos, state.getLightValue(access, pos));
     }
 
     @Override
@@ -120,24 +104,16 @@ public class BlockStairsBase extends BlockStairs {
     }
 
     @Override
-    public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
-
-    }
+    public void onBlockAdded(World world, BlockPos pos, IBlockState state) {}
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-
-    }
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {}
 
     @Override
-    public void onEntityWalk(World world, BlockPos pos, Entity entity) {
-
-    }
+    public void onEntityWalk(World world, BlockPos pos, Entity entity) {}
 
     @Override
-    public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
-
-    }
+    public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {}
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
@@ -145,9 +121,7 @@ public class BlockStairsBase extends BlockStairs {
     }
 
     @Override
-    public void onBlockDestroyedByExplosion(World world, BlockPos pos, Explosion explosionIn) {
-
-    }
+    public void onBlockDestroyedByExplosion(World world, BlockPos pos, Explosion explosionIn) {}
 
     @Override
     public MapColor getMapColor(IBlockState state, IBlockAccess access, BlockPos pos) {

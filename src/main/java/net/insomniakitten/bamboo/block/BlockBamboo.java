@@ -2,11 +2,11 @@ package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import lombok.experimental.var;
 import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.BamboozledBlocks;
-import net.insomniakitten.bamboo.block.base.BlockBase;
 import net.insomniakitten.bamboo.util.BoundingBoxes;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
@@ -18,6 +18,7 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.BlockStateContainer.Builder;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -25,6 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
@@ -35,28 +37,21 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-import static net.minecraft.util.EnumFacing.DOWN;
-import static net.minecraft.util.EnumFacing.EAST;
-import static net.minecraft.util.EnumFacing.NORTH;
-import static net.minecraft.util.EnumFacing.SOUTH;
-import static net.minecraft.util.EnumFacing.UP;
-import static net.minecraft.util.EnumFacing.WEST;
-
-public final class BlockBamboo extends BlockBase implements IPlantable {
+public final class BlockBamboo extends Block implements IPlantable {
     public static final PropertyInteger PROP_AGE = PropertyInteger.create("age", 0, 15);
     public static final PropertyBool PROP_CANOPY = PropertyBool.create("canopy");
     public static final PropertyInteger PROP_LEAVES = PropertyInteger.create("leaves", 0, 3);
 
-    private static final ImmutableMap<EnumFacing, PropertyBool> PROPS_SIDES = ImmutableMap.of(
-            UP, PropertyBool.create("up"),
-            NORTH, PropertyBool.create("north"),
-            SOUTH, PropertyBool.create("south"),
-            WEST, PropertyBool.create("west"),
-            EAST, PropertyBool.create("east")
+    private static final ImmutableMap<EnumFacing, PropertyBool> PROP_SIDES = ImmutableMap.of(
+            EnumFacing.UP, PropertyBool.create("up"),
+            EnumFacing.NORTH, PropertyBool.create("north"),
+            EnumFacing.SOUTH, PropertyBool.create("south"),
+            EnumFacing.WEST, PropertyBool.create("west"),
+            EnumFacing.EAST, PropertyBool.create("east")
     );
 
     private static final AxisAlignedBB AABB_SIMPLE = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 1.0, 0.9375);
@@ -84,19 +79,19 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
     );
 
     private static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB_SIDE = ImmutableMap.of(
-            NORTH, new AxisAlignedBB(0.75, 0.0, -0.0625, 0.9375, 1.0, 0.125),
-            SOUTH, new AxisAlignedBB(0.0625, 0.0, 0.875, 0.25, 1.0, 1.0625),
-            WEST, new AxisAlignedBB(-0.0625, 0.0, 0.375, 0.125, 1.0, 0.5625)
+            EnumFacing.NORTH, new AxisAlignedBB(0.75, 0.0, -0.0625, 0.9375, 1.0, 0.125),
+            EnumFacing.SOUTH, new AxisAlignedBB(0.0625, 0.0, 0.875, 0.25, 1.0, 1.0625),
+            EnumFacing.WEST, new AxisAlignedBB(-0.0625, 0.0, 0.375, 0.125, 1.0, 0.5625)
     );
 
     private static EnumPlantType plantTypeTropical;
 
     public BlockBamboo() {
-        super(Material.WOOD, MapColor.GREEN, SoundType.PLANT, 0.2F, 1.0F);
+        super(Material.WOOD, MapColor.GREEN);
+        setHardness(0.2F);
+        setResistance(1.0F);
         setSoundType(SoundType.PLANT);
         setHarvestLevel("shears", 0);
-        setFullBlock(false);
-        setOpaqueBlock(false);
         setTickRandomly(true);
     }
 
@@ -113,10 +108,15 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
 
         if (state.getBlock() != BamboozledBlocks.BAMBOO) return;
 
-        val boxes = new ArrayList<AxisAlignedBB>();
+        val actual = state.getActualState(world, pos);
+        val up = actual.getValue(PROP_SIDES.get(EnumFacing.UP));
+        val boxes = Lists.newArrayList(up ? AABB_NORMAL : AABB_NORMAL_TOP);
 
-        ((BlockBamboo) state.getBlock()).getCollisionBoxes(
-                state.getActualState(world, pos), world, pos, boxes);
+        for (val side : AABB_SIDE.keySet()) {
+            if (actual.getValue(PROP_SIDES.get(side))) {
+                boxes.add(AABB_SIDE.get(side));
+            }
+        }
 
         BoundingBoxes.renderAt(boxes, player, pos, event.getPartialTicks());
 
@@ -124,9 +124,9 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
     }
 
     private IBlockState getConnectionsForPos(IBlockState state, IBlockAccess access, BlockPos pos) {
-        for (val side : PROPS_SIDES.keySet()) {
+        for (val side : PROP_SIDES.keySet()) {
             val block = access.getBlockState(pos.offset(side)).getBlock();
-            state = state.withProperty(PROPS_SIDES.get(side), block == this);
+            state = state.withProperty(PROP_SIDES.get(side), block == this);
         }
         return state;
     }
@@ -137,7 +137,7 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
     }
 
     private IBlockState getCanopyForPos(IBlockState state, IBlockAccess access, BlockPos pos) {
-        if (state.getValue(PROPS_SIDES.get(UP))) {
+        if (state.getValue(PROP_SIDES.get(EnumFacing.UP))) {
             return state.withProperty(PROP_CANOPY, false);
         }
 
@@ -145,7 +145,7 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
         var height = 0;
 
         do {
-            target.move(DOWN);
+            target.move(EnumFacing.DOWN);
             ++height;
         } while (height < 6 && access.getBlockState(target).getBlock() == this);
 
@@ -159,6 +159,11 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
     }
 
     @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(PROP_AGE);
+    }
+
+    @Override
     @Deprecated
     public IBlockState getActualState(IBlockState state, IBlockAccess access, BlockPos pos) {
         state = getLeavesForPos(state, pos);
@@ -169,11 +174,35 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
 
     @Override
     @Deprecated
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
-        val renderUp = side == UP && access.getBlockState(pos.up()).getBlock() != this;
-        val renderDown = side == DOWN && access.getBlockState(pos.down()).getBlock() != this;
-        return (renderUp || renderDown) && super.shouldSideBeRendered(state, access, pos, side);
+    public boolean isFullCube(IBlockState state) {
+        return true;
+    }
+
+    @Override
+    @Deprecated
+    public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> boxes, Entity entity, boolean isActualState) {
+        if (!Bamboozled.getConfig().isFancyBambooEnabled()) {
+            addCollisionBoxToList(pos, entityBox, boxes, AABB_SIMPLE);
+            return;
+        }
+
+        val actual = state.getActualState(world, pos);
+
+        for (val box : actual.getValue(PROP_SIDES.get(EnumFacing.UP)) ? AABB_NORMAL : AABB_NORMAL_TOP) {
+            addCollisionBoxToList(pos, entityBox, boxes, box);
+        }
+
+        for (val side : AABB_SIDE.keySet()) {
+            if (actual.getValue(PROP_SIDES.get(side))) {
+                addCollisionBoxToList(pos, entityBox, boxes, AABB_SIDE.get(side));
+            }
+        }
+    }
+
+    @Override
+    @Deprecated
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
     }
 
     @Override
@@ -205,42 +234,48 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
     }
 
     @Override
+    @Deprecated
+    @Nullable
+    public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
+        if (!Bamboozled.getConfig().isFancyBambooEnabled()) {
+            return rayTrace(pos, start, end, AABB_SIMPLE);
+        }
+
+        val boxes = Lists.<AxisAlignedBB>newArrayList();
+        val actual = state.getActualState(world, pos);
+
+        if (actual.getValue(PROP_SIDES.get(EnumFacing.UP))) {
+            boxes.addAll(AABB_NORMAL);
+        } else boxes.addAll(AABB_NORMAL_TOP);
+
+        for (val side : AABB_SIDE.keySet()) {
+            if (actual.getValue(PROP_SIDES.get(side))) {
+                boxes.add(AABB_SIDE.get(side));
+            }
+        }
+
+        return BoundingBoxes.rayTrace(boxes, pos, start, end);
+    }
+
+    @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
         val state = world.getBlockState(pos.down());
-        val canSustainPlant = state.getBlock().canSustainPlant(state, world, pos.down(), UP, (BlockSapling) Blocks.SAPLING);
-        return state.getBlock() == this || canSustainPlant;
+        return state.getBlock() == this || state.getBlock().canSustainPlant(
+                state, world, pos.down(), EnumFacing.UP, (BlockSapling) Blocks.SAPLING
+        );
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
         val builder = new Builder(this);
-        PROPS_SIDES.values().forEach(builder::add);
-        return builder.add(PROP_AGE, PROP_CANOPY, PROP_LEAVES).build();
+        builder.add(PROP_AGE, PROP_CANOPY, PROP_LEAVES);
+        PROP_SIDES.values().forEach(builder::add);
+        return builder.build();
     }
 
     @Override
-    public void getCollisionBoxes(IBlockState state, IBlockAccess access, BlockPos pos, List<AxisAlignedBB> boxes) {
-        if (!Bamboozled.getConfig().isFancyBambooEnabled()) {
-            boxes.add(AABB_SIMPLE);
-            return;
-        }
-
-        state = state.getActualState(access, pos);
-
-        if (state.getValue(PROPS_SIDES.get(UP))) {
-            boxes.addAll(AABB_NORMAL);
-        } else boxes.addAll(AABB_NORMAL_TOP);
-
-        for (val side : AABB_SIDE.keySet()) {
-            if (state.getValue(PROPS_SIDES.get(side))) {
-                boxes.add(AABB_SIDE.get(side));
-            }
-        }
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(PROP_AGE);
+    public boolean doesSideBlockRendering(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
+        return side.getAxis().isVertical() && access.getBlockState(pos.offset(side)).getBlock() == this;
     }
 
     private void checkForDrop(IBlockState state, World world, BlockPos pos) {
@@ -253,9 +288,8 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
     @Override
     public EnumPlantType getPlantType(IBlockAccess access, BlockPos pos) {
         if (plantTypeTropical == null) {
-            val name = "Tropical";
-            Bamboozled.LOGGER.debug("Registering new PlantType \"{}\"", name);
-            plantTypeTropical = EnumPlantType.getPlantType(name);
+            Bamboozled.LOGGER.debug("Registering new PlantType \"Tropical\"");
+            plantTypeTropical = EnumPlantType.getPlantType("Tropical");
         }
         return plantTypeTropical;
     }

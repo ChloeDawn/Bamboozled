@@ -1,8 +1,8 @@
 package net.insomniakitten.bamboo.block;
 
-import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
-import net.insomniakitten.bamboo.block.base.BlockBase;
+import net.insomniakitten.bamboo.BamboozledItems;
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -28,18 +28,21 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public final class BlockBambooBundle extends BlockBase {
-    private static final PropertyEnum<Axis> AXIS = PropertyEnum.create("axis", Axis.class);
-    private static final PropertyInteger DRIED = PropertyInteger.create("dried", 0, 3);
+public final class BlockBambooBundle extends Block {
+    private static final PropertyEnum<Axis> PROP_AXIS = PropertyEnum.create("axis", Axis.class);
+    private static final PropertyInteger PROP_DRIED = PropertyInteger.create("dried", 0, 3);
 
     public BlockBambooBundle() {
-        super(Material.PLANTS, SoundType.WOOD, 1.0F, 5.0F);
+        super(Material.PLANTS);
+        setSoundType(SoundType.WOOD);
+        setHardness(1.0F);
+        setResistance(5.0F);
         setHarvestLevel("axe", 0);
         setTickRandomly(true);
     }
 
-    private static boolean isDry(IBlockState state) {
-        return state.getValue(DRIED) == 3;
+    public static boolean isDry(IBlockState state) {
+        return state.getValue(PROP_DRIED) == 3;
     }
 
     public static boolean isDry(int meta) {
@@ -47,7 +50,7 @@ public final class BlockBambooBundle extends BlockBase {
     }
 
     public static int getDryProgress(IBlockState state) {
-        return state.getValue(DRIED);
+        return state.getValue(PROP_DRIED);
     }
 
     @Override
@@ -65,54 +68,54 @@ public final class BlockBambooBundle extends BlockBase {
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(AXIS, Axis.values()[meta & 3]).withProperty(DRIED, meta >> 2);
+        return getDefaultState().withProperty(PROP_AXIS, Axis.values()[meta & 3]).withProperty(PROP_DRIED, meta >> 2);
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(PROP_AXIS).ordinal() | state.getValue(PROP_DRIED) << 2;
     }
 
     @Override
     @Deprecated
     public IBlockState withRotation(IBlockState state, Rotation rotation) {
-        switch (rotation) {
-            case COUNTERCLOCKWISE_90:
-            case CLOCKWISE_90:
-                switch (state.getValue(AXIS)) {
-                    case X: return state.withProperty(AXIS, Axis.Z);
-                    case Z: return state.withProperty(AXIS, Axis.X);
-                    default: return state;
-                }
-            default: return state;
+        if (rotation == Rotation.CLOCKWISE_90 || rotation == Rotation.COUNTERCLOCKWISE_90) {
+            switch (state.getValue(PROP_AXIS)) {
+                case X: return state.withProperty(PROP_AXIS, Axis.Z);
+                case Z: return state.withProperty(PROP_AXIS, Axis.X);
+            }
         }
+        return state;
     }
 
     @Override
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
-        if (Bamboozled.getConfig().isInWorldBambooDryingEnabled()
-                && !world.isRemote
-                && !isDry(state)
-                && world.isDaytime()
-                && world.canBlockSeeSky(pos.up())) {
-            world.setBlockState(pos, state.cycleProperty(DRIED));
+        if (!Bamboozled.getConfig().isInWorldBambooDryingEnabled()) return;
+        if (world.isRemote || !world.isDaytime()) return;
+        if (!isDry(state) && world.canBlockSeeSky(pos.up())) {
+            world.setBlockState(pos, state.cycleProperty(PROP_DRIED));
         }
     }
 
     @Override
     public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
-        items.add(new ItemStack(this, 1, 0));
-        items.add(new ItemStack(this, 1, 1));
+        items.add(new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, 0));
+        items.add(new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, 1));
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, AXIS, DRIED);
+        return new BlockStateContainer(this, PROP_AXIS, PROP_DRIED);
     }
 
     @Override
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess access, BlockPos pos, IBlockState state, int fortune) {
-        drops.add(new ItemStack(this, 1, isDry(state) ? 1 : 0));
+        drops.add(new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, isDry(state) ? 1 : 0));
     }
 
     @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
-        return new ItemStack(this, 1, isDry(state) ? 1 : 0);
+        return new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, isDry(state) ? 1 : 0);
     }
 
     @Override
@@ -122,13 +125,6 @@ public final class BlockBambooBundle extends BlockBase {
 
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        return getDefaultState().withProperty(AXIS, side.getAxis()).withProperty(DRIED, isDry(meta) ? 3 : 0);
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        val axis = state.getValue(AXIS).ordinal();
-        val dried = state.getValue(DRIED) << 2;
-        return axis | dried;
+        return getDefaultState().withProperty(PROP_AXIS, side.getAxis()).withProperty(PROP_DRIED, isDry(meta) ? 3 : 0);
     }
 }

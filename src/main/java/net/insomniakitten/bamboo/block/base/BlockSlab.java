@@ -1,7 +1,7 @@
 package net.insomniakitten.bamboo.block.base;
 
 import lombok.val;
-import net.minecraft.block.BlockSlab;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab.EnumBlockHalf;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -22,23 +22,23 @@ import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-public class BlockSlabBase extends BlockBase {
+public class BlockSlab extends Block {
     public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
 
-    public BlockSlabBase(Material material, MapColor mapColor, SoundType sound, float hardness, float resistance) {
-        super(material, mapColor, sound, hardness, resistance);
+    public BlockSlab(Material material, MapColor mapColor, SoundType sound, float hardness, float resistance) {
+        super(material, mapColor);
+        setSoundType(sound);
+        setHardness(hardness);
+        setResistance(resistance);
         useNeighborBrightness = true;
         setLightOpacity(0);
     }
 
-    public BlockSlabBase(Material material, SoundType sound, float hardness, float resistance) {
-        super(material, sound, hardness, resistance);
-        useNeighborBrightness = true;
-        setLightOpacity(0);
+    public BlockSlab(Material material, SoundType sound, float hardness, float resistance) {
+        this(material, material.getMaterialMapColor(), sound, hardness, resistance);
     }
 
     public IBlockState getLower() {
@@ -77,48 +77,46 @@ public class BlockSlabBase extends BlockBase {
         return getDefaultState().withProperty(VARIANT, Variant.VALUES[meta]);
     }
 
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(VARIANT).ordinal();
+    }
+
+    @Override
+    @Deprecated
+    public boolean isFullCube(IBlockState state) {
+        return isDouble(state);
+    }
+
+    @Override
+    @Deprecated
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return state.getValue(VARIANT).getBoundingBox();
+    }
+
+    @Override
     @Deprecated
     @SideOnly(Side.CLIENT)
     public int getPackedLightmapCoords(IBlockState state, IBlockAccess access, BlockPos pos) {
         val light = access.getCombinedLight(pos, state.getLightValue(access, pos));
         if (light == 0) {
-            pos = pos.down();
-            state = access.getBlockState(pos);
-            return access.getCombinedLight(pos, state.getLightValue(access, pos));
+            val below = pos.down();
+            val other = access.getBlockState(below);
+            return access.getCombinedLight(below, other.getLightValue(access, below));
         }
         return light;
     }
 
     @Override
     @Deprecated
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
-        val target = access.getBlockState(pos.offset(side));
-        if (side.getAxis().isHorizontal()) {
-            if (target.getBlock() instanceof BlockSlabBase && target.getPropertyKeys().contains(VARIANT)) {
-                if (state.getValue(VARIANT) == target.getValue(VARIANT)) {
-                    return false;
-                }
-            }
-            if (target.getBlock() instanceof BlockSlab && target.getPropertyKeys().contains(BlockSlab.HALF)) {
-                if (state.getValue(VARIANT).doesMatchHalf(target.getValue(BlockSlab.HALF))) {
-                    return false;
-                }
-            }
-        }
-        return super.shouldSideBeRendered(state, access, pos, side);
+    public BlockFaceShape getBlockFaceShape(IBlockAccess access, IBlockState state, BlockPos pos, EnumFacing side) {
+        return state.getValue(VARIANT).isSideSolid(side) ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
     }
 
     @Override
     @Deprecated
-    public int quantityDropped(Random random) {
-        return 1;
-    }
-
-    @Override
-    @Deprecated
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return getStateForPlacement(world, pos, side, hitX, hitY, hitZ, meta, placer, placer.getActiveHand());
+    public boolean isOpaqueCube(IBlockState state) {
+        return isDouble(state);
     }
 
     @Override
@@ -134,7 +132,18 @@ public class BlockSlabBase extends BlockBase {
 
     @Override
     public boolean doesSideBlockRendering(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
-        return !ForgeModContainer.disableStairSlabCulling && state.getValue(VARIANT).isSideSolid(side);
+        if (ForgeModContainer.disableStairSlabCulling) return false;
+
+        if (side.getAxis().isVertical()) {
+            return state.getValue(VARIANT).isSideSolid(side);
+        }
+
+        val target = access.getBlockState(pos.offset(side));
+        val block = target.getBlock();
+        val variant = state.getValue(VARIANT);
+
+        return block instanceof BlockSlab && variant == target.getValue(VARIANT)
+                || block instanceof net.minecraft.block.BlockSlab && variant.doesMatchHalf(target.getValue(net.minecraft.block.BlockSlab.HALF));
     }
 
     @Override
@@ -144,42 +153,7 @@ public class BlockSlabBase extends BlockBase {
 
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        switch (side) {
-            case UP:
-                return getLower();
-            case DOWN:
-                return getUpper();
-            default:
-                return hitY > 0.5D ? getUpper() : getLower();
-        }
-    }
-
-    @Override
-    public void getCollisionBoxes(IBlockState state, IBlockAccess access, BlockPos pos, List<AxisAlignedBB> boxes) {
-        boxes.add(state.getValue(VARIANT).getBoundingBox());
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(VARIANT).ordinal();
-    }
-
-    @Override
-    @Deprecated
-    public boolean isFullCube(IBlockState state) {
-        return isDouble(state);
-    }
-
-    @Override
-    @Deprecated
-    public BlockFaceShape getBlockFaceShape(IBlockAccess access, IBlockState state, BlockPos pos, EnumFacing side) {
-        return state.getValue(VARIANT).isSideSolid(side) ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
-    }
-
-    @Override
-    @Deprecated
-    public boolean isOpaqueCube(IBlockState state) {
-        return isDouble(state);
+        return side == EnumFacing.UP || hitY <= 0.5D ? getLower() : getUpper();
     }
 
     public enum Variant implements IStringSerializable {

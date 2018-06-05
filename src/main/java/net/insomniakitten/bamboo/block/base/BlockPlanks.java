@@ -1,5 +1,6 @@
 package net.insomniakitten.bamboo.block.base;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -20,22 +21,25 @@ import net.minecraft.world.World;
 
 import java.util.Locale;
 
-public class BlockPlanksBase extends BlockBase {
+public class BlockPlanks extends Block {
     private static final PropertyEnum<Orientation> ORIENTATION = PropertyEnum.create("orientation", Orientation.class);
 
-    public BlockPlanksBase() {
-        super(Material.WOOD, SoundType.WOOD, 2.0F, 15.0F);
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(ORIENTATION).ordinal();
+    public BlockPlanks() {
+        super(Material.WOOD);
+        setSoundType(SoundType.WOOD);
+        setHardness(2.0F);
+        setResistance(15.0F);
     }
 
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(int meta) {
         return getDefaultState().withProperty(ORIENTATION, Orientation.VALUES[meta]);
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(ORIENTATION).ordinal();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package net.insomniakitten.bamboo.item.base;
 
 import lombok.val;
-import net.insomniakitten.bamboo.block.base.BlockSlabBase;
+import net.insomniakitten.bamboo.block.base.BlockSlab;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -15,11 +15,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemBlockSlabBase extends ItemBlockBase {
-    private final BlockSlabBase slab;
+    private final BlockSlab slab;
 
     public ItemBlockSlabBase(Block slab) {
         super(slab);
-        this.slab = (BlockSlabBase) slab;
+        this.slab = (BlockSlab) slab;
     }
 
     @Override
