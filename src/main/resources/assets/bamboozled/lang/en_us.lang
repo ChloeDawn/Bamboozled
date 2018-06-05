@@ -1,29 +1,29 @@
 item_group.bamboozled.label=Bamboozled
 
-block.bamboozled.bamboo.name=Bamboo Stalks
+tile.bamboozled.bamboo.name=Bamboo Stalks
 
-block.bamboozled.bamboo_bundle.name=Bundle of Bamboo
-block.bamboozled.bamboo_bundle.desc=Place in sunlight to create dried bamboo
+tile.bamboozled.bamboo_bundle.name=Bundle of Bamboo
+tile.bamboozled.bamboo_bundle.desc=Place in sunlight to create dried bamboo
 
-block.bamboozled.bamboo_bundle_dried.name=Bundle of Dried Bamboo
-block.bamboozled.bamboo_bundle_dried.desc=Can be crafted into various decorations
+tile.bamboozled.bamboo_bundle_dried.name=Bundle of Dried Bamboo
+tile.bamboozled.bamboo_bundle_dried.desc=Can be crafted into various decorations
 
-block.bamboozled.bamboo_dried_slab.name=Dried Bamboo Slab
-block.bamboozled.bamboo_dried_stairs.name=Dried Bamboo Stairs
+tile.bamboozled.bamboo_dried_slab.name=Dried Bamboo Slab
+tile.bamboozled.bamboo_dried_stairs.name=Dried Bamboo Stairs
 
-block.bamboozled.bamboo_wall.name=Bamboo Wall
-block.bamboozled.bamboo_door.name=Bamboo Door
+tile.bamboozled.bamboo_wall.name=Bamboo Wall
+tile.bamboozled.bamboo_door.name=Bamboo Door
 
-block.bamboozled.bamboo_planks.name=Bamboo Planks
-block.bamboozled.bamboo_planks_vertical.name=Bamboo Vertical Planks
-block.bamboozled.bamboo_planks_slab.name=Bamboo Planks Slab
-block.bamboozled.bamboo_planks_stairs.name=Bamboo Planks Stairs
+tile.bamboozled.bamboo_planks.name=Bamboo Planks
+tile.bamboozled.bamboo_planks_vertical.name=Bamboo Vertical Planks
+tile.bamboozled.bamboo_planks_slab.name=Bamboo Planks Slab
+tile.bamboozled.bamboo_planks_stairs.name=Bamboo Planks Stairs
 
-block.bamboozled.rope.name=Rope
+tile.bamboozled.rope.name=Rope
 
-block.bamboozled.salt_ore.name=Halite
-block.bamboozled.salt_pile.name=Pile of Salt
-block.bamboozled.salt_block.name=Block of Salt
+tile.bamboozled.salt_ore.name=Halite
+tile.bamboozled.salt_pile.name=Pile of Salt
+tile.bamboozled.salt_block.name=Block of Salt
 
 item.bamboozled.bamboo_dried.name=Dried Bamboo Stalks
 item.bamboozled.bamboo_dried.desc=Can be crafted into various decorations
