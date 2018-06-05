@@ -30,9 +30,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 public final class BlockRope extends BlockBase {
-    private static final PropertyDirection FACING = PropertyDirection.create("facing", f -> f != EnumFacing.UP);
+    private static final PropertyDirection PROP_FACING = PropertyDirection.create("facing", f -> f != EnumFacing.UP);
 
-    private static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB_ROPE = ImmutableMap.of(
+    private static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB = ImmutableMap.of(
             EnumFacing.DOWN, new AxisAlignedBB(0.375D, 0.0, 0.375D, 0.625D, 1.0D, 0.625D),
             EnumFacing.NORTH, new AxisAlignedBB(0.375D, 0.0D, 0.8125D, 0.625D, 1.0D, 1.0D),
             EnumFacing.SOUTH, new AxisAlignedBB(0.375D, 0.0D, 0.0D, 0.625D, 1.0D, 0.1875D),
@@ -47,25 +47,24 @@ public final class BlockRope extends BlockBase {
     }
 
     public IBlockState withFacing(EnumFacing facing) {
-        return getDefaultState().withProperty(FACING, facing);
+        return getDefaultState().withProperty(PROP_FACING, facing);
     }
 
     private boolean doFacingsMatch(IBlockState first, IBlockState second) {
         return first.getBlock() == this && second.getBlock() == this
-                && first.getValue(FACING) == second.getValue(FACING);
+                && first.getValue(PROP_FACING) == second.getValue(PROP_FACING);
     }
 
     public boolean canPlaceAt(World world, BlockPos pos, EnumFacing facing) {
-        pos = pos.offset(facing.getOpposite());
-        val state = world.getBlockState(pos);
-        val shape = state.getBlockFaceShape(world, pos, facing);
-        val above = world.getBlockState(pos.offset(facing).up());
-        val isValidSide = FACING.getAllowedValues().contains(facing);
-        return isValidSide && (above.getBlock() == this || shape == BlockFaceShape.SOLID);
+        val offset = pos.offset(facing.getOpposite());
+        val state = world.getBlockState(offset);
+        val shape = state.getBlockFaceShape(world, offset, facing);
+        val isValidSide = PROP_FACING.getAllowedValues().contains(facing);
+        return isValidSide && (world.getBlockState(pos.up()).getBlock() == this || shape == BlockFaceShape.SOLID);
     }
 
     private void checkForDrop(World world, BlockPos pos, IBlockState state) {
-        if (!canPlaceAt(world, pos, state.getValue(FACING))) {
+        if (!canPlaceAt(world, pos, state.getValue(PROP_FACING))) {
             dropBlockAsItem(world, pos, state, 0);
             world.setBlockToAir(pos);
         }
@@ -80,22 +79,22 @@ public final class BlockRope extends BlockBase {
     @Override
     @Deprecated
     public IBlockState withRotation(IBlockState state, Rotation rot) {
-        return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
+        return state.withProperty(PROP_FACING, rot.rotate(state.getValue(PROP_FACING)));
     }
 
     @Override
     @Deprecated
     public IBlockState withMirror(IBlockState state, Mirror mirror) {
-        return state.withRotation(mirror.toRotation(state.getValue(FACING)));
+        return state.withRotation(mirror.toRotation(state.getValue(PROP_FACING)));
     }
 
     @Override
     @Deprecated
     @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        val offset = world.getBlockState(pos.offset(side));
+    public boolean shouldSideBeRendered(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
+        val offset = access.getBlockState(pos.offset(side));
         return (offset.getBlock() != this || !doFacingsMatch(state, offset))
-                && super.shouldSideBeRendered(state, world, pos, side);
+                && super.shouldSideBeRendered(state, access, pos, side);
     }
 
     @Override
@@ -111,7 +110,7 @@ public final class BlockRope extends BlockBase {
 
     @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        for (val side : FACING.getAllowedValues()) {
+        for (val side : PROP_FACING.getAllowedValues()) {
             if (canPlaceAt(world, pos, side)) {
                 return true;
             }
@@ -141,11 +140,11 @@ public final class BlockRope extends BlockBase {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING);
+        return new BlockStateContainer(this, PROP_FACING);
     }
 
     @Override
-    public boolean isLadder(IBlockState state, IBlockAccess world, BlockPos pos, EntityLivingBase entity) {
+    public boolean isLadder(IBlockState state, IBlockAccess access, BlockPos pos, EntityLivingBase entity) {
         return true;
     }
 
@@ -154,7 +153,7 @@ public final class BlockRope extends BlockBase {
         val placerFacing = placer.getHorizontalFacing().getOpposite();
         val above = world.getBlockState(pos.up());
         if (above.getBlock() == this) {
-            return withFacing(above.getValue(FACING));
+            return withFacing(above.getValue(PROP_FACING));
         }
         if (canPlaceAt(world, pos, side)) {
             return withFacing(side);
@@ -162,7 +161,7 @@ public final class BlockRope extends BlockBase {
         if (canPlaceAt(world, pos, placerFacing)) {
             return withFacing(placerFacing);
         }
-        for (val facing : FACING.getAllowedValues()) {
+        for (val facing : PROP_FACING.getAllowedValues()) {
             if (canPlaceAt(world, pos, facing)) {
                 return withFacing(facing);
             }
@@ -171,18 +170,18 @@ public final class BlockRope extends BlockBase {
     }
 
     @Override
-    public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
-        boxes.add(AABB_ROPE.get(state.getValue(FACING)));
+    public void getCollisionBoxes(IBlockState state, IBlockAccess access, BlockPos pos, List<AxisAlignedBB> boxes) {
+        boxes.add(AABB.get(state.getValue(PROP_FACING)));
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(FACING).ordinal();
+        return state.getValue(PROP_FACING).ordinal();
     }
 
     @Override
     @Deprecated
-    public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing face) {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess access, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 

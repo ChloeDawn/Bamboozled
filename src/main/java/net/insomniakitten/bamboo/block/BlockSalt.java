@@ -26,7 +26,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Random;
 
 public final class BlockSalt extends BlockFallingBase {
-
     public BlockSalt() {
         super(Material.SAND, MapColor.SNOW, SoundType.SAND, 0.5F, 2.5F);
     }
@@ -55,7 +54,7 @@ public final class BlockSalt extends BlockFallingBase {
     }
 
     @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess access, BlockPos pos, IBlockState state, int fortune) {
         drops.add(Bamboozled.getConfig().isSaltBlockDropsEnabled() ? new ItemStack(this) : new ItemStack(BamboozledItems.SALT_PILE, 9));
     }
 

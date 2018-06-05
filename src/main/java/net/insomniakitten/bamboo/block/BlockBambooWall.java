@@ -55,9 +55,9 @@ public final class BlockBambooWall extends BlockBase {
     );
 
     private static final ImmutableList<AxisAlignedBB> AABB_SELECTION = AABB_COLLISION.stream()
-            .map(aabb -> aabb.setMaxY(1.0D)).collect(ImmutableList.toImmutableList());
+            .map(it -> it.setMaxY(1.0D)).collect(ImmutableList.toImmutableList());
 
-    private static final ImmutableMap<EnumFacing, PropertyBool> CONNECTION = ImmutableMap.of(
+    private static final ImmutableMap<EnumFacing, PropertyBool> PROP_SIDES = ImmutableMap.of(
             NORTH, PropertyBool.create("north"),
             SOUTH, PropertyBool.create("south"),
             WEST, PropertyBool.create("west"),
@@ -73,25 +73,25 @@ public final class BlockBambooWall extends BlockBase {
     private int getBoundingBoxIndex(IBlockState state) {
         var i = 0;
         for (val side : EnumFacing.HORIZONTALS) {
-            if (state.getValue(CONNECTION.get(side))) {
+            if (state.getValue(PROP_SIDES.get(side))) {
                 i |= 1 << side.getHorizontalIndex();
             }
         }
         return i;
     }
 
-    public boolean canConnectTo(IBlockAccess world, BlockPos pos, EnumFacing side) {
-        val shape = world.getBlockState(pos).getBlockFaceShape(world, pos, side);
+    public boolean canConnectTo(IBlockAccess access, BlockPos pos, EnumFacing side) {
+        val shape = access.getBlockState(pos).getBlockFaceShape(access, pos, side);
         val isValidShape = shape == BlockFaceShape.SOLID || shape == BlockFaceShape.MIDDLE_POLE;
-        return isValidShape || world.getBlockState(pos).getBlock() == this;
+        return isValidShape || access.getBlockState(pos).getBlock() == this;
     }
 
     @Override
     @Deprecated
-    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public IBlockState getActualState(IBlockState state, IBlockAccess access, BlockPos pos) {
         for (val side : EnumFacing.HORIZONTALS) {
-            val canConnect = canConnectTo(world, pos.offset(side), side);
-            state = state.withProperty(CONNECTION.get(side), canConnect);
+            val canConnect = canConnectTo(access, pos.offset(side), side);
+            state = state.withProperty(PROP_SIDES.get(side), canConnect);
         }
         return state;
     }
@@ -99,28 +99,29 @@ public final class BlockBambooWall extends BlockBase {
     @Override
     @Deprecated
     @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        val actualState = state.getActualState(world, pos);
-        val actualStateAt = world.getBlockState(pos.offset(side)).getActualState(world, pos.offset(side));
-        val matchState = actualState != actualStateAt;
-        val matchBlock = actualState.getBlock() != actualStateAt.getBlock();
-        return (side.getAxis().isVertical() ? matchState : matchBlock)
-                && super.shouldSideBeRendered(state, world, pos, side);
+    public boolean shouldSideBeRendered(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
+        val ret = super.shouldSideBeRendered(state, access, pos, side);
+        val offset = pos.offset(side);
+        val other = access.getBlockState(offset);
+        if (side.getAxis().isVertical()) {
+            val actual = state.getActualState(access, pos);
+            return ret && actual == other.getActualState(access, offset);
+        } else return ret && state.getBlock() == other.getBlock();
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
         val builder = new Builder(this);
-        CONNECTION.values().forEach(builder::add);
+        PROP_SIDES.values().forEach(builder::add);
         return builder.build();
     }
 
     @Override
-    public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
-        state = state.getActualState(world, pos);
+    public void getCollisionBoxes(IBlockState state, IBlockAccess access, BlockPos pos, List<AxisAlignedBB> boxes) {
+        state = state.getActualState(access, pos);
         boxes.add(AABB_COLLISION.get(0));
         for (val side : EnumFacing.HORIZONTALS) {
-            if (state.getValue(CONNECTION.get(side))) {
+            if (state.getValue(PROP_SIDES.get(side))) {
                 boxes.add(AABB_COLLISION.get(1 << side.getHorizontalIndex()));
             }
         }
@@ -128,13 +129,13 @@ public final class BlockBambooWall extends BlockBase {
 
     @Override
     @Deprecated
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return AABB_SELECTION.get(getBoundingBoxIndex(getActualState(state, source, pos)));
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess access, BlockPos pos) {
+        return AABB_SELECTION.get(getBoundingBoxIndex(getActualState(state, access, pos)));
     }
 
     @Override
     @Deprecated
-    public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing face) {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess access, IBlockState state, BlockPos pos, EnumFacing face) {
         return face != UP && face != DOWN ? BlockFaceShape.MIDDLE_POLE : BlockFaceShape.CENTER_BIG;
     }
 
@@ -148,7 +149,7 @@ public final class BlockBambooWall extends BlockBase {
         boxes.add(AABB_SELECTION.get(0));
 
         for (val side : EnumFacing.HORIZONTALS) {
-            if (state.getValue(CONNECTION.get(side))) {
+            if (state.getValue(PROP_SIDES.get(side))) {
                 boxes.add(AABB_SELECTION.get(1 << side.getHorizontalIndex()));
             }
         }

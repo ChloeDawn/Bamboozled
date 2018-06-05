@@ -42,7 +42,7 @@ public class BlockFallingBase extends BlockFalling {
 
     @Override
     @Deprecated
-    public MapColor getMapColor(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+    public MapColor getMapColor(IBlockState state, IBlockAccess access, BlockPos pos) {
         return mapColor;
     }
 
@@ -59,15 +59,15 @@ public class BlockFallingBase extends BlockFalling {
 
     @Override
     @Deprecated
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess access, BlockPos pos) {
         val boxes = new ArrayList<AxisAlignedBB>();
-        getCollisionBoxes(state, world, pos, boxes);
+        getCollisionBoxes(state, access, pos, boxes);
         return !boxes.isEmpty() ? boxes.get(0) : FULL_BLOCK_AABB;
     }
 
     @Override
     @Deprecated
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess access, IBlockState state, BlockPos pos, EnumFacing face) {
         return fullBlock ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
     }
 
@@ -109,7 +109,7 @@ public class BlockFallingBase extends BlockFalling {
     }
 
     @Override
-    public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public int getLightOpacity(IBlockState state, IBlockAccess access, BlockPos pos) {
         return opaqueBlock ? 255 : 0;
     }
 
@@ -121,7 +121,7 @@ public class BlockFallingBase extends BlockFalling {
         this.opaqueBlock = opaqueBlock;
     }
 
-    public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
+    public void getCollisionBoxes(IBlockState state, IBlockAccess access, BlockPos pos, List<AxisAlignedBB> boxes) {
         boxes.add(FULL_BLOCK_AABB);
     }
 }

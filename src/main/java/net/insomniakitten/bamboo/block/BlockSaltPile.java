@@ -39,7 +39,7 @@ import static net.minecraft.util.EnumFacing.SOUTH;
 import static net.minecraft.util.EnumFacing.WEST;
 
 public final class BlockSaltPile extends BlockBase {
-    public static final ImmutableMap<EnumFacing, PropertyEnum<ConnectionType>> CONNECTION = ImmutableMap.of(
+    private static final ImmutableMap<EnumFacing, PropertyEnum<ConnectionType>> PROP_CONNECTIONS = ImmutableMap.of(
             NORTH, PropertyEnum.create("north", ConnectionType.class),
             SOUTH, PropertyEnum.create("south", ConnectionType.class),
             WEST, PropertyEnum.create("west", ConnectionType.class),
@@ -71,12 +71,12 @@ public final class BlockSaltPile extends BlockBase {
         setOpaqueBlock(false);
     }
 
-    private boolean canConnectTo(IBlockAccess world, BlockPos pos) {
-        return world.getBlockState(pos).getBlock() == this;
+    private boolean canConnectTo(IBlockAccess access, BlockPos pos) {
+        return access.getBlockState(pos).getBlock() == this;
     }
 
     private boolean isConnectedAt(IBlockState state, EnumFacing side) {
-        return state.getValue(CONNECTION.get(side)) != ConnectionType.NONE;
+        return state.getValue(PROP_CONNECTIONS.get(side)) != ConnectionType.NONE;
     }
 
     private int getAABBIndex(IBlockState state) {
@@ -107,17 +107,17 @@ public final class BlockSaltPile extends BlockBase {
         }
     }
 
-    private boolean isSolid(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return state.getBlockFaceShape(world, pos, EnumFacing.UP) == BlockFaceShape.SOLID;
+    private boolean isSolid(IBlockState state, IBlockAccess access, BlockPos pos) {
+        return state.getBlockFaceShape(access, pos, EnumFacing.UP) == BlockFaceShape.SOLID;
     }
 
-    private ConnectionType getAttachPosition(IBlockAccess world, BlockPos pos, EnumFacing direction) {
+    private ConnectionType getAttachPosition(IBlockAccess access, BlockPos pos, EnumFacing direction) {
         pos = pos.offset(direction);
-        val state = world.getBlockState(pos);
-        if (canConnectTo(world, pos) || (!state.isNormalCube() && canConnectTo(world, pos.down()))) {
+        val state = access.getBlockState(pos);
+        if (canConnectTo(access, pos) || (!state.isNormalCube() && canConnectTo(access, pos.down()))) {
             return ConnectionType.SIDE;
         }
-        if (!world.getBlockState(pos.up()).isNormalCube() && isSolid(state, world, pos) && canConnectTo(world, pos.up())) {
+        if (!access.getBlockState(pos.up()).isNormalCube() && isSolid(state, access, pos) && canConnectTo(access, pos.up())) {
             return state.isBlockNormalCube() ? ConnectionType.UP : ConnectionType.SIDE;
         }
         return ConnectionType.NONE;
@@ -125,9 +125,9 @@ public final class BlockSaltPile extends BlockBase {
 
     @Override
     @Deprecated
-    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public IBlockState getActualState(IBlockState state, IBlockAccess access, BlockPos pos) {
         for (val side : EnumFacing.HORIZONTALS) {
-            state = state.withProperty(CONNECTION.get(side), getAttachPosition(world, pos, side));
+            state = state.withProperty(PROP_CONNECTIONS.get(side), getAttachPosition(access, pos, side));
         }
         return state;
     }
@@ -139,7 +139,7 @@ public final class BlockSaltPile extends BlockBase {
 
     @Override
     @Deprecated
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess access, BlockPos pos) {
         return NULL_AABB;
     }
 
@@ -180,13 +180,13 @@ public final class BlockSaltPile extends BlockBase {
     @Override
     protected BlockStateContainer createBlockState() {
         val builder = new Builder(this);
-        CONNECTION.values().forEach(builder::add);
+        PROP_CONNECTIONS.values().forEach(builder::add);
         return builder.build();
     }
 
     @Override
-    public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
-        boxes.add(AABB_SALT_PILE.get(getAABBIndex(state.getActualState(world, pos))));
+    public void getCollisionBoxes(IBlockState state, IBlockAccess access, BlockPos pos, List<AxisAlignedBB> boxes) {
+        boxes.add(AABB_SALT_PILE.get(getAABBIndex(state.getActualState(access, pos))));
     }
 
     @Override

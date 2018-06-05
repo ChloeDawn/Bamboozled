@@ -70,21 +70,21 @@ public final class BlockSaltOre extends BlockBase {
     }
 
     @Override
-    public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
+    public boolean doesSideBlockRendering(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
         return !Bamboozled.getClientConfig().isFancySaltOreForced() && !isFancyGraphics()
-                || world.getBlockState(pos.offset(face)).getBlock() == this;
+                || access.getBlockState(pos.offset(side)).getBlock() == this;
     }
 
     @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        val rand = world instanceof World ? ((World) world).rand : new Random();
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess access, BlockPos pos, IBlockState state, int fortune) {
+        val rand = access instanceof World ? ((World) access).rand : new Random();
         val amount = 4 + rand.nextInt(5) * (Math.max(0, rand.nextInt(fortune + 2) - 1) + 1);
         drops.add(new ItemStack(BamboozledItems.SALT_PILE, amount));
     }
 
     @Override
     @Deprecated
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess access, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.SOLID;
     }
 

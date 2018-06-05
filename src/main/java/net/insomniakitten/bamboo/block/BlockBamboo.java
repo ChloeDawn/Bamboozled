@@ -123,23 +123,20 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
         event.setCanceled(true);
     }
 
-    private IBlockState getConnectionsForPos(IBlockState state, IBlockAccess world, BlockPos pos) {
+    private IBlockState getConnectionsForPos(IBlockState state, IBlockAccess access, BlockPos pos) {
         for (val side : PROPS_SIDES.keySet()) {
-            val block = world.getBlockState(pos.offset(side)).getBlock();
+            val block = access.getBlockState(pos.offset(side)).getBlock();
             state = state.withProperty(PROPS_SIDES.get(side), block == this);
         }
         return state;
     }
 
     private IBlockState getLeavesForPos(IBlockState state, BlockPos pos) {
-        val x = pos.getX();
-        val y = pos.getY();
-        val z = pos.getZ();
-        val rand = new Random(MathHelper.getCoordinateRandom(x, y, z));
+        val rand = new Random(MathHelper.getCoordinateRandom(pos.getX(), pos.getY(), pos.getZ()));
         return state.withProperty(PROP_LEAVES, rand.nextInt(4));
     }
 
-    private IBlockState getCanopyForPos(IBlockState state, IBlockAccess world, BlockPos pos) {
+    private IBlockState getCanopyForPos(IBlockState state, IBlockAccess access, BlockPos pos) {
         if (state.getValue(PROPS_SIDES.get(UP))) {
             return state.withProperty(PROP_CANOPY, false);
         }
@@ -150,7 +147,7 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
         do {
             target.move(DOWN);
             ++height;
-        } while (height < 6 && world.getBlockState(target).getBlock() == this);
+        } while (height < 6 && access.getBlockState(target).getBlock() == this);
 
         return state.withProperty(PROP_CANOPY, height > 5);
     }
@@ -163,20 +160,20 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
 
     @Override
     @Deprecated
-    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public IBlockState getActualState(IBlockState state, IBlockAccess access, BlockPos pos) {
         state = getLeavesForPos(state, pos);
-        state = getConnectionsForPos(state, world, pos);
-        state = getCanopyForPos(state, world, pos);
+        state = getConnectionsForPos(state, access, pos);
+        state = getCanopyForPos(state, access, pos);
         return state;
     }
 
     @Override
     @Deprecated
     @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        val renderUp = side == UP && world.getBlockState(pos.up()).getBlock() != this;
-        val renderDown = side == DOWN && world.getBlockState(pos.down()).getBlock() != this;
-        return (renderUp || renderDown) && super.shouldSideBeRendered(state, world, pos, side);
+    public boolean shouldSideBeRendered(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
+        val renderUp = side == UP && access.getBlockState(pos.up()).getBlock() != this;
+        val renderDown = side == DOWN && access.getBlockState(pos.down()).getBlock() != this;
+        return (renderUp || renderDown) && super.shouldSideBeRendered(state, access, pos, side);
     }
 
     @Override
@@ -222,13 +219,13 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
     }
 
     @Override
-    public void getCollisionBoxes(IBlockState state, IBlockAccess world, BlockPos pos, List<AxisAlignedBB> boxes) {
+    public void getCollisionBoxes(IBlockState state, IBlockAccess access, BlockPos pos, List<AxisAlignedBB> boxes) {
         if (!Bamboozled.getConfig().isFancyBambooEnabled()) {
             boxes.add(AABB_SIMPLE);
             return;
         }
 
-        state = state.getActualState(world, pos);
+        state = state.getActualState(access, pos);
 
         if (state.getValue(PROPS_SIDES.get(UP))) {
             boxes.addAll(AABB_NORMAL);
@@ -254,7 +251,7 @@ public final class BlockBamboo extends BlockBase implements IPlantable {
     }
 
     @Override
-    public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
+    public EnumPlantType getPlantType(IBlockAccess access, BlockPos pos) {
         if (plantTypeTropical == null) {
             val name = "Tropical";
             Bamboozled.LOGGER.debug("Registering new PlantType \"{}\"", name);

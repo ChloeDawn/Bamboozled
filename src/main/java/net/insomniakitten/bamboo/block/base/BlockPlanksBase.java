@@ -50,7 +50,7 @@ public class BlockPlanksBase extends BlockBase {
     }
 
     @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess access, BlockPos pos, IBlockState state, int fortune) {
         drops.add(new ItemStack(this, 1, getMetaFromState(state)));
     }
 

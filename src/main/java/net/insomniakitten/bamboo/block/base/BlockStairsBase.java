@@ -66,12 +66,12 @@ public class BlockStairsBase extends BlockStairs {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public int getPackedLightmapCoords(IBlockState state, IBlockAccess world, BlockPos pos) {
-        val light = world.getCombinedLight(pos, state.getLightValue(world, pos));
+    public int getPackedLightmapCoords(IBlockState state, IBlockAccess access, BlockPos pos) {
+        val light = access.getCombinedLight(pos, state.getLightValue(access, pos));
         if (light == 0 && state.getBlock() instanceof BlockSlab) {
             pos = pos.down();
-            state = world.getBlockState(pos);
-            return world.getCombinedLight(pos, state.getLightValue(world, pos));
+            state = access.getBlockState(pos);
+            return access.getCombinedLight(pos, state.getLightValue(access, pos));
         } else {
             return light;
         }
@@ -145,12 +145,12 @@ public class BlockStairsBase extends BlockStairs {
     }
 
     @Override
-    public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn) {
+    public void onBlockDestroyedByExplosion(World world, BlockPos pos, Explosion explosionIn) {
 
     }
 
     @Override
-    public MapColor getMapColor(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+    public MapColor getMapColor(IBlockState state, IBlockAccess access, BlockPos pos) {
         return mapColor;
     }
 }

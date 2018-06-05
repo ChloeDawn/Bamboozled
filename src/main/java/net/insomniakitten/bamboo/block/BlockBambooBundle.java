@@ -58,7 +58,7 @@ public final class BlockBambooBundle extends BlockBase {
 
     @Override
     @Deprecated
-    public MapColor getMapColor(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public MapColor getMapColor(IBlockState state, IBlockAccess access, BlockPos pos) {
         return isDry(state) ? MapColor.WOOD : MapColor.GREEN;
     }
 
@@ -106,7 +106,7 @@ public final class BlockBambooBundle extends BlockBase {
     }
 
     @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess access, BlockPos pos, IBlockState state, int fortune) {
         drops.add(new ItemStack(this, 1, isDry(state) ? 1 : 0));
     }
 
