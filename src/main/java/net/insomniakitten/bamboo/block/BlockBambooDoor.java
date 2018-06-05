@@ -4,9 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import lombok.experimental.var;
 import lombok.val;
-import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.BamboozledItems;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -80,16 +78,6 @@ public final class BlockBambooDoor extends BlockDoor {
         if (left && open) facing = facing.getOpposite();
 
         return (lower ? AABB_LOWER : AABB_UPPER).get(facing).offset(pos);
-    }
-
-    @Override
-    public Block setUnlocalizedName(String name) {
-        return super.setUnlocalizedName(Bamboozled.ID + "." + name);
-    }
-
-    @Override
-    public String getUnlocalizedName() {
-        return super.getUnlocalizedName().replace("tile.", "block.");
     }
 
     @Override
