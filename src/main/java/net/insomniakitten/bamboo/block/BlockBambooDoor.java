@@ -1,7 +1,6 @@
 package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import lombok.experimental.var;
 import lombok.val;
 import net.insomniakitten.bamboo.BamboozledItems;
@@ -21,28 +20,24 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 public final class BlockBambooDoor extends BlockDoor {
-    protected static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB_LOWER, AABB_UPPER;
+    protected static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB_LOWER =
+            ImmutableMap.<EnumFacing, AxisAlignedBB>builder()
+                    .put(EnumFacing.NORTH, new AxisAlignedBB(0.0D, 0.0D, 0.8125D, 1.0D, 2.0D, 1.0D))
+                    .put(EnumFacing.SOUTH, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 2.0D, 0.1875D))
+                    .put(EnumFacing.WEST, new AxisAlignedBB(0.8125D, 0.0D, 0.0D, 1.0D, 2.0D, 1.0D))
+                    .put(EnumFacing.EAST, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.1875D, 2.0D, 1.0D))
+                    .build();
 
-    static {
-        Map<EnumFacing, AxisAlignedBB> lower = new HashMap<>(), upper = new HashMap<>();
-
-        lower.put(EnumFacing.NORTH, new AxisAlignedBB(0.0D, 0.0D, 0.8125D, 1.0D, 2.0D, 1.0D));
-        lower.put(EnumFacing.SOUTH, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 2.0D, 0.1875D));
-        lower.put(EnumFacing.WEST, new AxisAlignedBB(0.8125D, 0.0D, 0.0D, 1.0D, 2.0D, 1.0D));
-        lower.put(EnumFacing.EAST, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.1875D, 2.0D, 1.0D));
-        upper.put(EnumFacing.NORTH, new AxisAlignedBB(0.0D, -1.0D, 0.8125D, 1.0D, 1.0D, 1.0D));
-        upper.put(EnumFacing.SOUTH, new AxisAlignedBB(0.0D, -1.0D, 0.0D, 1.0D, 1.0D, 0.1875D));
-        upper.put(EnumFacing.WEST, new AxisAlignedBB(0.8125D, -1.0D, 0.0D, 1.0D, 1.0D, 1.0D));
-        upper.put(EnumFacing.EAST, new AxisAlignedBB(0.0D, -1.0D, 0.0D, 0.1875D, 1.0D, 1.0D));
-
-        AABB_LOWER = Maps.immutableEnumMap(lower);
-        AABB_UPPER = Maps.immutableEnumMap(upper);
-    }
+    protected static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB_UPPER =
+            ImmutableMap.<EnumFacing, AxisAlignedBB>builder()
+                    .put(EnumFacing.NORTH, new AxisAlignedBB(0.0D, -1.0D, 0.8125D, 1.0D, 1.0D, 1.0D))
+                    .put(EnumFacing.SOUTH, new AxisAlignedBB(0.0D, -1.0D, 0.0D, 1.0D, 1.0D, 0.1875D))
+                    .put(EnumFacing.WEST, new AxisAlignedBB(0.8125D, -1.0D, 0.0D, 1.0D, 1.0D, 1.0D))
+                    .put(EnumFacing.EAST, new AxisAlignedBB(0.0D, -1.0D, 0.0D, 0.1875D, 1.0D, 1.0D))
+                    .build();
 
     public BlockBambooDoor() {
         super(Material.WOOD);
@@ -60,7 +55,6 @@ public final class BlockBambooDoor extends BlockDoor {
     public ItemStack getItem(World world, BlockPos pos, IBlockState state) {
         return new ItemStack(BamboozledItems.BAMBOO_DOOR);
     }
-
 
     @Override
     @Deprecated
