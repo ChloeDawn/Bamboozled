@@ -15,7 +15,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.BlockStateContainer.Builder;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.DamageSource;
@@ -190,7 +189,7 @@ public final class BlockSaltPile extends Block {
     @Override
     public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
         if (!Bamboozled.getConfig().isInWorldBambooDryingEnabled()) return;
-        if (!(entity instanceof EntityLiving)) return;
+        if (!(entity instanceof EntityLivingBase)) return;
         if (((EntityLivingBase) entity).isEntityUndead()) {
             if (world.getTotalWorldTime() % 20 == 0) {
                 entity.attackEntityFrom(DamageSource.MAGIC, 1);
