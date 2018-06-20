@@ -53,7 +53,6 @@ import java.util.Objects;
 public class BamboozledRegistry {
     @SubscribeEvent
     void onBlockRegistry(RegistryEvent.Register<Block> event) {
-        Bamboozled.LOGGER.debug("Registering blocks...");
         registerBlock(event, "bamboo", new BlockBamboo());
         registerBlock(event, "bamboo_bundle", new BlockBambooBundle());
         registerBlock(event, "bamboo_dried_stairs", new BlockStairs(Material.WOOD, SoundType.WOOD, 1.0F, 5.0F));
@@ -71,7 +70,6 @@ public class BamboozledRegistry {
 
     @SubscribeEvent
     void onItemRegistry(RegistryEvent.Register<Item> event) {
-        Bamboozled.LOGGER.debug("Registering items...");
         registerItem(event, "bamboo", new ItemBlockBase(BamboozledBlocks.BAMBOO));
         registerItem(event, "bamboo_dried", new ItemBase());
         registerItem(event, "bamboo_bundle", new ItemBambooBundle(BamboozledBlocks.BAMBOO_BUNDLE));
@@ -90,24 +88,19 @@ public class BamboozledRegistry {
 
     @SubscribeEvent
     void onEntityRegistry(RegistryEvent.Register<EntityEntry> event) {
-        Bamboozled.LOGGER.debug("Registering entity entries...");
         event.getRegistry().register(EntityFallingSaltBlock.ENTRY.build());
         event.getRegistry().register(EntityThrownSaltPile.ENTRY.build());
     }
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("ConstantConditions")
     void onModelRegistry(ModelRegistryEvent event) {
-        Bamboozled.LOGGER.debug("Registering entity renderers...");
         RenderingRegistry.registerEntityRenderingHandler(EntityFallingSaltBlock.class, RenderFallingBlock::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityThrownSaltPile.class, RenderThrownSaltPile::new);
 
-        Bamboozled.LOGGER.debug("Registering state mappers...");
         registerMapper(BamboozledBlocks.BAMBOO, BlockBamboo.PROP_AGE);
         registerMapper(BamboozledBlocks.BAMBOO_DOOR, BlockDoor.POWERED);
 
-        Bamboozled.LOGGER.debug("Registering item models...");
         registerModel(BamboozledItems.BAMBOO, 0, "inventory");
         registerModel(BamboozledItems.BAMBOO_DRIED, 0, "inventory");
         registerModel(BamboozledItems.BAMBOO_BUNDLE, 0, "axis=y,dried=0");
@@ -128,7 +121,6 @@ public class BamboozledRegistry {
 
     @SubscribeEvent
     void onRecipeRegistry(RegistryEvent.Register<IRecipe> event) {
-        Bamboozled.LOGGER.debug("Registering ore dictionary entries...");
         registerOre(BamboozledItems.BAMBOO, 0, "bamboo");
         registerOre(BamboozledItems.BAMBOO_BUNDLE, 0, "blockBamboo");
         registerOre(BamboozledItems.BAMBOO_BUNDLE, 1, "blockBamboo", "blockBambooDried");
@@ -144,7 +136,6 @@ public class BamboozledRegistry {
         registerOre(BamboozledItems.SALT_PILE, 0, "dustSalt");
         registerOre(BamboozledItems.SALT_BLOCK, 0, "blockSalt");
 
-        Bamboozled.LOGGER.debug("Registering furnace smelting recipes...");
         GameRegistry.addSmelting(BamboozledItems.BAMBOO, new ItemStack(BamboozledItems.BAMBOO_DRIED), 0.0F);
         GameRegistry.addSmelting(BamboozledBlocks.SALT_ORE, new ItemStack(BamboozledItems.SALT_PILE, 4), 0.0F);
     }

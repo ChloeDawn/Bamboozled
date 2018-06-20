@@ -20,7 +20,6 @@ import java.util.List;
 public final class BamboozledWailaPlugin implements IWailaPlugin {
     @Override
     public void register(IWailaRegistrar registrar) {
-        Bamboozled.LOGGER.debug("Registering Hwyla data providers...");
         registrar.registerBodyProvider(new IWailaDataProvider() {
             @Override
             @SideOnly(Side.CLIENT)

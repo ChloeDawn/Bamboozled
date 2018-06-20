@@ -11,16 +11,12 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Bamboozled.ID, name = Bamboozled.NAME, version = Bamboozled.VERSION)
 public final class Bamboozled {
     public static final String ID = "bamboozled";
     public static final String NAME = "Bamboozled";
     public static final String VERSION = "%VERSION%";
-
-    public static final Logger LOGGER = LogManager.getLogger(Bamboozled.ID);
 
     public static final CreativeTabs TAB = new CreativeTabs(Bamboozled.ID) {
         @Override

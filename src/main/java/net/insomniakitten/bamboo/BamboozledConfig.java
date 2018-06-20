@@ -27,7 +27,6 @@ public class BamboozledConfig {
             val lastFancySaltOre = CLIENT.isFancySaltOreForced();
             ConfigManager.sync(Bamboozled.ID, Config.Type.INSTANCE);
             if (CLIENT.isFancySaltOreForced() != lastFancySaltOre) {
-                Bamboozled.LOGGER.debug("Reloading renderers...");
                 FMLCommonHandler.instance().reloadRenderers();
             }
         }
