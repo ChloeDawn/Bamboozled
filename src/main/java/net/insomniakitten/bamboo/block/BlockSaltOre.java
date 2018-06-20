@@ -90,6 +90,6 @@ public final class BlockSaltOre extends Block {
 
     private boolean isFancy() {
         return Bamboozled.getClientConfig().isFancySaltOreForced()
-            || !Blocks.LEAVES.isOpaqueCube(Blocks.LEAVES.getDefaultState());
+            || !Blocks.LEAVES.getDefaultState().isOpaqueCube();
     }
 }
