@@ -56,6 +56,7 @@ public class BlockStairs extends net.minecraft.block.BlockStairs {
     public void onBlockDestroyedByPlayer(World world, BlockPos pos, IBlockState state) {}
 
     @Override
+    @Deprecated
     @SideOnly(Side.CLIENT)
     public int getPackedLightmapCoords(IBlockState state, IBlockAccess access, BlockPos pos) {
         return access.getCombinedLight(pos, state.getLightValue(access, pos));
@@ -83,6 +84,7 @@ public class BlockStairs extends net.minecraft.block.BlockStairs {
     }
 
     @Override
+    @Deprecated
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
         return FULL_BLOCK_AABB.offset(pos);
@@ -124,6 +126,7 @@ public class BlockStairs extends net.minecraft.block.BlockStairs {
     public void onBlockDestroyedByExplosion(World world, BlockPos pos, Explosion explosionIn) {}
 
     @Override
+    @Deprecated
     public MapColor getMapColor(IBlockState state, IBlockAccess access, BlockPos pos) {
         return mapColor;
     }
