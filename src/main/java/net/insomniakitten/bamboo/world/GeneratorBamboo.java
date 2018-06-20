@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @UtilityClass
 public class GeneratorBamboo {
     @SubscribeEvent
-    public void onChunkPopulation(PopulateChunkEvent.Post event) {
+    void onChunkPopulation(PopulateChunkEvent.Post event) {
         if (event.getRand().nextInt(6) != 0) return;
         val world = event.getWorld();
         val rand = event.getRand();

@@ -95,7 +95,7 @@ public final class BlockBamboo extends Block implements IPlantable {
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public static void onDrawBlockHighlight(DrawBlockHighlightEvent event) {
+    static void onDrawBlockHighlight(DrawBlockHighlightEvent event) {
         if (event.getTarget() == null) return;
         if (event.getTarget().typeOfHit != RayTraceResult.Type.BLOCK) return;
 

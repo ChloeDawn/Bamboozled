@@ -52,7 +52,7 @@ import java.util.Objects;
 @EventBusSubscriber(modid = Bamboozled.ID)
 public class BamboozledRegistry {
     @SubscribeEvent
-    protected void onBlockRegistry(RegistryEvent.Register<Block> event) {
+    void onBlockRegistry(RegistryEvent.Register<Block> event) {
         Bamboozled.LOGGER.debug("Registering blocks...");
         registerBlock(event, "bamboo", new BlockBamboo());
         registerBlock(event, "bamboo_bundle", new BlockBambooBundle());
@@ -70,7 +70,7 @@ public class BamboozledRegistry {
     }
 
     @SubscribeEvent
-    protected void onItemRegistry(RegistryEvent.Register<Item> event) {
+    void onItemRegistry(RegistryEvent.Register<Item> event) {
         Bamboozled.LOGGER.debug("Registering items...");
         registerItem(event, "bamboo", new ItemBlockBase(BamboozledBlocks.BAMBOO));
         registerItem(event, "bamboo_dried", new ItemBase());
@@ -89,7 +89,7 @@ public class BamboozledRegistry {
     }
 
     @SubscribeEvent
-    protected void onEntityRegistry(RegistryEvent.Register<EntityEntry> event) {
+    void onEntityRegistry(RegistryEvent.Register<EntityEntry> event) {
         Bamboozled.LOGGER.debug("Registering entity entries...");
         event.getRegistry().register(EntityFallingSaltBlock.ENTRY.build());
         event.getRegistry().register(EntityThrownSaltPile.ENTRY.build());
@@ -98,7 +98,7 @@ public class BamboozledRegistry {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     @SuppressWarnings("ConstantConditions")
-    protected void onModelRegistry(ModelRegistryEvent event) {
+    void onModelRegistry(ModelRegistryEvent event) {
         Bamboozled.LOGGER.debug("Registering entity renderers...");
         RenderingRegistry.registerEntityRenderingHandler(EntityFallingSaltBlock.class, RenderFallingBlock::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityThrownSaltPile.class, RenderThrownSaltPile::new);
@@ -127,7 +127,7 @@ public class BamboozledRegistry {
     }
 
     @SubscribeEvent
-    protected void onRecipeRegistry(RegistryEvent.Register<IRecipe> event) {
+    void onRecipeRegistry(RegistryEvent.Register<IRecipe> event) {
         Bamboozled.LOGGER.debug("Registering ore dictionary entries...");
         registerOre(BamboozledItems.BAMBOO, 0, "bamboo");
         registerOre(BamboozledItems.BAMBOO_BUNDLE, 0, "blockBamboo");

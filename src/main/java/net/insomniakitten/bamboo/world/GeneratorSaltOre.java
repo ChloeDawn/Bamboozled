@@ -19,7 +19,7 @@ import java.util.Random;
 @UtilityClass
 public class GeneratorSaltOre {
     @SubscribeEvent
-    public void onChunkPopulation(PopulateChunkEvent.Post event) {
+    void onChunkPopulation(PopulateChunkEvent.Post event) {
         val x = event.getChunkX() << 4;
         val z = event.getChunkZ() << 4;
         val pos = new MutableBlockPos(x, 0, z);

@@ -22,7 +22,7 @@ public class BamboozledConfig {
     public final World WORLD = new World();
 
     @SubscribeEvent
-    protected void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+    void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (Bamboozled.ID.equals(event.getModID())) {
             val lastFancySaltOre = CLIENT.isFancySaltOreForced();
             ConfigManager.sync(Bamboozled.ID, Config.Type.INSTANCE);
