@@ -143,7 +143,7 @@ public class BlockSlab extends Block {
         val variant = state.getValue(VARIANT);
 
         return block instanceof BlockSlab && variant == target.getValue(VARIANT)
-                || block instanceof net.minecraft.block.BlockSlab && variant.doesMatchHalf(target.getValue(net.minecraft.block.BlockSlab.HALF));
+            || block instanceof net.minecraft.block.BlockSlab && variant.doesMatchHalf(target.getValue(net.minecraft.block.BlockSlab.HALF));
     }
 
     @Override

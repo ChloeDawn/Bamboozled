@@ -27,13 +27,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class EntityFallingSaltBlock extends EntityFallingBlock {
     public static final EntityEntryBuilder ENTRY = EntityEntryBuilder.create()
-            .entity(EntityFallingSaltBlock.class)
-            .id(Bamboozled.ID + ":falling_salt_block", 0)
-            .name(Bamboozled.ID + ".falling_salt_block")
-            .tracker(256, 1, true);
+        .entity(EntityFallingSaltBlock.class)
+        .id(Bamboozled.ID + ":falling_salt_block", 0)
+        .name(Bamboozled.ID + ".falling_salt_block")
+        .tracker(256, 1, true);
 
     protected static final DataParameter<BlockPos> ORIGIN = EntityDataManager.createKey(
-            EntityFallingSaltBlock.class, DataSerializers.BLOCK_POS
+        EntityFallingSaltBlock.class, DataSerializers.BLOCK_POS
     );
 
     public int fallTime;
@@ -126,8 +126,8 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
             } else {
                 val state = world.getBlockState(pos);
                 if (world.isAirBlock(new BlockPos(posX, posY - 0.01D, posZ))
-                        && !(world.getBlockState(pos).getMaterial() == Material.WATER)
-                        && BlockFalling.canFallThrough(world.getBlockState(new BlockPos(posX, posY - 0.01D, posZ)))) {
+                    && !(world.getBlockState(pos).getMaterial() == Material.WATER)
+                    && BlockFalling.canFallThrough(world.getBlockState(new BlockPos(posX, posY - 0.01D, posZ)))) {
                     onGround = false;
                     return;
                 }
@@ -140,8 +140,8 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
                     setDead();
 
                     if (world.mayPlace(BamboozledBlocks.SALT_BLOCK, pos, true, EnumFacing.UP, null)
-                            && (world.getBlockState(pos).getMaterial() == Material.WATER
-                            || !BlockFalling.canFallThrough(world.getBlockState(pos.down())))) {
+                        && (world.getBlockState(pos).getMaterial() == Material.WATER
+                        || !BlockFalling.canFallThrough(world.getBlockState(pos.down())))) {
                         world.setBlockState(pos, BamboozledBlocks.SALT_BLOCK.getDefaultState(), 3);
                     } else if (shouldDropItem && world.getGameRules().getBoolean("doEntityDrops")) {
                         if (Bamboozled.getConfig().isSaltBlockDropsEnabled()) {
@@ -177,7 +177,7 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
         category.addDetail("Entity Name", this::getName);
         category.addCrashSection("Entity's Exact location", String.format("%.2f, %.2f, %.2f", posX, posY, posZ));
         category.addCrashSection("Entity's Block location", CrashReportCategory.getCoordinateInfo(
-                MathHelper.floor(posX), MathHelper.floor(posY), MathHelper.floor(posZ)));
+            MathHelper.floor(posX), MathHelper.floor(posY), MathHelper.floor(posZ)));
         category.addCrashSection("Entity's Momentum", String.format("%.2f, %.2f, %.2f", motionX, motionY, motionZ));
         category.addDetail("Entity's Passengers", () -> getPassengers().toString());
         category.addDetail("Entity's Vehicle", () -> getRidingEntity().toString());

@@ -34,25 +34,25 @@ import java.util.stream.Stream;
 
 public final class BlockSaltPile extends Block {
     private static final ImmutableMap<EnumFacing, PropertyEnum<ConnectionType>> PROP_CONNECTIONS = Stream.of(EnumFacing.HORIZONTALS)
-            .collect(ImmutableMap.toImmutableMap(Function.identity(), it -> PropertyEnum.create(it.getName(), ConnectionType.class)));
+        .collect(ImmutableMap.toImmutableMap(Function.identity(), it -> PropertyEnum.create(it.getName(), ConnectionType.class)));
 
     private static final ImmutableList<AxisAlignedBB> AABB = ImmutableList.of(
-            new AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.0625, 0.8125),
-            new AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.0625, 1.0),
-            new AxisAlignedBB(0.0, 0.0, 0.1875, 0.8125, 0.0625, 0.8125),
-            new AxisAlignedBB(0.0, 0.0, 0.1875, 0.8125, 0.0625, 1.0),
-            new AxisAlignedBB(0.1875, 0.0, 0.0, 0.8125, 0.0625, 0.8125),
-            new AxisAlignedBB(0.1875, 0.0, 0.0, 0.8125, 0.0625, 1.0),
-            new AxisAlignedBB(0.0, 0.0, 0.0, 0.8125, 0.0625, 0.8125),
-            new AxisAlignedBB(0.0, 0.0, 0.0, 0.8125, 0.0625, 1.0),
-            new AxisAlignedBB(0.1875, 0.0, 0.1875, 1.0, 0.0625, 0.8125),
-            new AxisAlignedBB(0.1875, 0.0, 0.1875, 1.0, 0.0625, 1.0),
-            new AxisAlignedBB(0.0, 0.0, 0.1875, 1.0, 0.0625, 0.8125),
-            new AxisAlignedBB(0.0, 0.0, 0.1875, 1.0, 0.0625, 1.0),
-            new AxisAlignedBB(0.1875, 0.0, 0.0, 1.0, 0.0625, 0.8125),
-            new AxisAlignedBB(0.1875, 0.0, 0.0, 1.0, 0.0625, 1.0),
-            new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.0625, 0.8125),
-            new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.0625, 1.0)
+        new AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.0625, 0.8125),
+        new AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.0625, 1.0),
+        new AxisAlignedBB(0.0, 0.0, 0.1875, 0.8125, 0.0625, 0.8125),
+        new AxisAlignedBB(0.0, 0.0, 0.1875, 0.8125, 0.0625, 1.0),
+        new AxisAlignedBB(0.1875, 0.0, 0.0, 0.8125, 0.0625, 0.8125),
+        new AxisAlignedBB(0.1875, 0.0, 0.0, 0.8125, 0.0625, 1.0),
+        new AxisAlignedBB(0.0, 0.0, 0.0, 0.8125, 0.0625, 0.8125),
+        new AxisAlignedBB(0.0, 0.0, 0.0, 0.8125, 0.0625, 1.0),
+        new AxisAlignedBB(0.1875, 0.0, 0.1875, 1.0, 0.0625, 0.8125),
+        new AxisAlignedBB(0.1875, 0.0, 0.1875, 1.0, 0.0625, 1.0),
+        new AxisAlignedBB(0.0, 0.0, 0.1875, 1.0, 0.0625, 0.8125),
+        new AxisAlignedBB(0.0, 0.0, 0.1875, 1.0, 0.0625, 1.0),
+        new AxisAlignedBB(0.1875, 0.0, 0.0, 1.0, 0.0625, 0.8125),
+        new AxisAlignedBB(0.1875, 0.0, 0.0, 1.0, 0.0625, 1.0),
+        new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.0625, 0.8125),
+        new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.0625, 1.0)
     );
 
     public BlockSaltPile() {

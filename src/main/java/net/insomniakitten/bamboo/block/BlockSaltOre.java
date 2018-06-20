@@ -58,10 +58,10 @@ public final class BlockSaltOre extends Block {
         val state = ((EntityFallingBlock) entity).getBlock();
 
         if (ReflectionHelper.getPrivateValue(
-                EntityFallingBlock.class,
-                ((EntityFallingBlock) entity),
-                "field_145808_f",
-                "dontSetBlock")) {
+            EntityFallingBlock.class,
+            ((EntityFallingBlock) entity),
+            "field_145808_f",
+            "dontSetBlock")) {
             return;
         }
 
@@ -90,6 +90,6 @@ public final class BlockSaltOre extends Block {
 
     private boolean isFancy() {
         return Bamboozled.getClientConfig().isFancySaltOreForced()
-                || !Blocks.LEAVES.isOpaqueCube(Blocks.LEAVES.getDefaultState());
+            || !Blocks.LEAVES.isOpaqueCube(Blocks.LEAVES.getDefaultState());
     }
 }

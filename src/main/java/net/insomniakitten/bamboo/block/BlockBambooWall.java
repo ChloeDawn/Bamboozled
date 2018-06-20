@@ -30,32 +30,32 @@ import java.util.List;
 
 public final class BlockBambooWall extends Block {
     private static final ImmutableList<AxisAlignedBB> AABB_COLLISION = ImmutableList.of(
-            new AxisAlignedBB(0.375D, 0.0D, 0.375D, 0.625D, 1.5D, 0.625D),
-            new AxisAlignedBB(0.375D, 0.0D, 0.375D, 0.625D, 1.5D, 1.0D),
-            new AxisAlignedBB(0.0D, 0.0D, 0.375D, 0.625D, 1.5D, 0.625D),
-            new AxisAlignedBB(0.0D, 0.0D, 0.375D, 0.625D, 1.5D, 1.0D),
-            new AxisAlignedBB(0.375D, 0.0D, 0.0D, 0.625D, 1.5D, 0.625D),
-            new AxisAlignedBB(0.375D, 0.0D, 0.0D, 0.625D, 1.5D, 1.0D),
-            new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.625D, 1.5D, 0.625D),
-            new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.625D, 1.5D, 1.0D),
-            new AxisAlignedBB(0.375D, 0.0D, 0.375D, 1.0D, 1.5D, 0.625D),
-            new AxisAlignedBB(0.375D, 0.0D, 0.375D, 1.0D, 1.5D, 1.0D),
-            new AxisAlignedBB(0.0D, 0.0D, 0.375D, 1.0D, 1.5D, 0.625D),
-            new AxisAlignedBB(0.0D, 0.0D, 0.375D, 1.0D, 1.5D, 1.0D),
-            new AxisAlignedBB(0.375D, 0.0D, 0.0D, 1.0D, 1.5D, 0.625D),
-            new AxisAlignedBB(0.375D, 0.0D, 0.0D, 1.0D, 1.5D, 1.0D),
-            new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.5D, 0.625D),
-            new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.5D, 1.0D)
+        new AxisAlignedBB(0.375D, 0.0D, 0.375D, 0.625D, 1.5D, 0.625D),
+        new AxisAlignedBB(0.375D, 0.0D, 0.375D, 0.625D, 1.5D, 1.0D),
+        new AxisAlignedBB(0.0D, 0.0D, 0.375D, 0.625D, 1.5D, 0.625D),
+        new AxisAlignedBB(0.0D, 0.0D, 0.375D, 0.625D, 1.5D, 1.0D),
+        new AxisAlignedBB(0.375D, 0.0D, 0.0D, 0.625D, 1.5D, 0.625D),
+        new AxisAlignedBB(0.375D, 0.0D, 0.0D, 0.625D, 1.5D, 1.0D),
+        new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.625D, 1.5D, 0.625D),
+        new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.625D, 1.5D, 1.0D),
+        new AxisAlignedBB(0.375D, 0.0D, 0.375D, 1.0D, 1.5D, 0.625D),
+        new AxisAlignedBB(0.375D, 0.0D, 0.375D, 1.0D, 1.5D, 1.0D),
+        new AxisAlignedBB(0.0D, 0.0D, 0.375D, 1.0D, 1.5D, 0.625D),
+        new AxisAlignedBB(0.0D, 0.0D, 0.375D, 1.0D, 1.5D, 1.0D),
+        new AxisAlignedBB(0.375D, 0.0D, 0.0D, 1.0D, 1.5D, 0.625D),
+        new AxisAlignedBB(0.375D, 0.0D, 0.0D, 1.0D, 1.5D, 1.0D),
+        new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.5D, 0.625D),
+        new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.5D, 1.0D)
     );
 
     private static final ImmutableList<AxisAlignedBB> AABB_SELECTION = AABB_COLLISION.stream()
-            .map(it -> it.setMaxY(1.0D)).collect(ImmutableList.toImmutableList());
+        .map(it -> it.setMaxY(1.0D)).collect(ImmutableList.toImmutableList());
 
     private static final ImmutableMap<EnumFacing, PropertyBool> PROP_SIDES = ImmutableMap.of(
-            EnumFacing.NORTH, PropertyBool.create("north"),
-            EnumFacing.SOUTH, PropertyBool.create("south"),
-            EnumFacing.WEST, PropertyBool.create("west"),
-            EnumFacing.EAST, PropertyBool.create("east")
+        EnumFacing.NORTH, PropertyBool.create("north"),
+        EnumFacing.SOUTH, PropertyBool.create("south"),
+        EnumFacing.WEST, PropertyBool.create("west"),
+        EnumFacing.EAST, PropertyBool.create("east")
     );
 
     public BlockBambooWall() {
@@ -89,16 +89,6 @@ public final class BlockBambooWall extends Block {
     @Deprecated
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess access, BlockPos pos) {
         return AABB_COLLISION.get(getBoundingBoxIndex(getActualState(state, access, pos)));
-    }
-
-    @Override
-    public boolean doesSideBlockRendering(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
-        val offset = pos.offset(side);
-        val other = access.getBlockState(offset);
-        if (side.getAxis().isVertical()) {
-            val actual = state.getActualState(access, pos);
-            return actual == other.getActualState(access, offset);
-        } else return state.getBlock() == other.getBlock();
     }
 
     @Override
@@ -160,6 +150,16 @@ public final class BlockBambooWall extends Block {
         val builder = new Builder(this);
         PROP_SIDES.values().forEach(builder::add);
         return builder.build();
+    }
+
+    @Override
+    public boolean doesSideBlockRendering(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
+        val offset = pos.offset(side);
+        val other = access.getBlockState(offset);
+        if (side.getAxis().isVertical()) {
+            val actual = state.getActualState(access, pos);
+            return actual == other.getActualState(access, offset);
+        } else return state.getBlock() == other.getBlock();
     }
 
     private int getBoundingBoxIndex(IBlockState state) {

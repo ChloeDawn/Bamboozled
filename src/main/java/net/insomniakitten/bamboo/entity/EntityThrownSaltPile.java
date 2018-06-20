@@ -13,10 +13,10 @@ import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 
 public final class EntityThrownSaltPile extends EntityThrowable {
     public static final EntityEntryBuilder<Entity> ENTRY = EntityEntryBuilder.create()
-            .entity(EntityThrownSaltPile.class)
-            .id(Bamboozled.ID + ":thrown_salt_pile", 1)
-            .name(Bamboozled.ID + ".thrown_salt_pile")
-            .tracker(64, 1, true);
+        .entity(EntityThrownSaltPile.class)
+        .id(Bamboozled.ID + ":thrown_salt_pile", 1)
+        .name(Bamboozled.ID + ".thrown_salt_pile")
+        .tracker(64, 1, true);
 
     @SuppressWarnings("unused")
     public EntityThrownSaltPile(World world) {

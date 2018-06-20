@@ -42,10 +42,10 @@ public class ItemBlockSlabBase extends ItemBlockBase {
     public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side, EntityPlayer player, ItemStack stack) {
         val state = world.getBlockState(pos);
         return state.getBlock() == slab
-                && (side == EnumFacing.UP && slab.isLower(state)
-                || side == EnumFacing.DOWN && slab.isUpper(state))
-                || world.getBlockState(pos.offset(side)).getBlock() == this.slab
-                || super.canPlaceBlockOnSide(world, pos, side, player, stack);
+            && (side == EnumFacing.UP && slab.isLower(state)
+            || side == EnumFacing.DOWN && slab.isUpper(state))
+            || world.getBlockState(pos.offset(side)).getBlock() == this.slab
+            || super.canPlaceBlockOnSide(world, pos, side, player, stack);
     }
 
     private boolean tryPlace(EntityPlayer player, ItemStack stack, World world, BlockPos pos, EnumFacing side) {
@@ -59,7 +59,7 @@ public class ItemBlockSlabBase extends ItemBlockBase {
             if (world.checkNoEntityCollision(aabb.offset(pos)) && world.setBlockState(pos, dSlab)) {
                 val sound = dSlab.getBlock().getSoundType(dSlab, world, pos, player);
                 world.playSound(player, pos, sound.getPlaceSound(), SoundCategory.BLOCKS,
-                        (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
+                    (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
                 stack.shrink(1);
             }
             return true;

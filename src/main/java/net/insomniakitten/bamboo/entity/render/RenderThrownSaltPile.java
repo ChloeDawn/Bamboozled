@@ -37,8 +37,8 @@ public final class RenderThrownSaltPile extends Render<EntityThrownSaltPile> {
         }
 
         Minecraft.getMinecraft().getRenderItem().renderItem(
-                new ItemStack(BamboozledItems.SALT_PILE),
-                ItemCameraTransforms.TransformType.GROUND
+            new ItemStack(BamboozledItems.SALT_PILE),
+            ItemCameraTransforms.TransformType.GROUND
         );
 
         if (renderOutlines) {

@@ -47,41 +47,41 @@ public final class BlockBamboo extends Block implements IPlantable {
     public static final PropertyInteger PROP_LEAVES = PropertyInteger.create("leaves", 0, 3);
 
     private static final ImmutableMap<EnumFacing, PropertyBool> PROP_SIDES = ImmutableMap.of(
-            EnumFacing.UP, PropertyBool.create("up"),
-            EnumFacing.NORTH, PropertyBool.create("north"),
-            EnumFacing.SOUTH, PropertyBool.create("south"),
-            EnumFacing.WEST, PropertyBool.create("west"),
-            EnumFacing.EAST, PropertyBool.create("east")
+        EnumFacing.UP, PropertyBool.create("up"),
+        EnumFacing.NORTH, PropertyBool.create("north"),
+        EnumFacing.SOUTH, PropertyBool.create("south"),
+        EnumFacing.WEST, PropertyBool.create("west"),
+        EnumFacing.EAST, PropertyBool.create("east")
     );
 
     private static final AxisAlignedBB AABB_SIMPLE = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 1.0, 0.9375);
 
     private static final ImmutableList<AxisAlignedBB> AABB_NORMAL = ImmutableList.of(
-            new AxisAlignedBB(0.125, 0.0, 0.125, 0.3125, 1.0, 0.3125),
-            new AxisAlignedBB(0.6875, 0.0, 0.25, 0.875, 1.0, 0.4375),
-            new AxisAlignedBB(0.125, 0.0, 0.625, 0.3125, 1.0, 0.8125),
-            new AxisAlignedBB(0.6875, 0.0, 0.5625, 0.875, 1.0, 0.75),
-            new AxisAlignedBB(0.4375, 0.0, 0.375, 0.625, 1.0, 0.5625),
-            new AxisAlignedBB(0.375, 0.0, 0.6875, 0.5625, 1.0, 0.875),
-            new AxisAlignedBB(0.4375, 0.0, 0.0625, 0.625, 1.0, 0.25),
-            new AxisAlignedBB(0.1875, 0.0, 0.375, 0.375, 1.0, 0.5625)
+        new AxisAlignedBB(0.125, 0.0, 0.125, 0.3125, 1.0, 0.3125),
+        new AxisAlignedBB(0.6875, 0.0, 0.25, 0.875, 1.0, 0.4375),
+        new AxisAlignedBB(0.125, 0.0, 0.625, 0.3125, 1.0, 0.8125),
+        new AxisAlignedBB(0.6875, 0.0, 0.5625, 0.875, 1.0, 0.75),
+        new AxisAlignedBB(0.4375, 0.0, 0.375, 0.625, 1.0, 0.5625),
+        new AxisAlignedBB(0.375, 0.0, 0.6875, 0.5625, 1.0, 0.875),
+        new AxisAlignedBB(0.4375, 0.0, 0.0625, 0.625, 1.0, 0.25),
+        new AxisAlignedBB(0.1875, 0.0, 0.375, 0.375, 1.0, 0.5625)
     );
 
     private static final ImmutableList<AxisAlignedBB> AABB_NORMAL_TOP = ImmutableList.of(
-            new AxisAlignedBB(0.125, 0.0, 0.125, 0.3125, 0.75, 0.3125),
-            new AxisAlignedBB(0.6875, 0.0, 0.25, 0.875, 0.625, 0.4375),
-            new AxisAlignedBB(0.125, 0.0, 0.625, 0.3125, 0.6875, 0.8125),
-            new AxisAlignedBB(0.6875, 0.0, 0.5625, 0.875, 0.8125, 0.75),
-            new AxisAlignedBB(0.4375, 0.0, 0.375, 0.625, 0.9375, 0.5625),
-            new AxisAlignedBB(0.375, 0.0, 0.6875, 0.5625, 0.875, 0.875),
-            new AxisAlignedBB(0.4375, 0.0, 0.0625, 0.625, 0.875, 0.25),
-            new AxisAlignedBB(0.1875, 0.0, 0.375, 0.375, 0.8125, 0.5625)
+        new AxisAlignedBB(0.125, 0.0, 0.125, 0.3125, 0.75, 0.3125),
+        new AxisAlignedBB(0.6875, 0.0, 0.25, 0.875, 0.625, 0.4375),
+        new AxisAlignedBB(0.125, 0.0, 0.625, 0.3125, 0.6875, 0.8125),
+        new AxisAlignedBB(0.6875, 0.0, 0.5625, 0.875, 0.8125, 0.75),
+        new AxisAlignedBB(0.4375, 0.0, 0.375, 0.625, 0.9375, 0.5625),
+        new AxisAlignedBB(0.375, 0.0, 0.6875, 0.5625, 0.875, 0.875),
+        new AxisAlignedBB(0.4375, 0.0, 0.0625, 0.625, 0.875, 0.25),
+        new AxisAlignedBB(0.1875, 0.0, 0.375, 0.375, 0.8125, 0.5625)
     );
 
     private static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB_SIDE = ImmutableMap.of(
-            EnumFacing.NORTH, new AxisAlignedBB(0.75, 0.0, -0.0625, 0.9375, 1.0, 0.125),
-            EnumFacing.SOUTH, new AxisAlignedBB(0.0625, 0.0, 0.875, 0.25, 1.0, 1.0625),
-            EnumFacing.WEST, new AxisAlignedBB(-0.0625, 0.0, 0.375, 0.125, 1.0, 0.5625)
+        EnumFacing.NORTH, new AxisAlignedBB(0.75, 0.0, -0.0625, 0.9375, 1.0, 0.125),
+        EnumFacing.SOUTH, new AxisAlignedBB(0.0625, 0.0, 0.875, 0.25, 1.0, 1.0625),
+        EnumFacing.WEST, new AxisAlignedBB(-0.0625, 0.0, 0.375, 0.125, 1.0, 0.5625)
     );
 
     public BlockBamboo() {
@@ -259,7 +259,7 @@ public final class BlockBamboo extends Block implements IPlantable {
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
         val state = world.getBlockState(pos.down());
         return state.getBlock() == this || state.getBlock().canSustainPlant(
-                state, world, pos.down(), EnumFacing.UP, (BlockSapling) Blocks.SAPLING
+            state, world, pos.down(), EnumFacing.UP, (BlockSapling) Blocks.SAPLING
         );
     }
 

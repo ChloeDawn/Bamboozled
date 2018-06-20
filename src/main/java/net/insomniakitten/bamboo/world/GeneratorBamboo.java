@@ -43,9 +43,9 @@ public class GeneratorBamboo {
         do {
             target = chunk.getBlockState(pos.move(EnumFacing.DOWN));
         } while (!world.isOutsideBuildHeight(pos)
-                && ((!target.getMaterial().isLiquid()
-                && target.getBlock().isReplaceable(world, pos))
-                || target.getBlock().isFoliage(world, pos)
-                || target.getBlock().isWood(world, pos)));
+            && ((!target.getMaterial().isLiquid()
+            && target.getBlock().isReplaceable(world, pos))
+            || target.getBlock().isFoliage(world, pos)
+            || target.getBlock().isWood(world, pos)));
     }
 }

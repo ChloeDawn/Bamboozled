@@ -25,8 +25,8 @@ public class BoundingBoxes {
         disableAlpha();
         enableBlend();
         tryBlendFuncSeparate(
-                SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA,
-                SourceFactor.ONE, DestFactor.ZERO
+            SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA,
+            SourceFactor.ONE, DestFactor.ZERO
         );
         glLineWidth(2.0F);
         disableTexture2D();
