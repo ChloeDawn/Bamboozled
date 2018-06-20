@@ -15,12 +15,12 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 def modVersion = '1.2.0'
-def mcfVersion = '1.12.2-14.23.2.2654'
-def mcpMappings = 'snapshot_20180409'
+def mcfVersion = '1.12.2-14.23.4.2705'
+def mcpMappings = 'snapshot_20180620'
 
-def hwylaVersion = '1.8.25-B40_1.12'
-def jeiVersion = '1.12.2:4.8.5.159'
-def ctmVersion = 'MC1.12-0.3.0.14'
+def hwylaVersion = '1.8.26-B41_1.12.2'
+def jeiVersion = '1.12.2:4.10.0.199'
+def ctmVersion = 'MC1.12-0.3.0.15'
 
 version = "1.12-$modVersion"
 group = 'net.insomniakitten.bamboozled'
