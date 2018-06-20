@@ -5,6 +5,7 @@ import net.insomniakitten.bamboo.world.GeneratorBamboo;
 import net.insomniakitten.bamboo.world.GeneratorSaltOre;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -34,6 +35,8 @@ public final class Bamboozled {
             return new ItemStack(BamboozledItems.BAMBOO);
         }
     };
+
+    public static final EnumPlantType TROPICAL_PLANT_TYPE = EnumPlantType.getPlantType("Tropical");
 
     public static BamboozledConfig.General getConfig() {
         return BamboozledConfig.GENERAL;

@@ -84,8 +84,6 @@ public final class BlockBamboo extends Block implements IPlantable {
             EnumFacing.WEST, new AxisAlignedBB(-0.0625, 0.0, 0.375, 0.125, 1.0, 0.5625)
     );
 
-    private static EnumPlantType plantTypeTropical;
-
     public BlockBamboo() {
         super(Material.WOOD, MapColor.GREEN);
         setHardness(0.2F);
@@ -287,11 +285,7 @@ public final class BlockBamboo extends Block implements IPlantable {
 
     @Override
     public EnumPlantType getPlantType(IBlockAccess access, BlockPos pos) {
-        if (plantTypeTropical == null) {
-            Bamboozled.LOGGER.debug("Registering new PlantType \"Tropical\"");
-            plantTypeTropical = EnumPlantType.getPlantType("Tropical");
-        }
-        return plantTypeTropical;
+        return Bamboozled.TROPICAL_PLANT_TYPE;
     }
 
     @Override
