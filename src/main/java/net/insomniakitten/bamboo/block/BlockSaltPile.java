@@ -139,6 +139,12 @@ public final class BlockSaltPile extends Block {
         return false;
     }
 
+    @Deprecated
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess access, BlockPos pos) {
+        return AABB.get(getBoundingBoxIndex(state.getActualState(access, pos)));
+    }
+
     @Override
     @Deprecated
     public BlockFaceShape getBlockFaceShape(IBlockAccess access, IBlockState state, BlockPos pos, EnumFacing face) {
@@ -149,13 +155,6 @@ public final class BlockSaltPile extends Block {
     @Deprecated
     public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess access, BlockPos pos) {
         return NULL_AABB;
-    }
-
-    @Override
-    @Deprecated
-    @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
-        return AABB.get(getBoundingBoxIndex(state.getActualState(world, pos))).offset(pos);
     }
 
     @Override
