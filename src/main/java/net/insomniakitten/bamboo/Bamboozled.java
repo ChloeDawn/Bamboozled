@@ -1,5 +1,8 @@
 package net.insomniakitten.bamboo;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import net.insomniakitten.bamboo.block.BlockBamboo;
 import net.insomniakitten.bamboo.world.GeneratorBamboo;
 import net.insomniakitten.bamboo.world.GeneratorSaltOre;
@@ -13,10 +16,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod(modid = Bamboozled.ID, name = Bamboozled.NAME, version = Bamboozled.VERSION)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Bamboozled {
     public static final String ID = "bamboozled";
     public static final String NAME = "Bamboozled";
     public static final String VERSION = "%VERSION%";
+
+    @Getter(onMethod = @__({ @Mod.InstanceFactory, @Deprecated }))
+    public static final Bamboozled INSTANCE = new Bamboozled();
 
     public static final CreativeTabs TAB = new CreativeTabs(Bamboozled.ID) {
         @Override
