@@ -20,18 +20,14 @@ public final class BamboozledWailaPlugin implements IWailaPlugin {
     public void register(IWailaRegistrar registrar) {
         registrar.registerBodyProvider(new IWailaDataProvider() {
             @Override
-            public List<String> getWailaBody(
-                ItemStack stack,
-                List<String> tooltip,
-                IWailaDataAccessor accessor,
-                IWailaConfigHandler config
-            ) {
+            public List<String> getWailaBody(ItemStack stack, List<String> tooltip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
                 if (Bamboozled.getConfig().isInWorldBambooDryingEnabled()) {
-                    val progress = BlockBambooBundle.getDryProgress(accessor.getBlockState());
+                    val state = accessor.getBlockState();
+                    val progress = BlockBambooBundle.getDryProgress(state);
                     if (progress < 3) {
                         val key = "waila.bamboozled.bamboo_bundle.dry_progress";
-                        val component = new TextComponentTranslation(key, 33 * progress);
-                        tooltip.add(component.getUnformattedComponentText());
+                        val txt = new TextComponentTranslation(key, 33 * progress);
+                        tooltip.add(txt.getUnformattedComponentText());
                     }
                 }
                 return tooltip;
