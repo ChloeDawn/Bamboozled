@@ -1,9 +1,9 @@
 {
   "__comment": "Copyright © InsomniaKitten 2017",
   "textures": {
-    "particle": "#side",
-    "cap": "#cap",
-    "side": "#side"
+    "particle": "bamboozled:blocks/bamboo_side",
+    "cap": "bamboozled:blocks/bamboo_cap",
+    "side": "bamboozled:blocks/bamboo_side"
   },
   "elements": [
     {

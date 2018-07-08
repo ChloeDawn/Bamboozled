@@ -23,7 +23,7 @@ public final class BamboozledWailaPlugin implements IWailaPlugin {
             public List<String> getWailaBody(ItemStack stack, List<String> tooltip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
                 if (Bamboozled.getConfig().isInWorldBambooDryingEnabled()) {
                     val state = accessor.getBlockState();
-                    val progress = BlockBambooBundle.getDryProgress(state);
+                    val progress = state.getValue(BlockBambooBundle.PROP_DRIED);
                     if (progress < 3) {
                         val key = "waila.bamboozled.bamboo_bundle.dry_progress";
                         val txt = new TextComponentTranslation(key, 33 * progress);

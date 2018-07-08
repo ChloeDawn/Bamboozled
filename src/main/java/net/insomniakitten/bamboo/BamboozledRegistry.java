@@ -15,7 +15,6 @@ import net.insomniakitten.bamboo.block.base.BlockSlab;
 import net.insomniakitten.bamboo.block.base.BlockStairs;
 import net.insomniakitten.bamboo.entity.EntityFallingSaltBlock;
 import net.insomniakitten.bamboo.entity.EntityThrownSaltPile;
-import net.insomniakitten.bamboo.entity.render.RenderThrownSaltPile;
 import net.insomniakitten.bamboo.item.ItemBambooBundle;
 import net.insomniakitten.bamboo.item.ItemSaltPile;
 import net.insomniakitten.bamboo.item.base.ItemBase;
@@ -24,29 +23,17 @@ import net.insomniakitten.bamboo.item.base.ItemBlockDoorBase;
 import net.insomniakitten.bamboo.item.base.ItemBlockPlanksBase;
 import net.insomniakitten.bamboo.item.base.ItemBlockSlabBase;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDoor;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.StateMap;
-import net.minecraft.client.renderer.entity.RenderFallingBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-
-import java.util.Objects;
 
 @UtilityClass
 @EventBusSubscriber(modid = Bamboozled.ID)
@@ -93,34 +80,10 @@ public class BamboozledRegistry {
     }
 
     @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    void onModelRegistry(ModelRegistryEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(EntityFallingSaltBlock.class, RenderFallingBlock::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityThrownSaltPile.class, RenderThrownSaltPile::new);
-
-        registerMapper(BamboozledBlocks.BAMBOO, BlockBamboo.PROP_AGE);
-        registerMapper(BamboozledBlocks.BAMBOO_DOOR, BlockDoor.POWERED);
-
-        registerModel(BamboozledItems.BAMBOO, 0, "inventory");
-        registerModel(BamboozledItems.BAMBOO_DRIED, 0, "inventory");
-        registerModel(BamboozledItems.BAMBOO_BUNDLE, 0, "axis=y,dried=0");
-        registerModel(BamboozledItems.BAMBOO_BUNDLE, 1, "axis=y,dried=3");
-        registerModel(BamboozledItems.BAMBOO_DRIED_STAIRS, 0, "facing=east,half=bottom,shape=straight");
-        registerModel(BamboozledItems.BAMBOO_DRIED_SLAB, 0, "variant=lower");
-        registerModel(BamboozledItems.BAMBOO_PLANKS, 0, "orientation=horizontal");
-        registerModel(BamboozledItems.BAMBOO_PLANKS, 1, "orientation=vertical");
-        registerModel(BamboozledItems.BAMBOO_PLANKS_STAIRS, 0, "facing=east,half=bottom,shape=straight");
-        registerModel(BamboozledItems.BAMBOO_PLANKS_SLAB, 0, "variant=lower");
-        registerModel(BamboozledItems.BAMBOO_WALL, 0, "inventory");
-        registerModel(BamboozledItems.BAMBOO_DOOR, 0, "inventory");
-        registerModel(BamboozledItems.SALT_ORE, 0, "normal");
-        registerModel(BamboozledItems.SALT_PILE, 0, "inventory");
-        registerModel(BamboozledItems.SALT_BLOCK, 0, "normal");
-        registerModel(BamboozledItems.ROPE, 0, "inventory");
-    }
-
-    @SubscribeEvent
     void onRecipeRegistry(RegistryEvent.Register<IRecipe> event) {
+        registerSmelting(BamboozledItems.BAMBOO, BamboozledItems.BAMBOO_DRIED, 1);
+        registerSmelting(BamboozledItems.SALT_BLOCK, BamboozledItems.SALT_PILE, 4);
+
         registerOre(BamboozledItems.BAMBOO, 0, "bamboo");
         registerOre(BamboozledItems.BAMBOO_BUNDLE, 0, "blockBamboo");
         registerOre(BamboozledItems.BAMBOO_BUNDLE, 1, "blockBamboo", "blockBambooDried");
@@ -135,9 +98,6 @@ public class BamboozledRegistry {
         registerOre(BamboozledItems.SALT_ORE, 0, "oreSalt", "oreHalite");
         registerOre(BamboozledItems.SALT_PILE, 0, "dustSalt");
         registerOre(BamboozledItems.SALT_BLOCK, 0, "blockSalt");
-
-        GameRegistry.addSmelting(BamboozledItems.BAMBOO, new ItemStack(BamboozledItems.BAMBOO_DRIED), 0.0F);
-        GameRegistry.addSmelting(BamboozledBlocks.SALT_ORE, new ItemStack(BamboozledItems.SALT_PILE, 4), 0.0F);
     }
 
     private void registerBlock(RegistryEvent.Register<Block> event, String name, Block block) {
@@ -154,17 +114,8 @@ public class BamboozledRegistry {
         event.getRegistry().register(item);
     }
 
-    @SideOnly(Side.CLIENT)
-    private void registerMapper(Block block, IProperty property) {
-        val mapper = new StateMap.Builder().ignore(property).build();
-        ModelLoader.setCustomStateMapper(block, mapper);
-    }
-
-    @SideOnly(Side.CLIENT)
-    private void registerModel(Item item, int meta, String variant) {
-        val name = Objects.requireNonNull(item.getRegistryName());
-        val model = new ModelResourceLocation(name, variant);
-        ModelLoader.setCustomModelResourceLocation(item, meta, model);
+    private void registerSmelting(Item input, Item output, int amount) {
+        GameRegistry.addSmelting(input, new ItemStack(output, amount), 0.0F);
     }
 
     private void registerOre(Item item, int meta, String... ores) {

@@ -18,6 +18,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -28,11 +29,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public final class EntityFallingSaltBlock extends EntityFallingBlock {
     public static final EntityEntryBuilder ENTRY = EntityEntryBuilder.create()
         .entity(EntityFallingSaltBlock.class)
-        .id(Bamboozled.ID + ":falling_salt_block", 0)
+        .id(new ResourceLocation(Bamboozled.ID, "falling_salt_block"), 0)
         .name(Bamboozled.ID + ".falling_salt_block")
         .tracker(256, 1, true);
 
-    protected static final DataParameter<BlockPos> ORIGIN = EntityDataManager.createKey(
+    private static final DataParameter<BlockPos> ORIGIN = EntityDataManager.createKey(
         EntityFallingSaltBlock.class, DataSerializers.BLOCK_POS
     );
 

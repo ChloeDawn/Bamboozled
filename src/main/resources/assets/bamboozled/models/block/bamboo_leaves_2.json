@@ -1,0 +1,7 @@
+{
+  "__comment": "Copyright © InsomniaKitten 2017",
+  "parent": "bamboozled:block/bamboo_leaves",
+  "textures": {
+    "leaves": "bamboozled:blocks/bamboo_leaves_2"
+  }
+}

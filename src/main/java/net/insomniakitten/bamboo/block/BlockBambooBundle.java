@@ -29,8 +29,8 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public final class BlockBambooBundle extends Block {
-    private static final PropertyEnum<Axis> PROP_AXIS = PropertyEnum.create("axis", Axis.class);
-    private static final PropertyInteger PROP_DRIED = PropertyInteger.create("dried", 0, 3);
+    public static final PropertyEnum<Axis> PROP_AXIS = PropertyEnum.create("axis", Axis.class);
+    public static final PropertyInteger PROP_DRIED = PropertyInteger.create("dried", 0, 3);
 
     public BlockBambooBundle() {
         super(Material.PLANTS);
@@ -47,10 +47,6 @@ public final class BlockBambooBundle extends Block {
 
     public static boolean isDry(int meta) {
         return meta == 1;
-    }
-
-    public static int getDryProgress(IBlockState state) {
-        return state.getValue(PROP_DRIED);
     }
 
     @Override

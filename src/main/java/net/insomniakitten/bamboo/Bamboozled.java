@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -39,7 +40,8 @@ public final class Bamboozled {
         }
     };
 
-    public static final EnumPlantType TROPICAL_PLANT_TYPE = EnumPlantType.getPlantType("Tropical");
+    public static final EnumPlantType TROPICAL_PLANT_TYPE =
+        EnumPlantType.getPlantType("Tropical");
 
     public static BamboozledConfig.General getConfig() {
         return BamboozledConfig.GENERAL;
@@ -53,7 +55,7 @@ public final class Bamboozled {
         return BamboozledConfig.WORLD;
     }
 
-    @Mod.EventHandler
+    @EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
         if (Bamboozled.getWorldConfig().isBambooGenerationEnabled()) {
             MinecraftForge.EVENT_BUS.register(GeneratorBamboo.class);

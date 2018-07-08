@@ -15,15 +15,15 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.BlockStateContainer.Builder;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -43,10 +43,9 @@ import java.util.Random;
 
 public final class BlockBamboo extends Block implements IPlantable {
     public static final PropertyInteger PROP_AGE = PropertyInteger.create("age", 0, 15);
-    public static final PropertyBool PROP_CANOPY = PropertyBool.create("canopy");
     public static final PropertyInteger PROP_LEAVES = PropertyInteger.create("leaves", 0, 3);
 
-    private static final ImmutableMap<EnumFacing, PropertyBool> PROP_SIDES = ImmutableMap.of(
+    public static final ImmutableMap<EnumFacing, PropertyBool> PROP_SIDES = ImmutableMap.of(
         EnumFacing.UP, PropertyBool.create("up"),
         EnumFacing.NORTH, PropertyBool.create("north"),
         EnumFacing.SOUTH, PropertyBool.create("south"),
@@ -134,22 +133,6 @@ public final class BlockBamboo extends Block implements IPlantable {
         return state.withProperty(PROP_LEAVES, rand.nextInt(4));
     }
 
-    private IBlockState getCanopyForPos(IBlockState state, IBlockAccess access, BlockPos pos) {
-        if (state.getValue(PROP_SIDES.get(EnumFacing.UP))) {
-            return state.withProperty(PROP_CANOPY, false);
-        }
-
-        val target = new MutableBlockPos(pos);
-        var height = 0;
-
-        do {
-            target.move(EnumFacing.DOWN);
-            ++height;
-        } while (height < 6 && access.getBlockState(target).getBlock() == this);
-
-        return state.withProperty(PROP_CANOPY, height > 5);
-    }
-
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(int meta) {
@@ -166,7 +149,6 @@ public final class BlockBamboo extends Block implements IPlantable {
     public IBlockState getActualState(IBlockState state, IBlockAccess access, BlockPos pos) {
         state = getLeavesForPos(state, pos);
         state = getConnectionsForPos(state, access, pos);
-        state = getCanopyForPos(state, access, pos);
         return state;
     }
 
@@ -174,6 +156,12 @@ public final class BlockBamboo extends Block implements IPlantable {
     @Deprecated
     public boolean isFullCube(IBlockState state) {
         return false;
+    }
+
+    @Override
+    @Deprecated
+    public BlockFaceShape getBlockFaceShape(IBlockAccess access, IBlockState state, BlockPos pos, EnumFacing face) {
+        return BlockFaceShape.UNDEFINED;
     }
 
     @Override
@@ -256,6 +244,12 @@ public final class BlockBamboo extends Block implements IPlantable {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
         val state = world.getBlockState(pos.down());
         return state.getBlock() == this || state.getBlock().canSustainPlant(
@@ -265,8 +259,8 @@ public final class BlockBamboo extends Block implements IPlantable {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        val builder = new Builder(this);
-        builder.add(PROP_AGE, PROP_CANOPY, PROP_LEAVES);
+        val builder = new BlockStateContainer.Builder(this);
+        builder.add(PROP_AGE, PROP_LEAVES);
         PROP_SIDES.values().forEach(builder::add);
         return builder.build();
     }
