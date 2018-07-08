@@ -173,7 +173,7 @@ public final class BlockBamboo extends Block implements IPlantable {
     @Override
     @Deprecated
     public boolean isFullCube(IBlockState state) {
-        return true;
+        return false;
     }
 
     @Override
