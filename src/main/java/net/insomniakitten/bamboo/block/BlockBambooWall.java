@@ -88,7 +88,7 @@ public final class BlockBambooWall extends Block {
     @Override
     @Deprecated
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess access, BlockPos pos) {
-        return AABB_COLLISION.get(getBoundingBoxIndex(getActualState(state, access, pos)));
+        return AABB_SELECTION.get(getBoundingBoxIndex(state.getActualState(access, pos)));
     }
 
     @Override
