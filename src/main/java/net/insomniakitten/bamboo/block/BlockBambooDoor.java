@@ -24,10 +24,10 @@ import java.util.Random;
 
 public final class BlockBambooDoor extends BlockDoor {
     private static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB = ImmutableMap.of(
-        EnumFacing.NORTH, new AxisAlignedBB(0.0D, 0.0D, 0.8125D, 1.0D, 2.0D, 1.0D),
-        EnumFacing.SOUTH, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 2.0D, 0.1875D),
-        EnumFacing.WEST, new AxisAlignedBB(0.8125D, 0.0D, 0.0D, 1.0D, 2.0D, 1.0D),
-        EnumFacing.EAST, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.1875D, 2.0D, 1.0D)
+        EnumFacing.NORTH, new AxisAlignedBB(0.0D, 0.0D, 0.8125D, 1.0D, 1.0D, 1.0D),
+        EnumFacing.SOUTH, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 0.1875D),
+        EnumFacing.WEST, new AxisAlignedBB(0.8125D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D),
+        EnumFacing.EAST, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.1875D, 1.0D, 1.0D)
     );
 
     public BlockBambooDoor() {
@@ -54,11 +54,10 @@ public final class BlockBambooDoor extends BlockDoor {
         val actual = state.getActualState(world, pos);
         val open = actual.getValue(OPEN);
         val left = actual.getValue(HINGE) == EnumHingePosition.LEFT;
-        val lower = actual.getValue(HALF) == EnumDoorHalf.LOWER;
         var facing = actual.getValue(FACING);
         if (open) facing = facing.rotateYCCW();
         if (left && open) facing = facing.getOpposite();
-        return AABB.get(facing).offset(lower ? pos : pos.down());
+        return AABB.get(facing).offset(pos);
     }
 
     @Override
