@@ -1,9 +1,9 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "result": { "item": "bamboozled:bamboo_bundle", "data": 0 },
-    "pattern": [ "BBB", "BSB", "BBB" ],
-    "key": {
-        "B": { "item": "bamboozled:bamboo" },
-        "S": { "ore": "string", "type": "forge:ore_dict" }
-    }
+  "type": "minecraft:crafting_shaped",
+  "result": { "item": "bamboozled:bamboo_bundle", "data": 0 },
+  "pattern": [ "BBB", "BSB", "BBB" ],
+  "key": {
+    "B": { "item": "bamboozled:bamboo" },
+    "S": { "ore": "string", "type": "forge:ore_dict" }
+  }
 }

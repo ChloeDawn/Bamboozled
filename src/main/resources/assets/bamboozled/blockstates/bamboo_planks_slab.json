@@ -1,24 +1,24 @@
 {
-    "forge_marker": 1,
-    "defaults": {
-      "textures": {
-          "bottom": "#all",
-          "top": "#all",
-          "side": "#all"
-      }
-    },
-    "variants": {
-        "variant=upper": [
-            { "model": "upper_slab", "textures": { "all": "bamboozled:blocks/bamboo_planks" } },
-            { "model": "upper_slab", "textures": { "all": "bamboozled:blocks/bamboo_planks_alt" } }
-        ],
-        "variant=lower": [
-            { "model": "half_slab", "textures": { "all": "bamboozled:blocks/bamboo_planks" } },
-            { "model": "half_slab", "textures": { "all": "bamboozled:blocks/bamboo_planks_alt" } }
-        ],
-        "variant=double": [
-            { "model": "cube_all", "textures": { "all": "bamboozled:blocks/bamboo_planks" } },
-            { "model": "cube_all", "textures": { "all": "bamboozled:blocks/bamboo_planks_alt" } }
-        ]
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "bottom": "#all",
+      "top": "#all",
+      "side": "#all"
     }
+  },
+  "variants": {
+    "variant=upper": [
+      { "model": "upper_slab", "textures": { "all": "bamboozled:blocks/bamboo_planks" } },
+      { "model": "upper_slab", "textures": { "all": "bamboozled:blocks/bamboo_planks_alt" } }
+    ],
+    "variant=lower": [
+      { "model": "half_slab", "textures": { "all": "bamboozled:blocks/bamboo_planks" } },
+      { "model": "half_slab", "textures": { "all": "bamboozled:blocks/bamboo_planks_alt" } }
+    ],
+    "variant=double": [
+      { "model": "cube_all", "textures": { "all": "bamboozled:blocks/bamboo_planks" } },
+      { "model": "cube_all", "textures": { "all": "bamboozled:blocks/bamboo_planks_alt" } }
+    ]
+  }
 }

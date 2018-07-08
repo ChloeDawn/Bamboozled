@@ -1,50 +1,50 @@
 {
-    "forge_marker": 1,
-    "defaults": {
-        "textures": {
-            "cap": "bamboozled:blocks/bamboo_cap",
-            "side": "bamboozled:blocks/bamboo_side"
-        }
-    },
-    "variants": {
-        "canopy": {
-            "true": { "submodel": "bamboozled:bamboo_canopy" },
-            "false": { }
-        },
-        "leaves": {
-            "0": { },
-            "1": {
-                "submodel": "bamboozled:bamboo_leaves",
-                "textures": { "leaves": "bamboozled:blocks/bamboo_leaves_0" }
-            },
-            "2": {
-                "submodel": "bamboozled:bamboo_leaves",
-                "textures": { "leaves": "bamboozled:blocks/bamboo_leaves_1" }
-            },
-            "3": {
-                "submodel": "bamboozled:bamboo_leaves",
-                "textures": { "leaves": "bamboozled:blocks/bamboo_leaves_2" }
-            }
-        },
-        "up": {
-            "true": { "model": "bamboozled:bamboo" },
-            "false": { "model": "bamboozled:bamboo_top" }
-        },
-        "north": {
-            "true": { "submodel": "bamboozled:bamboo_north" },
-            "false": { }
-        },
-        "south": {
-            "true": { "submodel": "bamboozled:bamboo_south" },
-            "false": { }
-        },
-        "west": {
-            "true": { "submodel": "bamboozled:bamboo_west" },
-            "false": { }
-        },
-        "east": {
-            "true": { },
-            "false": { }
-        }
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "cap": "bamboozled:blocks/bamboo_cap",
+      "side": "bamboozled:blocks/bamboo_side"
     }
+  },
+  "variants": {
+    "canopy": {
+      "true": { "submodel": "bamboozled:bamboo_canopy" },
+      "false": { }
+    },
+    "leaves": {
+      "0": { },
+      "1": {
+        "submodel": "bamboozled:bamboo_leaves",
+        "textures": { "leaves": "bamboozled:blocks/bamboo_leaves_0" }
+      },
+      "2": {
+        "submodel": "bamboozled:bamboo_leaves",
+        "textures": { "leaves": "bamboozled:blocks/bamboo_leaves_1" }
+      },
+      "3": {
+        "submodel": "bamboozled:bamboo_leaves",
+        "textures": { "leaves": "bamboozled:blocks/bamboo_leaves_2" }
+      }
+    },
+    "up": {
+      "true": { "model": "bamboozled:bamboo" },
+      "false": { "model": "bamboozled:bamboo_top" }
+    },
+    "north": {
+      "true": { "submodel": "bamboozled:bamboo_north" },
+      "false": { }
+    },
+    "south": {
+      "true": { "submodel": "bamboozled:bamboo_south" },
+      "false": { }
+    },
+    "west": {
+      "true": { "submodel": "bamboozled:bamboo_west" },
+      "false": { }
+    },
+    "east": {
+      "true": { },
+      "false": { }
+    }
+  }
 }

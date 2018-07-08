@@ -1,8 +1,8 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "result": { "item": "bamboozled:salt_pile", "count": 9 },
-    "pattern": [ "S" ],
-    "key": {
-        "S": { "item": "bamboozled:salt_block" }
-    }
+  "type": "minecraft:crafting_shaped",
+  "result": { "item": "bamboozled:salt_pile", "count": 9 },
+  "pattern": [ "S" ],
+  "key": {
+    "S": { "item": "bamboozled:salt_block" }
+  }
 }

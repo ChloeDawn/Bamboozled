@@ -1,18 +1,18 @@
 {
-    "forge_marker": 1,
-    "defaults": {
-        "textures": {
-            "end": "bamboozled:blocks/bamboo_bundle_dried_end",
-            "bottom": "bamboozled:blocks/bamboo_bundle_dried_end",
-            "top": "bamboozled:blocks/bamboo_bundle_dried_end",
-            "side": "bamboozled:blocks/bamboo_bundle_dried_side"
-        }
-    },
-    "variants": {
-        "variant": {
-            "lower": { "model": "half_slab" },
-            "upper": { "model": "upper_slab" },
-            "double": { "model": "cube_column" }
-        }
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "end": "bamboozled:blocks/bamboo_bundle_dried_end",
+      "bottom": "bamboozled:blocks/bamboo_bundle_dried_end",
+      "top": "bamboozled:blocks/bamboo_bundle_dried_end",
+      "side": "bamboozled:blocks/bamboo_bundle_dried_side"
     }
+  },
+  "variants": {
+    "variant": {
+      "lower": { "model": "half_slab" },
+      "upper": { "model": "upper_slab" },
+      "double": { "model": "cube_column" }
+    }
+  }
 }

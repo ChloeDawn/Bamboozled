@@ -1,18 +1,18 @@
 {
-    "__comment": "Copyright © InsomniaKitten 2017",
-    "parent": "block/block",
-    "textures": {
-        "particle": "bamboozled:blocks/bamboo_wall_side",
-        "cap": "bamboozled:blocks/bamboo_wall_cap"
-    },
-    "elements": [
-        {
-            "from": [ 6, 0, 6 ],
-            "to": [ 10, 16, 10 ],
-            "faces": {
-                "down": { "uv": [ 6, 6, 10, 10 ], "texture": "#cap", "cullface": "down" },
-                "up": { "uv": [ 6, 6, 10, 10 ], "texture": "#cap", "cullface": "up" }
-            }
-        }
-    ]
+  "__comment": "Copyright © InsomniaKitten 2017",
+  "parent": "block/block",
+  "textures": {
+    "particle": "bamboozled:blocks/bamboo_wall_side",
+    "cap": "bamboozled:blocks/bamboo_wall_cap"
+  },
+  "elements": [
+    {
+      "from": [ 6, 0, 6 ],
+      "to": [ 10, 16, 10 ],
+      "faces": {
+        "down": { "uv": [ 6, 6, 10, 10 ], "texture": "#cap", "cullface": "down" },
+        "up": { "uv": [ 6, 6, 10, 10 ], "texture": "#cap", "cullface": "up" }
+      }
+    }
+  ]
 }

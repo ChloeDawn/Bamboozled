@@ -1,8 +1,8 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "result": { "item": "bamboozled:bamboo", "count": 8 },
-    "pattern": [ "B" ],
-    "key": {
-        "B": { "item": "bamboozled:bamboo_bundle", "data": 0 }
-    }
+  "type": "minecraft:crafting_shaped",
+  "result": { "item": "bamboozled:bamboo", "count": 8 },
+  "pattern": [ "B" ],
+  "key": {
+    "B": { "item": "bamboozled:bamboo_bundle", "data": 0 }
+  }
 }
