@@ -47,7 +47,7 @@ dependencies {
 }
 
 processResources {
-  filter ReplaceTokens, tokens: [
-    'mod.version': modVersion
-  ]
+    filesMatching(['**/*.info', '**/*.mcmeta', '**/*.json', '**/*.properties']) {
+        filter ReplaceTokens, tokens: ['mod.version': modVersion]
+    }
 }
