@@ -37,7 +37,6 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import scala.Int;
 
 import javax.annotation.Nullable;
 import java.util.List;
