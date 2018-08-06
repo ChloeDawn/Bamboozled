@@ -110,8 +110,20 @@ public final class BlockRope extends Block {
         val offset = pos.offset(side.getOpposite());
         val state = world.getBlockState(offset);
         val shape = state.getBlockFaceShape(world, offset, side);
-        val isValidSide = BlockRope.PROP_FACING.getAllowedValues().contains(side);
-        return isValidSide && (world.getBlockState(pos.up()).getBlock() == this || shape == BlockFaceShape.SOLID);
+        if (BlockRope.PROP_FACING.getAllowedValues().contains(side)) {
+            if (world.getBlockState(pos.up()).getBlock() == this) {
+                return true;
+            }
+
+            if (side == EnumFacing.DOWN) {
+                return shape == BlockFaceShape.SOLID
+                    || shape == BlockFaceShape.CENTER
+                    || shape == BlockFaceShape.CENTER_BIG;
+            }
+
+            return shape == BlockFaceShape.SOLID;
+        }
+        return false;
     }
 
     @Override
