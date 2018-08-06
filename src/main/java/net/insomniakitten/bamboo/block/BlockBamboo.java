@@ -13,6 +13,7 @@ import net.minecraft.block.BlockSapling;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockFaceShape;
@@ -36,14 +37,15 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import scala.Int;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
 public final class BlockBamboo extends Block implements IPlantable {
-    public static final PropertyInteger PROP_AGE = PropertyInteger.create("age", 0, 15);
-    public static final PropertyInteger PROP_LEAVES = PropertyInteger.create("leaves", 0, 3);
+    public static final IProperty<Integer> PROP_AGE = PropertyInteger.create("age", 0, 15);
+    public static final IProperty<Integer> PROP_LEAVES = PropertyInteger.create("leaves", 0, 3);
 
     public static final ImmutableMap<EnumFacing, PropertyBool> PROP_SIDES = ImmutableMap.of(
         EnumFacing.UP, PropertyBool.create("up"),
@@ -85,33 +87,39 @@ public final class BlockBamboo extends Block implements IPlantable {
 
     public BlockBamboo() {
         super(Material.WOOD, MapColor.GREEN);
-        setHardness(0.2F);
-        setResistance(1.0F);
-        setSoundType(SoundType.PLANT);
-        setHarvestLevel("shears", 0);
-        setTickRandomly(true);
+        this.setHardness(0.2F);
+        this.setResistance(1.0F);
+        this.setSoundType(SoundType.PLANT);
+        this.setHarvestLevel("shears", 0);
+        this.setTickRandomly(true);
     }
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    static void onDrawBlockHighlight(DrawBlockHighlightEvent event) {
-        if (event.getTarget() == null) return;
-        if (event.getTarget().typeOfHit != RayTraceResult.Type.BLOCK) return;
+    static void onDrawBlockHighlight(final DrawBlockHighlightEvent event) {
+        if (event.getTarget() == null) {
+            return;
+        }
+        if (event.getTarget().typeOfHit != RayTraceResult.Type.BLOCK) {
+            return;
+        }
 
         val pos = event.getTarget().getBlockPos();
         val player = event.getPlayer();
         val world = player.world;
         val state = world.getBlockState(pos);
 
-        if (state.getBlock() != BamboozledBlocks.BAMBOO) return;
+        if (state.getBlock() != BamboozledBlocks.BAMBOO) {
+            return;
+        }
 
         val actual = state.getActualState(world, pos);
-        val up = actual.getValue(PROP_SIDES.get(EnumFacing.UP));
-        val boxes = Lists.newArrayList(up ? AABB_NORMAL : AABB_NORMAL_TOP);
+        val up = actual.getValue(BlockBamboo.PROP_SIDES.get(EnumFacing.UP));
+        val boxes = Lists.newArrayList(up ? BlockBamboo.AABB_NORMAL : BlockBamboo.AABB_NORMAL_TOP);
 
-        for (val side : AABB_SIDE.keySet()) {
-            if (actual.getValue(PROP_SIDES.get(side))) {
-                boxes.add(AABB_SIDE.get(side));
+        for (val side : BlockBamboo.AABB_SIDE.keySet()) {
+            if (actual.getValue(BlockBamboo.PROP_SIDES.get(side))) {
+                boxes.add(BlockBamboo.AABB_SIDE.get(side));
             }
         }
 
@@ -120,89 +128,86 @@ public final class BlockBamboo extends Block implements IPlantable {
         event.setCanceled(true);
     }
 
-    private IBlockState getConnectionsForPos(IBlockState state, IBlockAccess access, BlockPos pos) {
-        for (val side : PROP_SIDES.keySet()) {
-            val block = access.getBlockState(pos.offset(side)).getBlock();
-            state = state.withProperty(PROP_SIDES.get(side), block == this);
-        }
-        return state;
+    @Override
+    @Deprecated
+    public IBlockState getStateFromMeta(final int meta) {
+        return this.getDefaultState().withProperty(BlockBamboo.PROP_AGE, meta);
     }
 
-    private IBlockState getLeavesForPos(IBlockState state, BlockPos pos) {
-        val rand = new Random(MathHelper.getCoordinateRandom(pos.getX(), pos.getY(), pos.getZ()));
-        return state.withProperty(PROP_LEAVES, rand.nextInt(4));
+    @Override
+    public int getMetaFromState(final IBlockState state) {
+        return state.getValue(BlockBamboo.PROP_AGE);
     }
 
     @Override
     @Deprecated
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(PROP_AGE, meta);
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(PROP_AGE);
-    }
-
-    @Override
-    @Deprecated
-    public IBlockState getActualState(IBlockState state, IBlockAccess access, BlockPos pos) {
-        state = getLeavesForPos(state, pos);
-        state = getConnectionsForPos(state, access, pos);
-        return state;
+    public IBlockState getActualState(final IBlockState state, final IBlockAccess access, final BlockPos pos) {
+        var actualState = state;
+        actualState = this.getLeavesForPos(actualState, pos);
+        actualState = this.getConnectionsForPos(actualState, access, pos);
+        return actualState;
     }
 
     @Override
     @Deprecated
-    public boolean isFullCube(IBlockState state) {
+    public boolean isFullCube(final IBlockState state) {
         return false;
     }
 
     @Override
     @Deprecated
-    public BlockFaceShape getBlockFaceShape(IBlockAccess access, IBlockState state, BlockPos pos, EnumFacing face) {
+    public BlockFaceShape getBlockFaceShape(final IBlockAccess access, final IBlockState state, final BlockPos pos, final EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 
     @Override
     @Deprecated
-    public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> boxes, Entity entity, boolean isActualState) {
+    public void addCollisionBoxToList(final IBlockState state, final World world, final BlockPos pos, final AxisAlignedBB entityBox, final List<AxisAlignedBB> boxes, final Entity entity, final boolean isActualState) {
         if (!Bamboozled.getConfig().isFancyBambooEnabled()) {
-            addCollisionBoxToList(pos, entityBox, boxes, AABB_SIMPLE);
+            Block.addCollisionBoxToList(pos, entityBox, boxes, BlockBamboo.AABB_SIMPLE);
             return;
         }
 
         val actual = state.getActualState(world, pos);
 
-        for (val box : actual.getValue(PROP_SIDES.get(EnumFacing.UP)) ? AABB_NORMAL : AABB_NORMAL_TOP) {
-            addCollisionBoxToList(pos, entityBox, boxes, box);
+        for (val box : actual.getValue(BlockBamboo.PROP_SIDES.get(EnumFacing.UP)) ? BlockBamboo.AABB_NORMAL : BlockBamboo.AABB_NORMAL_TOP) {
+            Block.addCollisionBoxToList(pos, entityBox, boxes, box);
         }
 
-        for (val side : AABB_SIDE.keySet()) {
-            if (actual.getValue(PROP_SIDES.get(side))) {
-                addCollisionBoxToList(pos, entityBox, boxes, AABB_SIDE.get(side));
+        for (val side : BlockBamboo.AABB_SIDE.keySet()) {
+            if (actual.getValue(BlockBamboo.PROP_SIDES.get(side))) {
+                Block.addCollisionBoxToList(pos, entityBox, boxes, BlockBamboo.AABB_SIDE.get(side));
             }
         }
     }
 
     @Override
     @Deprecated
-    public boolean isOpaqueCube(IBlockState state) {
+    public boolean isOpaqueCube(final IBlockState state) {
         return false;
     }
 
     @Override
-    public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
-        checkForDrop(state, world, pos);
+    public void updateTick(final World world, final BlockPos pos, final IBlockState state, final Random rand) {
+        this.checkForDrop(state, world, pos);
+
         if (world.isAirBlock(pos.up())) {
             var i = 1;
-            while (world.getBlockState(pos.down(i)).getBlock() == this) ++i;
+
+            while (world.getBlockState(pos.down(i)).getBlock() == this) {
+                ++i;
+            }
+
             if (i < 6 && ForgeHooks.onCropsGrowPre(world, pos, state, true)) {
-                val age = state.getValue(PROP_AGE);
+                val age = state.getValue(BlockBamboo.PROP_AGE);
+
                 if (age == 15) {
-                    world.setBlockState(pos.up(), getDefaultState());
-                    world.setBlockState(pos, state.withProperty(PROP_AGE, 0), 4);
-                } else world.setBlockState(pos, state.withProperty(PROP_AGE, age + 1), 4);
+                    world.setBlockState(pos.up(), this.getDefaultState());
+                    world.setBlockState(pos, state.withProperty(BlockBamboo.PROP_AGE, 0), 4);
+                } else {
+                    world.setBlockState(pos, state.withProperty(BlockBamboo.PROP_AGE, age + 1), 4);
+                }
+
                 ForgeHooks.onCropsGrowPost(world, pos, state, world.getBlockState(pos));
             }
         }
@@ -210,33 +215,35 @@ public final class BlockBamboo extends Block implements IPlantable {
 
     @Override
     @Deprecated
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos) {
-        checkForDrop(state, world, pos);
+    public void neighborChanged(final IBlockState state, final World world, final BlockPos pos, final Block block, final BlockPos fromPos) {
+        this.checkForDrop(state, world, pos);
     }
 
     @Override
-    public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
-        checkForDrop(state, world, pos);
+    public void onBlockAdded(final World world, final BlockPos pos, final IBlockState state) {
+        this.checkForDrop(state, world, pos);
     }
 
     @Override
     @Deprecated
     @Nullable
-    public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
+    public RayTraceResult collisionRayTrace(final IBlockState state, final World world, final BlockPos pos, final Vec3d start, final Vec3d end) {
         if (!Bamboozled.getConfig().isFancyBambooEnabled()) {
-            return rayTrace(pos, start, end, AABB_SIMPLE);
+            return this.rayTrace(pos, start, end, BlockBamboo.AABB_SIMPLE);
         }
 
         val boxes = Lists.<AxisAlignedBB>newArrayList();
         val actual = state.getActualState(world, pos);
 
-        if (actual.getValue(PROP_SIDES.get(EnumFacing.UP))) {
-            boxes.addAll(AABB_NORMAL);
-        } else boxes.addAll(AABB_NORMAL_TOP);
+        if (actual.getValue(BlockBamboo.PROP_SIDES.get(EnumFacing.UP))) {
+            boxes.addAll(BlockBamboo.AABB_NORMAL);
+        } else {
+            boxes.addAll(BlockBamboo.AABB_NORMAL_TOP);
+        }
 
-        for (val side : AABB_SIDE.keySet()) {
-            if (actual.getValue(PROP_SIDES.get(side))) {
-                boxes.add(AABB_SIDE.get(side));
+        for (val side : BlockBamboo.AABB_SIDE.keySet()) {
+            if (actual.getValue(BlockBamboo.PROP_SIDES.get(side))) {
+                boxes.add(BlockBamboo.AABB_SIDE.get(side));
             }
         }
 
@@ -250,40 +257,56 @@ public final class BlockBamboo extends Block implements IPlantable {
     }
 
     @Override
-    public boolean canPlaceBlockAt(World world, BlockPos pos) {
+    public boolean canPlaceBlockAt(final World world, final BlockPos pos) {
         val state = world.getBlockState(pos.down());
-        return state.getBlock() == this || state.getBlock().canSustainPlant(
-            state, world, pos.down(), EnumFacing.UP, (BlockSapling) Blocks.SAPLING
-        );
+
+        if (state.getBlock() == this) {
+            return true;
+        }
+
+        return state.getBlock().canSustainPlant(state, world, pos.down(), EnumFacing.UP, (IPlantable) Blocks.SAPLING);
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
         val builder = new BlockStateContainer.Builder(this);
-        builder.add(PROP_AGE, PROP_LEAVES);
-        PROP_SIDES.values().forEach(builder::add);
+        builder.add(BlockBamboo.PROP_AGE, BlockBamboo.PROP_LEAVES);
+        BlockBamboo.PROP_SIDES.values().forEach(builder::add);
         return builder.build();
     }
 
     @Override
-    public boolean doesSideBlockRendering(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
+    public boolean doesSideBlockRendering(final IBlockState state, final IBlockAccess access, final BlockPos pos, final EnumFacing side) {
         return side.getAxis().isVertical() && access.getBlockState(pos.offset(side)).getBlock() == this;
     }
 
-    private void checkForDrop(IBlockState state, World world, BlockPos pos) {
-        if (!canPlaceBlockAt(world, pos)) {
-            dropBlockAsItem(world, pos, state, 0);
-            world.setBlockToAir(pos);
-        }
-    }
-
     @Override
-    public EnumPlantType getPlantType(IBlockAccess access, BlockPos pos) {
+    public EnumPlantType getPlantType(final IBlockAccess access, final BlockPos pos) {
         return Bamboozled.TROPICAL_PLANT_TYPE;
     }
 
     @Override
-    public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
+    public IBlockState getPlant(final IBlockAccess world, final BlockPos pos) {
         return world.getBlockState(pos);
+    }
+
+    private IBlockState getConnectionsForPos(IBlockState state, final IBlockAccess access, final BlockPos pos) {
+        for (val side : BlockBamboo.PROP_SIDES.keySet()) {
+            val block = access.getBlockState(pos.offset(side)).getBlock();
+            state = state.withProperty(BlockBamboo.PROP_SIDES.get(side), block == this);
+        }
+        return state;
+    }
+
+    private IBlockState getLeavesForPos(final IBlockState state, final BlockPos pos) {
+        val rand = new Random(MathHelper.getCoordinateRandom(pos.getX(), pos.getY(), pos.getZ()));
+        return state.withProperty(BlockBamboo.PROP_LEAVES, rand.nextInt(4));
+    }
+
+    private void checkForDrop(final IBlockState state, final World world, final BlockPos pos) {
+        if (!this.canPlaceBlockAt(world, pos)) {
+            this.dropBlockAsItem(world, pos, state, 0);
+            world.setBlockToAir(pos);
+        }
     }
 }

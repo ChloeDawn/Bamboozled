@@ -1,6 +1,5 @@
 package net.insomniakitten.bamboo.world;
 
-import lombok.experimental.UtilityClass;
 import lombok.experimental.var;
 import lombok.val;
 import net.insomniakitten.bamboo.BamboozledBlocks;
@@ -11,10 +10,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@UtilityClass
-public class GeneratorBamboo {
+public final class GeneratorBamboo {
+    private GeneratorBamboo() {}
+
     @SubscribeEvent
-    void onChunkPopulation(PopulateChunkEvent.Post event) {
+    static void onChunkPopulation(final PopulateChunkEvent.Post event) {
         if (event.getRand().nextInt(6) != 0) return;
         val world = event.getWorld();
         val rand = event.getRand();
@@ -24,7 +24,7 @@ public class GeneratorBamboo {
         for (var i = 0; i < 8; ++i) {
             pos.setPos(x + rand.nextInt(5) - rand.nextInt(5), 0, z + rand.nextInt(5) - rand.nextInt(5));
             if (world.getBiome(pos).isHighHumidity()) {
-                getSurface(world, pos);
+                GeneratorBamboo.getSurface(world, pos);
                 val maxHeight = 2 + rand.nextInt(rand.nextInt(3) + 4);
                 for (var height = 0; height < maxHeight; ++height) {
                     val toPlace = pos.move(EnumFacing.UP, 1);
@@ -36,16 +36,23 @@ public class GeneratorBamboo {
         }
     }
 
-    private void getSurface(World world, final MutableBlockPos pos) {
+    private static void getSurface(final World world, final MutableBlockPos pos) {
         val chunk = world.getChunk(pos);
         IBlockState target;
         pos.setY(world.getHeight(pos.getX(), pos.getZ()));
         do {
             target = chunk.getBlockState(pos.move(EnumFacing.DOWN));
-        } while (!world.isOutsideBuildHeight(pos)
-            && ((!target.getMaterial().isLiquid()
-            && target.getBlock().isReplaceable(world, pos))
-            || target.getBlock().isFoliage(world, pos)
-            || target.getBlock().isWood(world, pos)));
+        } while (GeneratorBamboo.isSurfaceBlock(world, pos, target));
+    }
+
+    private static boolean isSurfaceBlock(final World world, final MutableBlockPos pos, final IBlockState state) {
+        if (!world.isOutsideBuildHeight(pos)) {
+            val block = state.getBlock();
+            if (!state.getMaterial().isLiquid() && block.isReplaceable(world, pos)) {
+                return true;
+            }
+            return block.isFoliage(world, pos) || block.isWood(world, pos);
+        }
+        return false;
     }
 }

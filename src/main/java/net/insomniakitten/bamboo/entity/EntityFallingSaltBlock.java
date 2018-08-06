@@ -8,6 +8,7 @@ import net.minecraft.block.BlockFalling;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityFallingBlock;
@@ -27,35 +28,34 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class EntityFallingSaltBlock extends EntityFallingBlock {
-    public static final EntityEntryBuilder ENTRY = EntityEntryBuilder.create()
+    public static final EntityEntryBuilder<Entity> ENTRY = EntityEntryBuilder
+        .create()
         .entity(EntityFallingSaltBlock.class)
         .id(new ResourceLocation(Bamboozled.ID, "falling_salt_block"), 0)
         .name(Bamboozled.ID + ".falling_salt_block")
         .tracker(256, 1, true);
 
-    private static final DataParameter<BlockPos> ORIGIN = EntityDataManager.createKey(
-        EntityFallingSaltBlock.class, DataSerializers.BLOCK_POS
-    );
+    private static final DataParameter<BlockPos> ORIGIN = EntityDataManager.createKey(EntityFallingSaltBlock.class, DataSerializers.BLOCK_POS);
 
-    public int fallTime;
+    private int fallTime;
 
     @SuppressWarnings("unused")
-    public EntityFallingSaltBlock(World world) {
+    public EntityFallingSaltBlock(final World world) {
         super(world);
     }
 
-    public EntityFallingSaltBlock(World world, double x, double y, double z) {
+    public EntityFallingSaltBlock(final World world, final double x, final double y, final double z) {
         super(world);
-        setSize(0.98F, 0.98F);
-        setPosition(x, y + (double) ((1.0F - height) / 2.0F), z);
-        setOrigin(new BlockPos(this));
-        preventEntitySpawning = true;
-        motionX = 0.0D;
-        motionY = 0.0D;
-        motionZ = 0.0D;
-        prevPosX = x;
-        prevPosY = y;
-        prevPosZ = z;
+        this.setSize(0.98F, 0.98F);
+        this.setPosition(x, y + (double) ((1.0F - this.height) / 2.0F), z);
+        this.setOrigin(new BlockPos(this));
+        this.preventEntitySpawning = true;
+        this.motionX = 0.0D;
+        this.motionY = 0.0D;
+        this.motionZ = 0.0D;
+        this.prevPosX = x;
+        this.prevPosY = y;
+        this.prevPosZ = z;
     }
 
     @Override
@@ -63,15 +63,26 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
         return false;
     }
 
+    private boolean canDropAsItem(final BlockPos pos) {
+        if (this.fallTime > 100) {
+            if (!this.world.isRemote) {
+                if (pos.getY() < 1 || pos.getY() > 256) {
+                    return true;
+                }
+            }
+        }
+        return this.fallTime > 600;
+    }
+
     @Override
     public void setOrigin(BlockPos pos) {
-        dataManager.set(ORIGIN, pos);
+        this.dataManager.set(EntityFallingSaltBlock.ORIGIN, pos);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public BlockPos getOrigin() {
-        return dataManager.get(ORIGIN);
+        return this.dataManager.get(EntityFallingSaltBlock.ORIGIN);
     }
 
     @Override
@@ -81,113 +92,119 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
 
     @Override
     protected void entityInit() {
-        dataManager.register(ORIGIN, BlockPos.ORIGIN);
+        this.dataManager.register(EntityFallingSaltBlock.ORIGIN, BlockPos.ORIGIN);
     }
 
     @Override
     public boolean canBeCollidedWith() {
-        return !isDead;
+        return !this.isDead;
     }
 
     @Override
     public void onUpdate() {
-        prevPosX = posX;
-        prevPosY = posY;
-        prevPosZ = posZ;
+        this.prevPosX = this.posX;
+        this.prevPosY = this.posY;
+        this.prevPosZ = this.posZ;
 
-        if (fallTime++ == 0) {
+        if (this.fallTime++ == 0) {
             val pos = new BlockPos(this);
 
-            if (world.getBlockState(pos).getBlock() == BamboozledBlocks.SALT_BLOCK) {
-                world.setBlockToAir(pos);
-            } else if (!world.isRemote) {
-                setDead();
+            if (this.world.getBlockState(pos).getBlock() == BamboozledBlocks.SALT_BLOCK) {
+                this.world.setBlockToAir(pos);
+            } else if (!this.world.isRemote) {
+                this.setDead();
                 return;
             }
         }
 
-        if (!hasNoGravity()) {
-            motionY -= 0.04D;
+        if (!this.hasNoGravity()) {
+            this.motionY -= 0.04D;
         }
 
-        move(MoverType.SELF, motionX, motionY, motionZ);
+        this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 
-        if (!world.isRemote) {
+        if (!this.world.isRemote) {
             val pos = new BlockPos(this);
 
-            if (!onGround) {
-                if (fallTime > 100 && !world.isRemote && (pos.getY() < 1 || pos.getY() > 256) || fallTime > 600) {
-                    if (shouldDropItem && world.getGameRules().getBoolean("doEntityDrops")) {
-                        if (Bamboozled.getConfig().isSaltBlockDropsEnabled()) {
-                            entityDropItem(new ItemStack(BamboozledBlocks.SALT_BLOCK), 0.0F);
-                        } else entityDropItem(new ItemStack(BamboozledItems.SALT_PILE, 9), 0.0F);
-                    }
-                    setDead();
-                }
-            } else {
-                val state = world.getBlockState(pos);
-                if (world.isAirBlock(new BlockPos(posX, posY - 0.01D, posZ))
-                    && !(world.getBlockState(pos).getMaterial() == Material.WATER)
-                    && BlockFalling.canFallThrough(world.getBlockState(new BlockPos(posX, posY - 0.01D, posZ)))) {
-                    onGround = false;
+            if (this.onGround) {
+                val state = this.world.getBlockState(pos);
+                if (this.world.isAirBlock(new BlockPos(this.posX, this.posY - 0.01D, this.posZ)) && !(this.world
+                    .getBlockState(pos)
+                    .getMaterial() == Material.WATER) && BlockFalling.canFallThrough(this.world.getBlockState(new BlockPos(this.posX, this.posY - 0.01D, this.posZ)))) {
+                    this.onGround = false;
                     return;
                 }
 
-                motionX *= 0.7D;
-                motionZ *= 0.7D;
-                motionY *= -0.5D;
+                this.motionX *= 0.7D;
+                this.motionZ *= 0.7D;
+                this.motionY *= -0.5D;
 
                 if (state.getBlock() != Blocks.PISTON_EXTENSION) {
-                    setDead();
+                    this.setDead();
 
-                    if (world.mayPlace(BamboozledBlocks.SALT_BLOCK, pos, true, EnumFacing.UP, null)
-                        && (world.getBlockState(pos).getMaterial() == Material.WATER
-                        || !BlockFalling.canFallThrough(world.getBlockState(pos.down())))) {
-                        world.setBlockState(pos, BamboozledBlocks.SALT_BLOCK.getDefaultState(), 3);
-                    } else if (shouldDropItem && world.getGameRules().getBoolean("doEntityDrops")) {
+                    if (this.world.mayPlace(BamboozledBlocks.SALT_BLOCK, pos, true, EnumFacing.UP, null) && (this.world
+                        .getBlockState(pos)
+                        .getMaterial() == Material.WATER || !BlockFalling.canFallThrough(this.world.getBlockState(pos.down())))) {
+                        this.world.setBlockState(pos, BamboozledBlocks.SALT_BLOCK.getDefaultState(), 3);
+                    } else if (this.shouldDropItem && this.world.getGameRules().getBoolean("doEntityDrops")) {
                         if (Bamboozled.getConfig().isSaltBlockDropsEnabled()) {
-                            entityDropItem(new ItemStack(BamboozledBlocks.SALT_BLOCK), 0.0F);
-                        } else entityDropItem(new ItemStack(BamboozledItems.SALT_PILE, 9), 0.0F);
+                            this.entityDropItem(new ItemStack(BamboozledBlocks.SALT_BLOCK), 0.0F);
+                        } else {
+                            this.entityDropItem(new ItemStack(BamboozledItems.SALT_PILE, 9), 0.0F);
+                        }
                     }
+                }
+            } else {
+                if (this.canDropAsItem(pos)) {
+                    if (this.shouldDropItem && this.world.getGameRules().getBoolean("doEntityDrops")) {
+                        if (Bamboozled.getConfig().isSaltBlockDropsEnabled()) {
+                            this.entityDropItem(new ItemStack(BamboozledBlocks.SALT_BLOCK), 0.0F);
+                        } else {
+                            this.entityDropItem(new ItemStack(BamboozledItems.SALT_PILE, 9), 0.0F);
+                        }
+                    }
+                    this.setDead();
                 }
             }
         }
 
-        motionX *= 0.98D;
-        motionY *= 0.98D;
-        motionZ *= 0.98D;
+        this.motionX *= 0.98D;
+        this.motionY *= 0.98D;
+        this.motionZ *= 0.98D;
+    }
+
+
+
+    @Override
+    public void fall(final float distance, final float damageMultiplier) {}
+
+    @Override
+    protected void writeEntityToNBT(final NBTTagCompound compound) {
+        compound.setInteger("fall_time", this.fallTime);
     }
 
     @Override
-    public void fall(float distance, float damageMultiplier) {}
-
-    @Override
-    protected void writeEntityToNBT(NBTTagCompound compound) {
-        compound.setInteger("fall_time", fallTime);
+    protected void readEntityFromNBT(final NBTTagCompound compound) {
+        this.fallTime = compound.getInteger("fall_time");
     }
 
     @Override
-    protected void readEntityFromNBT(NBTTagCompound compound) {
-        fallTime = compound.getInteger("fall_time");
-    }
-
-    @Override
-    public void addEntityCrashInfo(CrashReportCategory category) {
-        category.addDetail("Entity Type", () -> EntityList.getKey(this) + " (" + getClass().getCanonicalName() + ")");
-        category.addCrashSection("Entity ID", getEntityId());
+    public void addEntityCrashInfo(final CrashReportCategory category) {
+        category.addDetail("Entity Type", () -> EntityList.getKey(this) + " (" + this.getClass().getCanonicalName() + ")");
+        category.addCrashSection("Entity ID", this.getEntityId());
         category.addDetail("Entity Name", this::getName);
-        category.addCrashSection("Entity's Exact location", String.format("%.2f, %.2f, %.2f", posX, posY, posZ));
-        category.addCrashSection("Entity's Block location", CrashReportCategory.getCoordinateInfo(
-            MathHelper.floor(posX), MathHelper.floor(posY), MathHelper.floor(posZ)));
-        category.addCrashSection("Entity's Momentum", String.format("%.2f, %.2f, %.2f", motionX, motionY, motionZ));
-        category.addDetail("Entity's Passengers", () -> getPassengers().toString());
-        category.addDetail("Entity's Vehicle", () -> getRidingEntity().toString());
+        category.addCrashSection("Entity's Exact location", String.format("%.2f, %.2f, %.2f", this.posX, this.posY, this.posZ));
+        category.addCrashSection("Entity's Block location", CrashReportCategory.getCoordinateInfo(MathHelper.floor(this.posX), MathHelper
+            .floor(this.posY), MathHelper.floor(this.posZ)));
+        category.addCrashSection("Entity's Momentum", String.format("%.2f, %.2f, %.2f", this.motionX, this.motionY, this.motionZ));
+        category.addDetail("Entity's Passengers", () -> this.getPassengers().toString());
+        category.addDetail("Entity's Vehicle", () -> String.valueOf(this.getRidingEntity()));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public World getWorldObj() {
-        return world;
+        return this.world;
     }
 
     @Override

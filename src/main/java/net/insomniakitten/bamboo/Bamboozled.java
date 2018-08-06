@@ -1,8 +1,5 @@
 package net.insomniakitten.bamboo;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import net.insomniakitten.bamboo.block.BlockBamboo;
 import net.insomniakitten.bamboo.world.GeneratorBamboo;
 import net.insomniakitten.bamboo.world.GeneratorSaltOre;
@@ -17,18 +14,16 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod(modid = Bamboozled.ID, useMetadata = true)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Bamboozled {
     public static final String ID = "bamboozled";
 
-    @Getter(onMethod = @__({ @Mod.InstanceFactory, @Deprecated }))
-    public static final Bamboozled INSTANCE = new Bamboozled();
+    private static final Bamboozled INSTANCE = new Bamboozled();
 
-    public static final CreativeTabs TAB = new CreativeTabs(Bamboozled.ID) {
+    private static final CreativeTabs ITEM_GROUP = new CreativeTabs(Bamboozled.ID) {
         @Override
         @SideOnly(Side.CLIENT)
         public String getTranslationKey() {
-            return "item_group." + Bamboozled.ID + ".label";
+            return "item_group.bamboozled.label";
         }
 
         @Override
@@ -37,6 +32,17 @@ public final class Bamboozled {
             return new ItemStack(BamboozledItems.BAMBOO);
         }
     };
+
+    private Bamboozled() {}
+
+    @Mod.InstanceFactory
+    public static Bamboozled getInstance() {
+        return Bamboozled.INSTANCE;
+    }
+
+    public static CreativeTabs getItemGroup() {
+        return Bamboozled.ITEM_GROUP;
+    }
 
     public static final EnumPlantType TROPICAL_PLANT_TYPE =
         EnumPlantType.getPlantType("Tropical");
@@ -54,13 +60,15 @@ public final class Bamboozled {
     }
 
     @EventHandler
-    public void onPreInit(FMLPreInitializationEvent event) {
+    void onPreInitialization(final FMLPreInitializationEvent event) {
         if (Bamboozled.getWorldConfig().isBambooGenerationEnabled()) {
             MinecraftForge.EVENT_BUS.register(GeneratorBamboo.class);
         }
+
         if (Bamboozled.getWorldConfig().isSaltOreGenerationEnabled()) {
             MinecraftForge.EVENT_BUS.register(GeneratorSaltOre.class);
         }
+
         if (Bamboozled.getConfig().isFancyBambooEnabled()) {
             MinecraftForge.EVENT_BUS.register(BlockBamboo.class);
         }

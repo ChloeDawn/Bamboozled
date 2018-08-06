@@ -1,7 +1,6 @@
 package net.insomniakitten.bamboo;
 
 import lombok.Data;
-import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
@@ -13,35 +12,38 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@UtilityClass
 @EventBusSubscriber(modid = Bamboozled.ID)
 @Config(modid = Bamboozled.ID, name = Bamboozled.ID, category = "")
-public class BamboozledConfig {
-    public final Client CLIENT = new Client();
-    public final General GENERAL = new General();
-    public final World WORLD = new World();
+public final class BamboozledConfig {
+    public static final Client CLIENT = new Client();
+    public static final General GENERAL = new General();
+    public static final World WORLD = new World();
+
+    private BamboozledConfig() {}
 
     @SubscribeEvent
-    void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+    static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
         if (Bamboozled.ID.equals(event.getModID())) {
-            val lastFancySaltOre = CLIENT.isFancySaltOreForced();
+            val lastFancySaltOre = BamboozledConfig.CLIENT.isFancySaltOreForced();
             ConfigManager.sync(Bamboozled.ID, Config.Type.INSTANCE);
-            if (CLIENT.isFancySaltOreForced() != lastFancySaltOre) {
+            if (BamboozledConfig.CLIENT.isFancySaltOreForced() != lastFancySaltOre) {
                 FMLCommonHandler.instance().reloadRenderers();
             }
         }
     }
 
     @Data
-    public final class Client {
+    public static final class Client {
         @Name("force_fancy_salt_ore")
         @Comment({ "Should halite always render as a translucent block?",
                    "If false, halite will render solid on Fast graphics." })
         public boolean fancySaltOreForced = false;
+
+        private Client() {}
     }
 
     @Data
-    public final class General {
+    public static final class General {
         @Name("in_world_bamboo_drying")
         @Comment("Should bundles of bamboo dry out over time when placed outside under the sun?")
         @RequiresMcRestart
@@ -74,10 +76,12 @@ public class BamboozledConfig {
                    "When false, collision logic will also be simplified" })
         @RequiresMcRestart
         public boolean fancyBambooEnabled = true;
+
+        private General() {}
     }
 
     @Data
-    public final class World {
+    public static final class World {
         @Name("generate_bamboo")
         @Comment("Should bamboo stalks be generated in tropical biomes?")
         @RequiresMcRestart
@@ -92,5 +96,7 @@ public class BamboozledConfig {
         @Comment("The size of generated halite clusters")
         @RequiresMcRestart
         public int saltClusterSize = 8;
+
+        private World() {}
     }
 }

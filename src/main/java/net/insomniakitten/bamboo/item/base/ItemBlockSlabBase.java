@@ -17,19 +17,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ItemBlockSlabBase extends ItemBlockBase {
     private final BlockSlab slab;
 
-    public ItemBlockSlabBase(Block slab) {
+    public ItemBlockSlabBase(final Block slab) {
         super(slab);
         this.slab = (BlockSlab) slab;
     }
 
     @Override
-    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(final EntityPlayer player, final World world, final BlockPos pos, final EnumHand hand, final EnumFacing facing, final float hitX, final float hitY, final float hitZ) {
         val stack = player.getHeldItem(hand);
         if (!stack.isEmpty() && player.canPlayerEdit(pos.offset(facing), facing, stack)) {
-            if (tryPlace(player, stack, world, pos, facing)) {
+            if (this.tryPlace(player, stack, world, pos, facing)) {
                 return EnumActionResult.SUCCESS;
             }
-            if (tryPlace(player, stack, world, pos.offset(facing), null)) {
+            if (this.tryPlace(player, stack, world, pos.offset(facing), null)) {
                 return EnumActionResult.SUCCESS;
             }
             return super.onItemUse(player, world, pos, hand, facing, hitX, hitY, hitZ);
@@ -39,31 +39,70 @@ public class ItemBlockSlabBase extends ItemBlockBase {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side, EntityPlayer player, ItemStack stack) {
+    public boolean canPlaceBlockOnSide(final World world, final BlockPos pos, final EnumFacing side, final EntityPlayer player, final ItemStack stack) {
         val state = world.getBlockState(pos);
-        return state.getBlock() == slab
-            && (side == EnumFacing.UP && slab.isLower(state)
-            || side == EnumFacing.DOWN && slab.isUpper(state))
-            || world.getBlockState(pos.offset(side)).getBlock() == this.slab
-            || super.canPlaceBlockOnSide(world, pos, side, player, stack);
-    }
 
-    private boolean tryPlace(EntityPlayer player, ItemStack stack, World world, BlockPos pos, EnumFacing side) {
-        val state = world.getBlockState(pos);
-        if (state.getBlock() != slab) return false;
-        if (slab.isDouble(state)) return false;
-        if (side == null || side == EnumFacing.UP && slab.isLower(state) || side == EnumFacing.DOWN && slab.isUpper(state)) {
-            val dSlab = slab.getDouble();
-            val aabb = dSlab.getCollisionBoundingBox(world, pos);
-            if (aabb == null) return false;
-            if (world.checkNoEntityCollision(aabb.offset(pos)) && world.setBlockState(pos, dSlab)) {
-                val sound = dSlab.getBlock().getSoundType(dSlab, world, pos, player);
-                world.playSound(player, pos, sound.getPlaceSound(), SoundCategory.BLOCKS,
-                    (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
-                stack.shrink(1);
+        if (state.getBlock() == this.slab) {
+            if (side == EnumFacing.UP && this.slab.isLower(state)) {
+                return true;
             }
+
+            if (side == EnumFacing.DOWN && this.slab.isUpper(state)) {
+                return true;
+            }
+        }
+
+        if (world.getBlockState(pos.offset(side)).getBlock() == this.slab) {
             return true;
         }
+
+        return super.canPlaceBlockOnSide(world, pos, side, player, stack);
+    }
+
+    private boolean tryPlace(final EntityPlayer player, final ItemStack stack, final World world, final BlockPos pos, final EnumFacing side) {
+        val state = world.getBlockState(pos);
+
+        if (state.getBlock() != this.slab) {
+            return false;
+        }
+
+        if (this.slab.isDouble(state)) return false;
+        if (side == null || side == EnumFacing.UP && slab.isLower(state)) {
+            val dSlab = this.slab.getDouble();
+            val aabb = dSlab.getCollisionBoundingBox(world, pos);
+
+            if (aabb == null) {
+                return false;
+            }
+
+            if (world.checkNoEntityCollision(aabb.offset(pos)) && world.setBlockState(pos, dSlab)) {
+                val sound = dSlab.getBlock().getSoundType(dSlab, world, pos, player);
+                world.playSound(player, pos, sound.getPlaceSound(), SoundCategory.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound
+                    .getPitch() * 0.8F);
+                stack.shrink(1);
+            }
+
+            return true;
+        }
+
+        if (side == EnumFacing.DOWN && this.slab.isUpper(state)) {
+            val dSlab = this.slab.getDouble();
+            val aabb = dSlab.getCollisionBoundingBox(world, pos);
+
+            if (aabb == null) {
+                return false;
+            }
+
+            if (world.checkNoEntityCollision(aabb.offset(pos)) && world.setBlockState(pos, dSlab)) {
+                val sound = dSlab.getBlock().getSoundType(dSlab, world, pos, player);
+                world.playSound(player, pos, sound.getPlaceSound(), SoundCategory.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound
+                    .getPitch() * 0.8F);
+                stack.shrink(1);
+            }
+
+            return true;
+        }
+
         return false;
     }
 }

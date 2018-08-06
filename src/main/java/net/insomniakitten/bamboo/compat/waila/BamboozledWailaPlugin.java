@@ -17,21 +17,23 @@ import java.util.List;
 @WailaPlugin
 public final class BamboozledWailaPlugin implements IWailaPlugin {
     @Override
-    public void register(IWailaRegistrar registrar) {
-        registrar.registerBodyProvider(new IWailaDataProvider() {
-            @Override
-            public List<String> getWailaBody(ItemStack stack, List<String> tooltip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-                if (Bamboozled.getConfig().isInWorldBambooDryingEnabled()) {
-                    val state = accessor.getBlockState();
-                    val progress = state.getValue(BlockBambooBundle.PROP_DRIED);
-                    if (progress < 3) {
-                        val key = "waila.bamboozled.bamboo_bundle.dry_progress";
-                        val txt = new TextComponentTranslation(key, 33 * progress);
-                        tooltip.add(txt.getUnformattedComponentText());
-                    }
+    public void register(final IWailaRegistrar registrar) {
+        registrar.registerBodyProvider(new DataProvider(), BlockBambooBundle.class);
+    }
+
+    private static final class DataProvider implements IWailaDataProvider {
+        @Override
+        public List<String> getWailaBody(final ItemStack stack, final List<String> tooltip, final IWailaDataAccessor accessor, final IWailaConfigHandler config) {
+            if (Bamboozled.getConfig().isInWorldBambooDryingEnabled()) {
+                val state = accessor.getBlockState();
+                val progress = state.getValue(BlockBambooBundle.PROP_DRIED);
+                if (progress < 3) {
+                    val key = "waila.bamboozled.bamboo_bundle.dry_progress";
+                    val txt = new TextComponentTranslation(key, 33 * progress);
+                    tooltip.add(txt.getUnformattedComponentText());
                 }
-                return tooltip;
             }
-        }, BlockBambooBundle.class);
+            return tooltip;
+        }
     }
 }

@@ -3,13 +3,13 @@ package net.insomniakitten.bamboo.item.base;
 import net.minecraft.block.Block;
 
 public class ItemSubBlockBase extends ItemBlockBase {
-    public ItemSubBlockBase(Block block) {
+    public ItemSubBlockBase(final Block block) {
         super(block);
-        setHasSubtypes(true);
+        this.setHasSubtypes(true);
     }
 
     @Override
-    public int getMetadata(int damage) {
+    public int getMetadata(final int damage) {
         return damage;
     }
 }

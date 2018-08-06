@@ -9,6 +9,7 @@ import net.insomniakitten.bamboo.util.BoundingBoxes;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
@@ -48,10 +49,10 @@ public final class BlockBambooWall extends Block {
         new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.5D, 1.0D)
     );
 
-    private static final ImmutableList<AxisAlignedBB> AABB_SELECTION = AABB_COLLISION.stream()
+    private static final ImmutableList<AxisAlignedBB> AABB_SELECTION = BlockBambooWall.AABB_COLLISION.stream()
         .map(it -> it.setMaxY(1.0D)).collect(ImmutableList.toImmutableList());
 
-    private static final ImmutableMap<EnumFacing, PropertyBool> PROP_SIDES = ImmutableMap.of(
+    private static final ImmutableMap<EnumFacing, IProperty<Boolean>> PROP_SIDES = ImmutableMap.of(
         EnumFacing.NORTH, PropertyBool.create("north"),
         EnumFacing.SOUTH, PropertyBool.create("south"),
         EnumFacing.WEST, PropertyBool.create("west"),
@@ -60,52 +61,52 @@ public final class BlockBambooWall extends Block {
 
     public BlockBambooWall() {
         super(Material.WOOD);
-        setHardness(1.0F);
-        setResistance(5.0F);
-        setSoundType(SoundType.WOOD);
+        this.setHardness(1.0F);
+        this.setResistance(5.0F);
+        this.setSoundType(SoundType.WOOD);
     }
 
     @Override
-    public int getMetaFromState(IBlockState state) {
+    public int getMetaFromState(final IBlockState state) {
         return 0;
     }
 
     @Override
     @Deprecated
-    public IBlockState getActualState(IBlockState state, IBlockAccess access, BlockPos pos) {
+    public IBlockState getActualState(IBlockState state, final IBlockAccess access, final BlockPos pos) {
         for (val side : EnumFacing.HORIZONTALS) {
-            state = state.withProperty(PROP_SIDES.get(side), canConnectTo(access, pos.offset(side), side));
+            state = state.withProperty(BlockBambooWall.PROP_SIDES.get(side), this.canConnectTo(access, pos.offset(side), side));
         }
         return state;
     }
 
     @Override
     @Deprecated
-    public boolean isFullCube(IBlockState state) {
+    public boolean isFullCube(final IBlockState state) {
         return false;
     }
 
     @Override
     @Deprecated
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess access, BlockPos pos) {
-        return AABB_SELECTION.get(getBoundingBoxIndex(state.getActualState(access, pos)));
+    public AxisAlignedBB getBoundingBox(final IBlockState state, final IBlockAccess access, final BlockPos pos) {
+        return BlockBambooWall.AABB_SELECTION.get(this.getBoundingBoxIndex(state.getActualState(access, pos)));
     }
 
     @Override
     @Deprecated
-    public BlockFaceShape getBlockFaceShape(IBlockAccess access, IBlockState state, BlockPos pos, EnumFacing side) {
+    public BlockFaceShape getBlockFaceShape(final IBlockAccess access, final IBlockState state, final BlockPos pos, final EnumFacing side) {
         return side.getAxis().isHorizontal() ? BlockFaceShape.MIDDLE_POLE : BlockFaceShape.CENTER_BIG;
     }
 
     @Override
     @Deprecated
-    public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> boxes, Entity entity, boolean isActualState) {
+    public void addCollisionBoxToList(final IBlockState state, final World world, final BlockPos pos, final AxisAlignedBB entityBox, final List<AxisAlignedBB> boxes, final Entity entity, final boolean isActualState) {
         val actual = isActualState ? state : state.getActualState(world, pos);
-        addCollisionBoxToList(pos, entityBox, boxes, AABB_COLLISION.get(0));
+        Block.addCollisionBoxToList(pos, entityBox, boxes, BlockBambooWall.AABB_COLLISION.get(0));
         for (val side : EnumFacing.HORIZONTALS) {
-            if (actual.getValue(PROP_SIDES.get(side))) {
-                val aabb = AABB_COLLISION.get(1 << side.getHorizontalIndex());
-                addCollisionBoxToList(pos, entityBox, boxes, aabb);
+            if (actual.getValue(BlockBambooWall.PROP_SIDES.get(side))) {
+                val aabb = BlockBambooWall.AABB_COLLISION.get(1 << side.getHorizontalIndex());
+                Block.addCollisionBoxToList(pos, entityBox, boxes, aabb);
             }
         }
     }
@@ -113,33 +114,33 @@ public final class BlockBambooWall extends Block {
     @Override
     @Deprecated
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
-        return AABB_SELECTION.get(getBoundingBoxIndex(getActualState(state, world, pos))).offset(pos);
+    public AxisAlignedBB getSelectedBoundingBox(final IBlockState state, final World world, final BlockPos pos) {
+        return BlockBambooWall.AABB_SELECTION.get(this.getBoundingBoxIndex(state.getActualState(world, pos))).offset(pos);
     }
 
     @Override
     @Deprecated
-    public boolean isOpaqueCube(IBlockState state) {
+    public boolean isOpaqueCube(final IBlockState state) {
         return false;
     }
 
     @Override
     @Deprecated
     @Nullable
-    public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
-        val boxes = Lists.newArrayList(AABB_SELECTION.get(0));
+    public RayTraceResult collisionRayTrace(final IBlockState state, final World world, final BlockPos pos, final Vec3d start, final Vec3d end) {
+        val boxes = Lists.newArrayList(BlockBambooWall.AABB_SELECTION.get(0));
         val actual = state.getActualState(world, pos);
 
         for (val side : EnumFacing.HORIZONTALS) {
-            if (actual.getValue(PROP_SIDES.get(side))) {
+            if (actual.getValue(BlockBambooWall.PROP_SIDES.get(side))) {
                 val i = 1 << side.getHorizontalIndex();
-                boxes.add(AABB_SELECTION.get(i));
+                boxes.add(BlockBambooWall.AABB_SELECTION.get(i));
             }
         }
 
         if (boxes.size() <= 1) {
-            val box = !boxes.isEmpty() ? boxes.get(0) : FULL_BLOCK_AABB;
-            return rayTrace(pos, start, end, box);
+            val box = boxes.isEmpty() ? Block.FULL_BLOCK_AABB : boxes.get(0);
+            return this.rayTrace(pos, start, end, box);
         }
 
         return BoundingBoxes.rayTrace(boxes, pos, start, end);
@@ -148,35 +149,40 @@ public final class BlockBambooWall extends Block {
     @Override
     protected BlockStateContainer createBlockState() {
         val builder = new Builder(this);
-        PROP_SIDES.values().forEach(builder::add);
+        BlockBambooWall.PROP_SIDES.values().forEach(builder::add);
         return builder.build();
     }
 
     @Override
-    public boolean doesSideBlockRendering(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
+    public boolean doesSideBlockRendering(final IBlockState state, final IBlockAccess access, final BlockPos pos, final EnumFacing side) {
         val offset = pos.offset(side);
         val other = access.getBlockState(offset);
         if (side.getAxis().isVertical()) {
             val actual = state.getActualState(access, pos);
             return actual == other.getActualState(access, offset);
-        } else return state.getBlock() == other.getBlock();
+        } else {
+            return state.getBlock() == other.getBlock();
+        }
     }
 
-    private int getBoundingBoxIndex(IBlockState state) {
+    public boolean canConnectTo(final IBlockAccess access, final BlockPos pos, final EnumFacing side) {
+        val state = access.getBlockState(pos);
+
+        if (state.getBlock() == this) {
+            return true;
+        }
+
+        val shape = state.getBlockFaceShape(access, pos, side);
+        return shape == BlockFaceShape.SOLID || shape == BlockFaceShape.MIDDLE_POLE;
+    }
+
+    private int getBoundingBoxIndex(final IBlockState state) {
         var i = 0;
         for (val side : EnumFacing.HORIZONTALS) {
-            if (state.getValue(PROP_SIDES.get(side))) {
+            if (state.getValue(BlockBambooWall.PROP_SIDES.get(side))) {
                 i |= 1 << side.getHorizontalIndex();
             }
         }
         return i;
-    }
-
-    public boolean canConnectTo(IBlockAccess access, BlockPos pos, EnumFacing side) {
-        val state = access.getBlockState(pos);
-        if (state.getBlock() != this) {
-            val shape = state.getBlockFaceShape(access, pos, side);
-            return shape == BlockFaceShape.SOLID || shape == BlockFaceShape.MIDDLE_POLE;
-        } else return true;
     }
 }

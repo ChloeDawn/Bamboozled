@@ -27,25 +27,25 @@ import java.util.Random;
 public final class BlockSalt extends BlockFalling {
     public BlockSalt() {
         super(Material.SAND);
-        setHardness(0.5F);
-        setResistance(2.5F);
-        setSoundType(SoundType.SAND);
+        this.setHardness(0.5F);
+        this.setResistance(2.5F);
+        this.setSoundType(SoundType.SAND);
     }
 
-    private boolean isEmpty(IBlockAccess access, BlockPos pos) {
+    private boolean isEmpty(final IBlockAccess access, final BlockPos pos) {
         val state = access.getBlockState(pos);
-        return state.getBlock().isAir(state, access, pos) && canFallThrough(state);
+        return state.getBlock().isAir(state, access, pos) && BlockFalling.canFallThrough(state);
     }
 
     @Override
-    public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
-        if (!world.isRemote && pos.getY() >= 0 && isEmpty(world, pos.down())) {
-            if (fallInstantly || !world.isAreaLoaded(pos.add(-32, -32, -32), pos.add(32, 32, 32))) {
+    public void updateTick(final World world, final BlockPos pos, final IBlockState state, final Random rand) {
+        if (!world.isRemote && pos.getY() >= 0 && this.isEmpty(world, pos.down())) {
+            if (BlockFalling.fallInstantly || !world.isAreaLoaded(pos.add(-32, -32, -32), pos.add(32, 32, 32))) {
                 world.setBlockToAir(pos);
 
                 var target = pos.down();
 
-                while (target.getY() > 0 && isEmpty(world, pos.down())) {
+                while (target.getY() > 0 && this.isEmpty(world, pos.down())) {
                     target = target.down();
                 }
 
@@ -63,14 +63,19 @@ public final class BlockSalt extends BlockFalling {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public int getDustColor(IBlockState state) {
+    public int getDustColor(final IBlockState state) {
         return 0xE9E9E9;
     }
 
     @Override
-    public void onEntityWalk(World world, BlockPos pos, Entity entity) {
-        if (!Bamboozled.getConfig().isSaltUndeadDamageEnabled()) return;
-        if (!(entity instanceof EntityLiving)) return;
+    public void onEntityWalk(final World world, final BlockPos pos, final Entity entity) {
+        if (!Bamboozled.getConfig().isSaltUndeadDamageEnabled()) {
+            return;
+        }
+
+        if (!(entity instanceof EntityLiving)) {
+            return;
+        }
 
         if (((EntityLivingBase) entity).isEntityUndead()) {
             if (world.getTotalWorldTime() % 20 == 0) {
@@ -80,7 +85,7 @@ public final class BlockSalt extends BlockFalling {
     }
 
     @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess access, BlockPos pos, IBlockState state, int fortune) {
+    public void getDrops(final NonNullList<ItemStack> drops, final IBlockAccess access, final BlockPos pos, final IBlockState state, final int fortune) {
         if (Bamboozled.getConfig().isSaltBlockDropsEnabled()) {
             drops.add(new ItemStack(BamboozledBlocks.SALT_BLOCK));
         } else drops.add(new ItemStack(BamboozledItems.SALT_PILE, 9));

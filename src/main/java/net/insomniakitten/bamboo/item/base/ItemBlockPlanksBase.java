@@ -5,13 +5,13 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
 public class ItemBlockPlanksBase extends ItemSubBlockBase {
-    public ItemBlockPlanksBase(Block block) {
+    public ItemBlockPlanksBase(final Block block) {
         super(block);
     }
 
     @Override
-    public String getTranslationKey(ItemStack stack) {
-        var name = getTranslationKey();
+    public String getTranslationKey(final ItemStack stack) {
+        var name = this.getTranslationKey();
         if (stack.getMetadata() > 0) {
             name += "_vertical";
         }

@@ -26,62 +26,62 @@ public class BlockPlanks extends Block {
 
     public BlockPlanks() {
         super(Material.WOOD);
-        setSoundType(SoundType.WOOD);
-        setHardness(2.0F);
-        setResistance(15.0F);
+        this.setSoundType(SoundType.WOOD);
+        this.setHardness(2.0F);
+        this.setResistance(15.0F);
     }
 
     @Override
     @Deprecated
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(ORIENTATION, Orientation.VALUES[meta]);
+    public IBlockState getStateFromMeta(final int meta) {
+        return this.getDefaultState().withProperty(BlockPlanks.ORIENTATION, Orientation.VALUES[meta]);
     }
 
     @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(ORIENTATION).ordinal();
+    public int getMetaFromState(final IBlockState state) {
+        return state.getValue(BlockPlanks.ORIENTATION).ordinal();
     }
 
     @Override
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
+    public void getSubBlocks(final CreativeTabs tab, final NonNullList<ItemStack> items) {
         items.add(new ItemStack(this, 1, 0));
         items.add(new ItemStack(this, 1, 1));
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, ORIENTATION);
+        return new BlockStateContainer(this, BlockPlanks.ORIENTATION);
     }
 
     @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess access, BlockPos pos, IBlockState state, int fortune) {
-        drops.add(new ItemStack(this, 1, getMetaFromState(state)));
+    public void getDrops(final NonNullList<ItemStack> drops, final IBlockAccess access, final BlockPos pos, final IBlockState state, final int fortune) {
+        drops.add(new ItemStack(this, 1, this.getMetaFromState(state)));
     }
 
     @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
-        return new ItemStack(this, 1, getMetaFromState(state));
+    public ItemStack getPickBlock(final IBlockState state, final RayTraceResult target, final World world, final BlockPos pos, final EntityPlayer player) {
+        return new ItemStack(this, 1, this.getMetaFromState(state));
     }
 
     @Override
-    public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
-        world.setBlockState(pos, world.getBlockState(pos).cycleProperty(ORIENTATION));
+    public boolean rotateBlock(final World world, final BlockPos pos, final EnumFacing axis) {
+        world.setBlockState(pos, world.getBlockState(pos).cycleProperty(BlockPlanks.ORIENTATION));
         return true;
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        return getDefaultState().withProperty(ORIENTATION, meta > 0 ? Orientation.VERTICAL : Orientation.HORIZONTAL);
+    public IBlockState getStateForPlacement(final World world, final BlockPos pos, final EnumFacing facing, final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer, final EnumHand hand) {
+        return this.getDefaultState().withProperty(BlockPlanks.ORIENTATION, meta > 0 ? Orientation.VERTICAL : Orientation.HORIZONTAL);
     }
 
     private enum Orientation implements IStringSerializable {
         HORIZONTAL, VERTICAL;
 
-        private static final Orientation[] VALUES = values();
+        private static final Orientation[] VALUES = Orientation.values();
 
         @Override
         public String getName() {
-            return name().toLowerCase(Locale.ROOT);
+            return this.name().toLowerCase(Locale.ROOT);
         }
     }
 }

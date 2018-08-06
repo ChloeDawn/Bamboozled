@@ -1,5 +1,6 @@
 package net.insomniakitten.bamboo.block.base;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -25,55 +26,55 @@ public class BlockStairs extends net.minecraft.block.BlockStairs {
     private final Material material;
     private final MapColor mapColor;
 
-    public BlockStairs(Material material, MapColor mapColor, SoundType sound, float hardness, float resistance) {
+    public BlockStairs(final Material material, final MapColor mapColor, final SoundType sound, final float hardness, final float resistance) {
         super(Blocks.AIR.getDefaultState());
-        setHardness(hardness);
-        setResistance(resistance);
-        setSoundType(sound);
-        useNeighborBrightness = true;
+        this.setHardness(hardness);
+        this.setResistance(resistance);
+        this.setSoundType(sound);
+        this.useNeighborBrightness = true;
         this.material = material;
         this.mapColor = mapColor;
     }
 
-    public BlockStairs(Material material, SoundType sound, float hardness, float resistance) {
+    public BlockStairs(final Material material, final SoundType sound, final float hardness, final float resistance) {
         this(material, material.getMaterialMapColor(), sound, hardness, resistance);
     }
 
     @Override
     @Deprecated
-    public Material getMaterial(IBlockState state) {
-        return material;
+    public Material getMaterial(final IBlockState state) {
+        return this.material;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void randomDisplayTick(IBlockState state, World world, BlockPos pos, Random rand) {}
+    public void randomDisplayTick(final IBlockState state, final World world, final BlockPos pos, final Random rand) {}
 
     @Override
-    public void onBlockClicked(World world, BlockPos pos, EntityPlayer player) {}
+    public void onBlockClicked(final World world, final BlockPos pos, final EntityPlayer player) {}
 
     @Override
-    public void onPlayerDestroy(World world, BlockPos pos, IBlockState state) {}
+    public void onPlayerDestroy(final World world, final BlockPos pos, final IBlockState state) {}
 
     @Override
     @Deprecated
     @SideOnly(Side.CLIENT)
-    public int getPackedLightmapCoords(IBlockState state, IBlockAccess access, BlockPos pos) {
+    public int getPackedLightmapCoords(final IBlockState state, final IBlockAccess access, final BlockPos pos) {
         return access.getCombinedLight(pos, state.getLightValue(access, pos));
     }
 
     @Override
-    public float getExplosionResistance(Entity exploder) {
-        return blockResistance / 5.0F;
+    public float getExplosionResistance(final Entity exploder) {
+        return this.blockResistance / 5.0F;
     }
 
     @Override
-    public int tickRate(World worldIn) {
+    public int tickRate(final World world) {
         return 10;
     }
 
     @Override
-    public Vec3d modifyAcceleration(World world, BlockPos pos, Entity entity, Vec3d motion) {
+    public Vec3d modifyAcceleration(final World world, final BlockPos pos, final Entity entity, final Vec3d motion) {
         return motion;
     }
 
@@ -86,8 +87,8 @@ public class BlockStairs extends net.minecraft.block.BlockStairs {
     @Override
     @Deprecated
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
-        return FULL_BLOCK_AABB.offset(pos);
+    public AxisAlignedBB getSelectedBoundingBox(final IBlockState state, final World world, final BlockPos pos) {
+        return Block.FULL_BLOCK_AABB.offset(pos);
     }
 
     @Override
@@ -96,38 +97,38 @@ public class BlockStairs extends net.minecraft.block.BlockStairs {
     }
 
     @Override
-    public boolean canCollideCheck(IBlockState state, boolean hitIfLiquid) {
-        return isCollidable();
+    public boolean canCollideCheck(final IBlockState state, final boolean hitIfLiquid) {
+        return this.isCollidable();
     }
 
     @Override
-    public boolean canPlaceBlockAt(World world, BlockPos pos) {
+    public boolean canPlaceBlockAt(final World world, final BlockPos pos) {
         return world.getBlockState(pos).getBlock().isReplaceable(world, pos);
     }
 
     @Override
-    public void onBlockAdded(World world, BlockPos pos, IBlockState state) {}
+    public void onBlockAdded(final World world, final BlockPos pos, final IBlockState state) {}
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {}
+    public void breakBlock(final World world, final BlockPos pos, final IBlockState state) {}
 
     @Override
-    public void onEntityWalk(World world, BlockPos pos, Entity entity) {}
+    public void onEntityWalk(final World world, final BlockPos pos, final Entity entity) {}
 
     @Override
-    public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {}
+    public void updateTick(final World world, final BlockPos pos, final IBlockState state, final Random rand) {}
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(final World world, final BlockPos pos, final IBlockState state, final EntityPlayer player, final EnumHand hand, final EnumFacing facing, final float hitX, final float hitY, final float hitZ) {
         return false;
     }
 
     @Override
-    public void onExplosionDestroy(World world, BlockPos pos, Explosion explosionIn) {}
+    public void onExplosionDestroy(final World world, final BlockPos pos, final Explosion explosion) {}
 
     @Override
     @Deprecated
-    public MapColor getMapColor(IBlockState state, IBlockAccess access, BlockPos pos) {
-        return mapColor;
+    public MapColor getMapColor(final IBlockState state, final IBlockAccess access, final BlockPos pos) {
+        return this.mapColor;
     }
 }

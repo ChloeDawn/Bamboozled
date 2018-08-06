@@ -9,30 +9,30 @@ import net.minecraft.util.NonNullList;
 public class ItemBlockDoorBase extends ItemDoor {
     private final Block door;
 
-    public ItemBlockDoorBase(Block door) {
+    public ItemBlockDoorBase(final Block door) {
         super(door);
         this.door = door;
     }
 
     @Override
     public String getTranslationKey() {
-        return door.getTranslationKey();
+        return this.door.getTranslationKey();
     }
 
     @Override
-    public String getTranslationKey(ItemStack stack) {
-        return door.getTranslationKey();
+    public String getTranslationKey(final ItemStack stack) {
+        return this.door.getTranslationKey();
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
+    public void getSubItems(final CreativeTabs tab, final NonNullList<ItemStack> items) {
+        if (this.isInCreativeTab(tab)) {
             items.add(new ItemStack(this));
         }
     }
 
     @Override
     public CreativeTabs getCreativeTab() {
-        return door.getCreativeTab();
+        return this.door.getCreativeTab();
     }
 }

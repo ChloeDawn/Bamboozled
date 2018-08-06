@@ -32,36 +32,43 @@ public final class BlockBambooDoor extends BlockDoor {
 
     public BlockBambooDoor() {
         super(Material.WOOD);
-        setHardness(3.0F);
-        setSoundType(SoundType.WOOD);
-        disableStats();
+        this.setHardness(3.0F);
+        this.setSoundType(SoundType.WOOD);
+        this.disableStats();
     }
 
     @Override
-    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return state.getValue(HALF) == EnumDoorHalf.LOWER ? BamboozledItems.BAMBOO_DOOR : Items.AIR;
+    public Item getItemDropped(final IBlockState state, final Random rand, final int fortune) {
+        return state.getValue(BlockDoor.HALF) == EnumDoorHalf.LOWER ? BamboozledItems.BAMBOO_DOOR : Items.AIR;
     }
 
     @Override
-    public ItemStack getItem(World world, BlockPos pos, IBlockState state) {
+    public ItemStack getItem(final World world, final BlockPos pos, final IBlockState state) {
         return new ItemStack(BamboozledItems.BAMBOO_DOOR);
     }
 
     @Override
     @Deprecated
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
+    public AxisAlignedBB getSelectedBoundingBox(final IBlockState state, final World world, final BlockPos pos) {
         val actual = state.getActualState(world, pos);
-        val open = actual.getValue(OPEN);
-        val left = actual.getValue(HINGE) == EnumHingePosition.LEFT;
-        var facing = actual.getValue(FACING);
-        if (open) facing = facing.rotateYCCW();
-        if (left && open) facing = facing.getOpposite();
-        return AABB.get(facing).offset(pos);
+        val open = actual.getValue(BlockDoor.OPEN);
+        val left = actual.getValue(BlockDoor.HINGE) == EnumHingePosition.LEFT;
+        var facing = actual.getValue(BlockDoor.FACING);
+
+        if (open) {
+            facing = facing.rotateYCCW();
+        }
+
+        if (left && open) {
+            facing = facing.getOpposite();
+        }
+
+        return BlockBambooDoor.AABB.get(facing).offset(pos);
     }
 
     @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+    public ItemStack getPickBlock(final IBlockState state, final RayTraceResult target, final World world, final BlockPos pos, final EntityPlayer player) {
         return new ItemStack(BamboozledItems.BAMBOO_DOOR);
     }
 }

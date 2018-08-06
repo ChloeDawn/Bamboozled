@@ -28,76 +28,76 @@ import java.util.Random;
 public class BlockSlab extends Block {
     public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
 
-    public BlockSlab(Material material, MapColor mapColor, SoundType sound, float hardness, float resistance) {
+    public BlockSlab(final Material material, final MapColor mapColor, final SoundType sound, final float hardness, final float resistance) {
         super(material, mapColor);
-        setSoundType(sound);
-        setHardness(hardness);
-        setResistance(resistance);
-        useNeighborBrightness = true;
-        setLightOpacity(0);
+        this.setSoundType(sound);
+        this.setHardness(hardness);
+        this.setResistance(resistance);
+        this.useNeighborBrightness = true;
+        this.setLightOpacity(0);
     }
 
-    public BlockSlab(Material material, SoundType sound, float hardness, float resistance) {
+    public BlockSlab(final Material material, final SoundType sound, final float hardness, final float resistance) {
         this(material, material.getMaterialMapColor(), sound, hardness, resistance);
     }
 
     public IBlockState getLower() {
-        return getDefaultState().withProperty(VARIANT, Variant.LOWER);
+        return this.getDefaultState().withProperty(BlockSlab.VARIANT, Variant.LOWER);
     }
 
     public IBlockState getUpper() {
-        return getDefaultState().withProperty(VARIANT, Variant.UPPER);
+        return this.getDefaultState().withProperty(BlockSlab.VARIANT, Variant.UPPER);
     }
 
     public IBlockState getDouble() {
-        return getDefaultState().withProperty(VARIANT, Variant.DOUBLE);
+        return this.getDefaultState().withProperty(BlockSlab.VARIANT, Variant.DOUBLE);
     }
 
-    public final boolean isLower(IBlockState state) {
-        return state.getValue(VARIANT).isLower();
+    public final boolean isLower(final IBlockState state) {
+        return state.getValue(BlockSlab.VARIANT).isLower();
     }
 
-    public final boolean isUpper(IBlockState state) {
-        return state.getValue(VARIANT).isUpper();
+    public final boolean isUpper(final IBlockState state) {
+        return state.getValue(BlockSlab.VARIANT).isUpper();
     }
 
-    public final boolean isDouble(IBlockState state) {
-        return state.getValue(VARIANT).isDouble();
-    }
-
-    @Override
-    @Deprecated
-    public boolean isTopSolid(IBlockState state) {
-        return isDouble(state) || isUpper(state);
+    public final boolean isDouble(final IBlockState state) {
+        return state.getValue(BlockSlab.VARIANT).isDouble();
     }
 
     @Override
     @Deprecated
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(VARIANT, Variant.VALUES[meta]);
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(VARIANT).ordinal();
+    public boolean isTopSolid(final IBlockState state) {
+        return this.isDouble(state) || this.isUpper(state);
     }
 
     @Override
     @Deprecated
-    public boolean isFullCube(IBlockState state) {
-        return isDouble(state);
+    public IBlockState getStateFromMeta(final int meta) {
+        return this.getDefaultState().withProperty(BlockSlab.VARIANT, Variant.VALUES[meta]);
+    }
+
+    @Override
+    public int getMetaFromState(final IBlockState state) {
+        return state.getValue(BlockSlab.VARIANT).ordinal();
     }
 
     @Override
     @Deprecated
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return state.getValue(VARIANT).getBoundingBox();
+    public boolean isFullCube(final IBlockState state) {
+        return this.isDouble(state);
+    }
+
+    @Override
+    @Deprecated
+    public AxisAlignedBB getBoundingBox(final IBlockState state, final IBlockAccess access, final BlockPos pos) {
+        return state.getValue(BlockSlab.VARIANT).getBoundingBox();
     }
 
     @Override
     @Deprecated
     @SideOnly(Side.CLIENT)
-    public int getPackedLightmapCoords(IBlockState state, IBlockAccess access, BlockPos pos) {
+    public int getPackedLightmapCoords(final IBlockState state, final IBlockAccess access, final BlockPos pos) {
         val light = access.getCombinedLight(pos, state.getLightValue(access, pos));
         if (light == 0) {
             val below = pos.down();
@@ -109,14 +109,14 @@ public class BlockSlab extends Block {
 
     @Override
     @Deprecated
-    public BlockFaceShape getBlockFaceShape(IBlockAccess access, IBlockState state, BlockPos pos, EnumFacing side) {
-        return state.getValue(VARIANT).isSideSolid(side) ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
+    public BlockFaceShape getBlockFaceShape(final IBlockAccess access, final IBlockState state, final BlockPos pos, final EnumFacing side) {
+        return state.getValue(BlockSlab.VARIANT).isSideSolid(side) ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
     }
 
     @Override
     @Deprecated
-    public boolean isOpaqueCube(IBlockState state) {
-        return isDouble(state);
+    public boolean isOpaqueCube(final IBlockState state) {
+        return this.isDouble(state);
     }
 
     @Override
@@ -127,79 +127,90 @@ public class BlockSlab extends Block {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, VARIANT);
+        return new BlockStateContainer(this, BlockSlab.VARIANT);
     }
 
     @Override
-    public boolean doesSideBlockRendering(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
-        if (ForgeModContainer.disableStairSlabCulling) return false;
+    public boolean doesSideBlockRendering(final IBlockState state, final IBlockAccess access, final BlockPos pos, final EnumFacing side) {
+        if (ForgeModContainer.disableStairSlabCulling) {
+            return false;
+        }
 
         if (side.getAxis().isVertical()) {
-            return state.getValue(VARIANT).isSideSolid(side);
+            return state.getValue(BlockSlab.VARIANT).isSideSolid(side);
         }
 
         val target = access.getBlockState(pos.offset(side));
         val block = target.getBlock();
-        val variant = state.getValue(VARIANT);
+        val variant = state.getValue(BlockSlab.VARIANT);
 
-        return block instanceof BlockSlab && variant == target.getValue(VARIANT)
-            || block instanceof net.minecraft.block.BlockSlab && variant.doesMatchHalf(target.getValue(net.minecraft.block.BlockSlab.HALF));
+        if (block instanceof BlockSlab) {
+            if (variant == target.getValue(BlockSlab.VARIANT)) {
+                return true;
+            }
+        }
+
+        if (block instanceof net.minecraft.block.BlockSlab) {
+            return variant.doesMatchHalf(target.getValue(net.minecraft.block.BlockSlab.HALF));
+        }
+
+        return false;
     }
 
     @Override
-    public int quantityDropped(IBlockState state, int fortune, Random random) {
-        return isDouble(state) ? 2 : 1;
+    public int quantityDropped(final IBlockState state, final int fortune, final Random random) {
+        return this.isDouble(state) ? 2 : 1;
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        return side == EnumFacing.UP || hitY <= 0.5D ? getLower() : getUpper();
+    public IBlockState getStateForPlacement(final World world, final BlockPos pos, final EnumFacing side, final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer, final EnumHand hand) {
+        return side == EnumFacing.UP || hitY <= 0.5D ? this.getLower() : this.getUpper();
     }
 
-    public enum Variant implements IStringSerializable {
+    private enum Variant implements IStringSerializable {
+        DOUBLE(Block.FULL_BLOCK_AABB, null, null),
         LOWER(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D), EnumFacing.DOWN, EnumBlockHalf.BOTTOM),
-        UPPER(new AxisAlignedBB(0.0D, 0.5D, 0.0D, 1.0D, 1.0D, 1.0D), EnumFacing.UP, EnumBlockHalf.TOP),
-        DOUBLE(FULL_BLOCK_AABB, null, null);
+        UPPER(new AxisAlignedBB(0.0D, 0.5D, 0.0D, 1.0D, 1.0D, 1.0D), EnumFacing.UP, EnumBlockHalf.TOP);
 
-        public static final Variant[] VALUES = values();
+        public static final Variant[] VALUES = Variant.values();
 
         private final AxisAlignedBB boundingBox;
         private final EnumFacing side;
         private final EnumBlockHalf half;
 
-        Variant(AxisAlignedBB boundingBox, EnumFacing side, EnumBlockHalf half) {
+        Variant(final AxisAlignedBB boundingBox, final EnumFacing side, final EnumBlockHalf half) {
             this.boundingBox = boundingBox;
             this.side = side;
             this.half = half;
         }
 
         public boolean isLower() {
-            return this == LOWER;
+            return this == Variant.LOWER;
         }
 
         public boolean isUpper() {
-            return this == UPPER;
+            return this == Variant.UPPER;
         }
 
         public boolean isDouble() {
-            return this == DOUBLE;
+            return this == Variant.DOUBLE;
         }
 
         public AxisAlignedBB getBoundingBox() {
-            return boundingBox;
+            return this.boundingBox;
         }
 
-        public boolean isSideSolid(EnumFacing side) {
+        public boolean isSideSolid(final EnumFacing side) {
             return this.side == side;
         }
 
-        public boolean doesMatchHalf(EnumBlockHalf half) {
+        public boolean doesMatchHalf(final EnumBlockHalf half) {
             return this.half == half;
         }
 
         @Override
         public String getName() {
-            return name().toLowerCase(Locale.ROOT);
+            return this.name().toLowerCase(Locale.ROOT);
         }
     }
 }

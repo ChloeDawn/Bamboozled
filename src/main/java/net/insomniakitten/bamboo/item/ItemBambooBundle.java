@@ -14,25 +14,25 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 public final class ItemBambooBundle extends ItemSubBlockBase {
-    public ItemBambooBundle(Block block) {
+    public ItemBambooBundle(final Block block) {
         super(block);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
+    public void addInformation(final ItemStack stack, final World world, final List<String> tooltip, final ITooltipFlag flag) {
         if (Bamboozled.getConfig().isInWorldBambooDryingEnabled() || BlockBambooBundle.isDry(stack.getMetadata())) {
             super.addInformation(stack, world, tooltip, flag);
         }
     }
 
     @Override
-    public int getItemBurnTime(ItemStack stack) {
+    public int getItemBurnTime(final ItemStack stack) {
         return BlockBambooBundle.isDry(stack.getMetadata()) ? 288 : -1;
     }
 
     @Override
-    public String getTranslationKey(ItemStack stack) {
+    public String getTranslationKey(final ItemStack stack) {
         var name = super.getTranslationKey(stack);
         if (BlockBambooBundle.isDry(stack.getMetadata())) {
             name += "_dried";

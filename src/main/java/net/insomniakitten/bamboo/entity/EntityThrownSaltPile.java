@@ -20,21 +20,21 @@ public final class EntityThrownSaltPile extends EntityThrowable {
         .tracker(64, 1, true);
 
     @SuppressWarnings("unused")
-    public EntityThrownSaltPile(World world) {
+    public EntityThrownSaltPile(final World world) {
         super(world);
     }
 
     @SuppressWarnings("unused")
-    public EntityThrownSaltPile(World world, double x, double y, double z) {
+    public EntityThrownSaltPile(final World world, final double x, final double y, final double z) {
         super(world, x, y, z);
     }
 
-    public EntityThrownSaltPile(World world, EntityLivingBase thrower) {
+    public EntityThrownSaltPile(final World world, final EntityLivingBase thrower) {
         super(world, thrower);
     }
 
     @Override
-    protected void onImpact(RayTraceResult result) {
+    protected void onImpact(final RayTraceResult result) {
         if (Bamboozled.getConfig().isSaltUndeadDamageEnabled() && result.typeOfHit == RayTraceResult.Type.ENTITY) {
             if (result.entityHit instanceof EntityLivingBase) {
                 val living = (EntityLivingBase) result.entityHit;

@@ -1,4 +1,5 @@
 {
+  "__comment": "Copyright © InsomniaKitten 2017",
   "parent": "item/generated",
   "textures": {
     "layer0": "bamboozled:items/salt_pile"

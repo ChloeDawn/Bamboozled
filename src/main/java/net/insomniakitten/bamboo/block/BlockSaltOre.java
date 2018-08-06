@@ -27,46 +27,50 @@ import java.util.Random;
 public final class BlockSaltOre extends Block {
     public BlockSaltOre() {
         super(Material.ROCK, MapColor.SNOW);
-        setSoundType(SoundType.STONE);
-        setHardness(1.5F);
-        setResistance(17.5F);
-        setLightOpacity(1);
+        this.setSoundType(SoundType.STONE);
+        this.setHardness(1.5F);
+        this.setResistance(17.5F);
+        this.setLightOpacity(1);
     }
 
     @Override
     @Deprecated
-    public boolean isOpaqueCube(IBlockState state) {
+    public boolean isOpaqueCube(final IBlockState state) {
         return false;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getRenderLayer() {
-        return isFancy() ? BlockRenderLayer.TRANSLUCENT : BlockRenderLayer.SOLID;
+        return this.isFancy() ? BlockRenderLayer.TRANSLUCENT : BlockRenderLayer.SOLID;
     }
 
     @Override
-    public void onLanded(World world, Entity entity) {
+    public void onLanded(final World world, final Entity entity) {
         val motion = entity.motionY;
 
         super.onLanded(world, entity);
 
-        if (!entity.onGround || motion >= 0) return;
-        if (!(entity instanceof EntityFallingBlock)) return;
+        if (!entity.onGround || motion >= 0) {
+            return;
+        }
+        if (!(entity instanceof EntityFallingBlock)) {
+            return;
+        }
 
         val pos = new BlockPos(entity);
         val state = ((EntityFallingBlock) entity).getBlock();
 
-        if (ReflectionHelper.getPrivateValue(
-            EntityFallingBlock.class,
-            ((EntityFallingBlock) entity),
-            "field_145808_f",
-            "dontSetBlock")) {
+        if (ReflectionHelper.getPrivateValue(EntityFallingBlock.class, (EntityFallingBlock) entity, "field_145808_f", "dontSetBlock")) {
             return;
         }
 
-        if (state == null || state.getBlock() != Blocks.ANVIL) return;
-        if (!world.mayPlace(state.getBlock(), pos, true, EnumFacing.UP, null)) return;
+        if (state == null || state.getBlock() != Blocks.ANVIL) {
+            return;
+        }
+        if (!world.mayPlace(state.getBlock(), pos, true, EnumFacing.UP, null)) {
+            return;
+        }
 
         world.destroyBlock(pos.down(), false);
 
@@ -77,19 +81,18 @@ public final class BlockSaltOre extends Block {
     }
 
     @Override
-    public boolean doesSideBlockRendering(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
-        return !isFancy() || access.getBlockState(pos.offset(side)).getBlock() == this;
+    public boolean doesSideBlockRendering(final IBlockState state, final IBlockAccess access, final BlockPos pos, final EnumFacing side) {
+        return !this.isFancy() || access.getBlockState(pos.offset(side)).getBlock() == this;
     }
 
     @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess access, BlockPos pos, IBlockState state, int fortune) {
+    public void getDrops(final NonNullList<ItemStack> drops, final IBlockAccess access, final BlockPos pos, final IBlockState state, final int fortune) {
         val rand = access instanceof World ? ((World) access).rand : new Random();
         val amount = 4 + rand.nextInt(5) * (Math.max(0, rand.nextInt(fortune + 2) - 1) + 1);
         drops.add(new ItemStack(BamboozledItems.SALT_PILE, amount));
     }
 
     private boolean isFancy() {
-        return Bamboozled.getClientConfig().isFancySaltOreForced()
-            || !Blocks.LEAVES.getDefaultState().isOpaqueCube();
+        return Bamboozled.getClientConfig().isFancySaltOreForced() || !Blocks.LEAVES.getDefaultState().isOpaqueCube();
     }
 }

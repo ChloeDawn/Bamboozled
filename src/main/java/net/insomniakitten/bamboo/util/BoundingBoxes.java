@@ -14,14 +14,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static net.minecraft.client.renderer.GlStateManager.*;
 
-@UtilityClass
-public class BoundingBoxes {
+public final class BoundingBoxes {
+    private BoundingBoxes() {}
+
     @SideOnly(Side.CLIENT)
-    public void renderAt(List<AxisAlignedBB> boxes, Entity entity, BlockPos pos, float partialTicks) {
+    public static void renderAt(final Iterable<AxisAlignedBB> boxes, final Entity entity, final BlockPos pos, final float partialTicks) {
         disableAlpha();
         enableBlend();
         tryBlendFuncSeparate(
@@ -46,7 +46,7 @@ public class BoundingBoxes {
         enableAlpha();
     }
 
-    public RayTraceResult rayTrace(List<AxisAlignedBB> boxes, BlockPos pos, Vec3d start, Vec3d end) {
+    public static RayTraceResult rayTrace(final Iterable<AxisAlignedBB> boxes, final BlockPos pos, final Vec3d start, final Vec3d end) {
         val results = new ArrayList<RayTraceResult>();
         val a = start.subtract(pos.getX(), pos.getY(), pos.getZ());
         val b = end.subtract(pos.getX(), pos.getY(), pos.getZ());

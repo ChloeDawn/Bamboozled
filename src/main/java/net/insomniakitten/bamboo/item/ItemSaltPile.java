@@ -6,6 +6,7 @@ import net.insomniakitten.bamboo.entity.EntityThrownSaltPile;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
@@ -17,12 +18,12 @@ import net.minecraft.world.World;
 import java.util.Objects;
 
 public final class ItemSaltPile extends ItemBlock {
-    public ItemSaltPile(Block block) {
+    public ItemSaltPile(final Block block) {
         super(block);
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(final World world, final EntityPlayer player, final EnumHand hand) {
         val stack = player.getHeldItem(hand);
 
         if (!Bamboozled.getConfig().isThrowableSaltPilesEnabled()) {
@@ -35,7 +36,7 @@ public final class ItemSaltPile extends ItemBlock {
 
         if (!player.isCreative()) stack.shrink(1);
 
-        player.playSound(SoundEvents.ENTITY_SNOWBALL_THROW, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+        player.playSound(SoundEvents.ENTITY_SNOWBALL_THROW, 0.5F, 0.4F / (Item.itemRand.nextFloat() * 0.4F + 0.8F));
         player.getCooldownTracker().setCooldown(this, 10);
 
         if (!world.isRemote) {
