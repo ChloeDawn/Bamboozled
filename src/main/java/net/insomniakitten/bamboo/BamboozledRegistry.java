@@ -56,6 +56,7 @@ public final class BamboozledRegistry {
         BamboozledRegistry.registerBlock(event, "salt_pile", new BlockSaltPile());
         BamboozledRegistry.registerBlock(event, "salt_block", new BlockSalt());
         BamboozledRegistry.registerBlock(event, "rope", new BlockRope());
+        BamboozledRegistry.registerBlock(event, "rope_fence", new BlockFence(Material.WOOD, SoundType.WOOD, 2.0F, 5.0F));
     }
 
     @SubscribeEvent
@@ -76,6 +77,7 @@ public final class BamboozledRegistry {
         BamboozledRegistry.registerItem(event, "salt_pile", new ItemSaltPile(BamboozledBlocks.SALT_PILE));
         BamboozledRegistry.registerItem(event, "salt_block", new ItemBlockBase(BamboozledBlocks.SALT_BLOCK));
         BamboozledRegistry.registerItem(event, "rope", new ItemBlockBase(BamboozledBlocks.ROPE));
+        BamboozledRegistry.registerItem(event, "rope_fence", new ItemBlockBase(BamboozledBlocks.ROPE_FENCE));
     }
 
     @SubscribeEvent
@@ -105,6 +107,7 @@ public final class BamboozledRegistry {
         BamboozledRegistry.registerOre(BamboozledItems.SALT_ORE, 0, "oreSalt", "oreHalite");
         BamboozledRegistry.registerOre(BamboozledItems.SALT_PILE, 0, "dustSalt");
         BamboozledRegistry.registerOre(BamboozledItems.SALT_BLOCK, 0, "blockSalt");
+        BamboozledRegistry.registerOre(BamboozledItems.ROPE_FENCE, 0, "fenceWood", "fenceRope");
     }
 
     private static void registerBlock(final RegistryEvent.Register<Block> event, final String name, final Block block) {

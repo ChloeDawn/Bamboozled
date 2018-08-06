@@ -57,6 +57,7 @@ public final class BamboozledClient {
         BamboozledClient.registerModel(BamboozledItems.SALT_PILE, 0, "inventory");
         BamboozledClient.registerModel(BamboozledItems.SALT_BLOCK, 0, "normal");
         BamboozledClient.registerModel(BamboozledItems.ROPE, 0, "inventory");
+        BamboozledClient.registerModel(BamboozledItems.ROPE_FENCE, 0, "inventory");
     }
 
     private static void registerMapper(final Block block, final Consumer<StateMap.Builder> consumer) {

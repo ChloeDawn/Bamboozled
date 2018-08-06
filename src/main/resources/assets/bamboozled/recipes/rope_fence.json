@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "result": { "item": "bamboozled:rope_fence", "count": 3 },
+  "pattern": [ "PRP", "PRP" ],
+  "key": {
+    "P": { "ore": "plankWood", "type": "forge:ore_dict" },
+    "R": { "item": "bamboozled:rope" }
+  }
+}
