@@ -50,6 +50,8 @@ public final class BamboozledClient {
         BamboozledClient.registerModel(BamboozledItems.BAMBOO_PLANKS_STAIRS, 0, "facing=east,half=bottom,shape=straight");
         BamboozledClient.registerModel(BamboozledItems.BAMBOO_PLANKS_SLAB, 0, "variant=lower");
         BamboozledClient.registerModel(BamboozledItems.BAMBOO_WALL, 0, "inventory");
+        BamboozledClient.registerModel(BamboozledItems.BAMBOO_DRIED_FENCE, 0, "inventory");
+        BamboozledClient.registerModel(BamboozledItems.BAMBOO_PLANKS_FENCE, 0, "inventory");
         BamboozledClient.registerModel(BamboozledItems.BAMBOO_DOOR, 0, "inventory");
         BamboozledClient.registerModel(BamboozledItems.SALT_ORE, 0, "normal");
         BamboozledClient.registerModel(BamboozledItems.SALT_PILE, 0, "inventory");

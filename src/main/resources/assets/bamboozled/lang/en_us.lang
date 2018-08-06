@@ -10,6 +10,7 @@ tile.bamboozled.bamboo_bundle_dried.desc=Can be crafted into various decorations
 
 tile.bamboozled.bamboo_dried_slab.name=Dried Bamboo Slab
 tile.bamboozled.bamboo_dried_stairs.name=Dried Bamboo Stairs
+tile.bamboozled.bamboo_dried_fence.name=Dried Bamboo Fence
 
 tile.bamboozled.bamboo_wall.name=Bamboo Wall
 tile.bamboozled.bamboo_door.name=Bamboo Door
@@ -18,6 +19,7 @@ tile.bamboozled.bamboo_planks.name=Bamboo Planks
 tile.bamboozled.bamboo_planks_vertical.name=Bamboo Vertical Planks
 tile.bamboozled.bamboo_planks_slab.name=Bamboo Planks Slab
 tile.bamboozled.bamboo_planks_stairs.name=Bamboo Planks Stairs
+tile.bamboozled.bamboo_planks_fence.name=Bamboo Planks Fence
 
 tile.bamboozled.rope.name=Rope
 

@@ -1,0 +1,7 @@
+{
+  "__comment": "Copyright © InsomniaKitten 2017",
+  "parent": "block/fence_inventory",
+  "textures": {
+    "texture": "bamboozled:blocks/bamboo_bundle_dried_side"
+  }
+}

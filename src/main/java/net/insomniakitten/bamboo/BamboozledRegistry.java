@@ -9,6 +9,7 @@ import net.insomniakitten.bamboo.block.BlockRope;
 import net.insomniakitten.bamboo.block.BlockSalt;
 import net.insomniakitten.bamboo.block.BlockSaltOre;
 import net.insomniakitten.bamboo.block.BlockSaltPile;
+import net.insomniakitten.bamboo.block.base.BlockFence;
 import net.insomniakitten.bamboo.block.base.BlockPlanks;
 import net.insomniakitten.bamboo.block.base.BlockSlab;
 import net.insomniakitten.bamboo.block.base.BlockStairs;
@@ -48,6 +49,8 @@ public final class BamboozledRegistry {
         BamboozledRegistry.registerBlock(event, "bamboo_planks_stairs", new BlockStairs(Material.WOOD, SoundType.WOOD, 2.0F, 15.0F));
         BamboozledRegistry.registerBlock(event, "bamboo_planks_slab", new BlockSlab(Material.WOOD, SoundType.WOOD, 2.0F, 15.0F));
         BamboozledRegistry.registerBlock(event, "bamboo_wall", new BlockBambooWall());
+        BamboozledRegistry.registerBlock(event, "bamboo_dried_fence", new BlockFence(Material.WOOD, SoundType.WOOD, 2.0F, 5.0F));
+        BamboozledRegistry.registerBlock(event, "bamboo_planks_fence", new BlockFence(Material.WOOD, SoundType.WOOD, 2.0F, 5.0F));
         BamboozledRegistry.registerBlock(event, "bamboo_door", new BlockBambooDoor());
         BamboozledRegistry.registerBlock(event, "salt_ore", new BlockSaltOre());
         BamboozledRegistry.registerBlock(event, "salt_pile", new BlockSaltPile());
@@ -66,6 +69,8 @@ public final class BamboozledRegistry {
         BamboozledRegistry.registerItem(event, "bamboo_planks_stairs", new ItemBlockBase(BamboozledBlocks.BAMBOO_PLANKS_STAIRS));
         BamboozledRegistry.registerItem(event, "bamboo_planks_slab", new ItemBlockSlabBase(BamboozledBlocks.BAMBOO_PLANKS_SLAB));
         BamboozledRegistry.registerItem(event, "bamboo_wall", new ItemBlockBase(BamboozledBlocks.BAMBOO_WALL));
+        BamboozledRegistry.registerItem(event, "bamboo_dried_fence", new ItemBlockBase(BamboozledBlocks.BAMBOO_DRIED_FENCE));
+        BamboozledRegistry.registerItem(event, "bamboo_planks_fence", new ItemBlockBase(BamboozledBlocks.BAMBOO_PLANKS_FENCE));
         BamboozledRegistry.registerItem(event, "bamboo_door", new ItemBlockDoorBase(BamboozledBlocks.BAMBOO_DOOR));
         BamboozledRegistry.registerItem(event, "salt_ore", new ItemBlockBase(BamboozledBlocks.SALT_ORE));
         BamboozledRegistry.registerItem(event, "salt_pile", new ItemSaltPile(BamboozledBlocks.SALT_PILE));
@@ -94,6 +99,8 @@ public final class BamboozledRegistry {
         BamboozledRegistry.registerOre(BamboozledItems.BAMBOO_PLANKS_STAIRS, 0, "stairWood");
         BamboozledRegistry.registerOre(BamboozledItems.BAMBOO_PLANKS_SLAB, 0, "slabWood");
         BamboozledRegistry.registerOre(BamboozledItems.BAMBOO_WALL, 0, "wallBamboo");
+        BamboozledRegistry.registerOre(BamboozledItems.BAMBOO_DRIED_FENCE, 0, "fenceBamboo");
+        BamboozledRegistry.registerOre(BamboozledItems.BAMBOO_PLANKS_FENCE, 0, "fenceWood");
         BamboozledRegistry.registerOre(BamboozledItems.BAMBOO_DOOR, 0, "doorBamboo");
         BamboozledRegistry.registerOre(BamboozledItems.SALT_ORE, 0, "oreSalt", "oreHalite");
         BamboozledRegistry.registerOre(BamboozledItems.SALT_PILE, 0, "dustSalt");

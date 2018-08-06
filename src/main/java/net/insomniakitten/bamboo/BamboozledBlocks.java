@@ -14,6 +14,8 @@ public final class BamboozledBlocks {
     public static final Block BAMBOO_PLANKS_STAIRS = Blocks.AIR;
     public static final Block BAMBOO_PLANKS_SLAB = Blocks.AIR;
     public static final Block BAMBOO_WALL = Blocks.AIR;
+    public static final Block BAMBOO_DRIED_FENCE = Blocks.AIR;
+    public static final Block BAMBOO_PLANKS_FENCE = Blocks.AIR;
     public static final Block BAMBOO_DOOR = Blocks.AIR;
     public static final Block SALT_ORE = Blocks.AIR;
     public static final Block SALT_PILE = Blocks.AIR;

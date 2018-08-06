@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "result": { "item": "bamboozled:bamboo_dried_fence", "count": 3 },
+  "pattern": [ "BSB", "BSB" ],
+  "key": {
+    "B": { "item": "bamboozled:bamboo_bundle", "data": 1 },
+    "S": { "item": "minecraft:stick" }
+  }
+}

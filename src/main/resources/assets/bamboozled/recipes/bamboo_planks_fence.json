@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "result": { "item": "bamboozled:bamboo_planks_fence", "count": 3 },
+  "pattern": [ "BSB", "BSB" ],
+  "key": {
+    "B": { "item": "bamboozled:bamboo_planks", "data": 0 },
+    "S": { "item": "minecraft:stick" }
+  }
+}
