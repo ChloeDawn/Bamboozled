@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 buildscript {
     repositories {
         jcenter()
@@ -14,13 +16,12 @@ plugins {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-def modVersion = '1.2.0'
-def mcfVersion = '1.12.2-14.23.4.2705'
-def mcpMappings = 'snapshot_20180620'
-
+def modVersion = '2.0.0'
+def mcfVersion = '1.12.2-14.23.4.2747'
+def mcpMappings = 'snapshot_20180806'
 def hwylaVersion = '1.8.26-B41_1.12.2'
-def jeiVersion = '1.12.2:4.10.0.199'
-def ctmVersion = 'MC1.12-0.3.0.15'
+def jeiVersion = '1.12.2:4.11.0.206'
+def ctmVersion = 'MC1.12.2-0.3.2.18'
 
 version = "1.12-$modVersion"
 group = 'net.insomniakitten.bamboozled'
@@ -31,8 +32,6 @@ minecraft {
     version = mcfVersion
     mappings = mcpMappings
     runDir = 'run'
-    replaceIn 'Bamboozled.java'
-    replace '%VERSION%', modVersion
 }
 
 repositories {
@@ -48,11 +47,7 @@ dependencies {
 }
 
 processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info', 'pack.mcmeta'
-        expand 'version': modVersion
-    }
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info', 'pack.mcmeta'
-    }
+  filter ReplaceTokens, tokens: [
+    'mod.version': modVersion
+  ]
 }

@@ -16,12 +16,10 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod(modid = Bamboozled.ID, name = Bamboozled.NAME, version = Bamboozled.VERSION)
+@Mod(modid = Bamboozled.ID, useMetadata = true)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Bamboozled {
     public static final String ID = "bamboozled";
-    public static final String NAME = "Bamboozled";
-    public static final String VERSION = "%VERSION%";
 
     @Getter(onMethod = @__({ @Mod.InstanceFactory, @Deprecated }))
     public static final Bamboozled INSTANCE = new Bamboozled();
