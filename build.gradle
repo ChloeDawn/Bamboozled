@@ -1,17 +1,17 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 buildscript {
-    repositories {
-        jcenter()
-        maven { url = 'https://files.minecraftforge.net/maven' }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-    }
+  repositories {
+    jcenter()
+    maven { url = 'https://files.minecraftforge.net/maven' }
+  }
+  dependencies {
+    classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+  }
 }
 
 plugins {
-    id 'io.franzbecker.gradle-lombok' version '1.14'
+  id 'io.franzbecker.gradle-lombok' version '1.14'
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -29,25 +29,25 @@ archivesBaseName = 'Bamboozled'
 sourceCompatibility = 1.8
 
 minecraft {
-    version = mcfVersion
-    mappings = mcpMappings
-    runDir = 'run'
+  version = mcfVersion
+  mappings = mcpMappings
+  runDir = 'run'
 }
 
 repositories {
-    maven { url = 'http://maven.tterrag.com' }
-    maven { url = 'http://tehnut.info/maven' }
-    maven { url = 'http://dvs1.progwml6.com/files/maven' }
+  maven { url = 'http://maven.tterrag.com' }
+  maven { url = 'http://tehnut.info/maven' }
+  maven { url = 'http://dvs1.progwml6.com/files/maven' }
 }
 
 dependencies {
-    deobfCompile "team.chisel.ctm:CTM:$ctmVersion"
-    deobfCompile "mcp.mobius.waila:Hwyla:$hwylaVersion"
-    deobfCompile "mezz.jei:jei_$jeiVersion"
+  deobfCompile "team.chisel.ctm:CTM:$ctmVersion"
+  deobfCompile "mcp.mobius.waila:Hwyla:$hwylaVersion"
+  deobfCompile "mezz.jei:jei_$jeiVersion"
 }
 
 processResources {
-    filesMatching(['**/*.info', '**/*.mcmeta', '**/*.json', '**/*.properties']) {
-        filter ReplaceTokens, tokens: ['mod.version': modVersion]
-    }
+  filesMatching(['**/*.info', '**/*.mcmeta', '**/*.json', '**/*.properties']) {
+    filter ReplaceTokens, tokens: ['mod.version': modVersion]
+  }
 }
