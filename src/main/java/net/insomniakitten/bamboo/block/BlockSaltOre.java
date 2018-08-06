@@ -41,7 +41,7 @@ public final class BlockSaltOre extends Block {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return isFancy() ? BlockRenderLayer.TRANSLUCENT : BlockRenderLayer.SOLID;
     }
 

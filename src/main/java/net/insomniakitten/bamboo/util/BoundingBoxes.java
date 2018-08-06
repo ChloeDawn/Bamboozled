@@ -54,7 +54,7 @@ public class BoundingBoxes {
         for (val box : boxes) {
             val result = box.calculateIntercept(a, b);
             if (result != null) {
-                val vec = result.hitVec.addVector(pos.getX(), pos.getY(), pos.getZ());
+                val vec = result.hitVec.add(pos.getX(), pos.getY(), pos.getZ());
                 results.add(new RayTraceResult(vec, result.sideHit, pos));
             }
         }

@@ -30,7 +30,7 @@ public class GeneratorSaltOre {
     }
 
     private void findSurface(World world, final MutableBlockPos pos) {
-        val chunk = world.getChunkFromBlockCoords(pos);
+        val chunk = world.getChunk(pos);
         IBlockState target;
         pos.setY(world.getHeight(pos.getX(), pos.getZ()));
         do {

@@ -15,13 +15,13 @@ public class ItemBlockDoorBase extends ItemDoor {
     }
 
     @Override
-    public String getUnlocalizedName() {
-        return door.getUnlocalizedName();
+    public String getTranslationKey() {
+        return door.getTranslationKey();
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack stack) {
-        return door.getUnlocalizedName();
+    public String getTranslationKey(ItemStack stack) {
+        return door.getTranslationKey();
     }
 
     @Override
@@ -33,6 +33,6 @@ public class ItemBlockDoorBase extends ItemDoor {
 
     @Override
     public CreativeTabs getCreativeTab() {
-        return door.getCreativeTabToDisplayOn();
+        return door.getCreativeTab();
     }
 }

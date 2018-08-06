@@ -32,8 +32,8 @@ public final class ItemBambooBundle extends ItemSubBlockBase {
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack stack) {
-        var name = super.getUnlocalizedName(stack);
+    public String getTranslationKey(ItemStack stack) {
+        var name = super.getTranslationKey(stack);
         if (BlockBambooBundle.isDry(stack.getMetadata())) {
             name += "_dried";
         }

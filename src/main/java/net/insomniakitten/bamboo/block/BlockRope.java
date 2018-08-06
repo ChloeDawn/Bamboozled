@@ -134,7 +134,7 @@ public final class BlockRope extends Block {
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         val stack = player.getHeldItem(hand);
         if (!stack.isEmpty() && stack.getItem() == BamboozledItems.ROPE) {
-            val chunk = world.getChunkFromBlockCoords(pos);
+            val chunk = world.getChunk(pos);
             val target = new BlockPos.MutableBlockPos(pos);
 
             do {
@@ -152,7 +152,7 @@ public final class BlockRope extends Block {
 
     @Override
     @Deprecated
-    public EnumPushReaction getMobilityFlag(IBlockState state) {
+    public EnumPushReaction getPushReaction(IBlockState state) {
         return EnumPushReaction.DESTROY;
     }
 

@@ -10,8 +10,8 @@ public class ItemBlockPlanksBase extends ItemSubBlockBase {
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack stack) {
-        var name = getUnlocalizedName();
+    public String getTranslationKey(ItemStack stack) {
+        var name = getTranslationKey();
         if (stack.getMetadata() > 0) {
             name += "_vertical";
         }

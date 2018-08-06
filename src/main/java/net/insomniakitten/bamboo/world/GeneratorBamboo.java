@@ -37,7 +37,7 @@ public class GeneratorBamboo {
     }
 
     private void getSurface(World world, final MutableBlockPos pos) {
-        val chunk = world.getChunkFromBlockCoords(pos);
+        val chunk = world.getChunk(pos);
         IBlockState target;
         pos.setY(world.getHeight(pos.getX(), pos.getZ()));
         do {

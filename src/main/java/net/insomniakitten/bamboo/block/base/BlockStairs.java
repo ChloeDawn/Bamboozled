@@ -53,7 +53,7 @@ public class BlockStairs extends net.minecraft.block.BlockStairs {
     public void onBlockClicked(World world, BlockPos pos, EntityPlayer player) {}
 
     @Override
-    public void onBlockDestroyedByPlayer(World world, BlockPos pos, IBlockState state) {}
+    public void onPlayerDestroy(World world, BlockPos pos, IBlockState state) {}
 
     @Override
     @Deprecated
@@ -79,7 +79,7 @@ public class BlockStairs extends net.minecraft.block.BlockStairs {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.SOLID;
     }
 
@@ -123,7 +123,7 @@ public class BlockStairs extends net.minecraft.block.BlockStairs {
     }
 
     @Override
-    public void onBlockDestroyedByExplosion(World world, BlockPos pos, Explosion explosionIn) {}
+    public void onExplosionDestroy(World world, BlockPos pos, Explosion explosionIn) {}
 
     @Override
     @Deprecated

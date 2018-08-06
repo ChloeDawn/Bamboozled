@@ -175,7 +175,7 @@ public final class BlockSaltPile extends Block {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.TRANSLUCENT;
     }
 
@@ -187,7 +187,7 @@ public final class BlockSaltPile extends Block {
     }
 
     @Override
-    public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
+    public void onEntityCollision(World world, BlockPos pos, IBlockState state, Entity entity) {
         if (!Bamboozled.getConfig().isInWorldBambooDryingEnabled()) return;
         if (!(entity instanceof EntityLivingBase)) return;
         if (((EntityLivingBase) entity).isEntityUndead()) {
