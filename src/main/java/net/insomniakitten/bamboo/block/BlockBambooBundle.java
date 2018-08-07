@@ -1,5 +1,6 @@
 package net.insomniakitten.bamboo.block;
 
+import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.BamboozledItems;
 import net.minecraft.block.Block;
@@ -65,17 +66,16 @@ public final class BlockBambooBundle extends Block {
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(final int meta) {
-        return this
-            .getDefaultState()
+        return this.getDefaultState()
             .withProperty(BlockBambooBundle.PROP_AXIS, Axis.values()[meta & 3])
             .withProperty(BlockBambooBundle.PROP_DRIED, meta >> 2);
     }
 
     @Override
     public int getMetaFromState(final IBlockState state) {
-        return state
-            .getValue(BlockBambooBundle.PROP_AXIS)
-            .ordinal() | state.getValue(BlockBambooBundle.PROP_DRIED) << 2;
+        val axis = state.getValue(BlockBambooBundle.PROP_AXIS).ordinal();
+        val dried = state.getValue(BlockBambooBundle.PROP_DRIED) << 2;
+        return axis | dried;
     }
 
     @Override
@@ -84,6 +84,7 @@ public final class BlockBambooBundle extends Block {
         if (rotation == Rotation.CLOCKWISE_90 || rotation == Rotation.COUNTERCLOCKWISE_90) {
             switch (state.getValue(BlockBambooBundle.PROP_AXIS)) {
                 case X: return state.withProperty(BlockBambooBundle.PROP_AXIS, Axis.Z);
+                case Y: break;
                 case Z: return state.withProperty(BlockBambooBundle.PROP_AXIS, Axis.X);
             }
         }
@@ -124,6 +125,11 @@ public final class BlockBambooBundle extends Block {
         return new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, BlockBambooBundle.isDry(state) ? 1 : 0);
     }
 
+    @Override // TODO More accurate rotation based on given 'axis'?
+    public boolean rotateBlock(final World world, final BlockPos pos, final EnumFacing axis) {
+        return world.setBlockState(pos, world.getBlockState(pos).cycleProperty(BlockBambooBundle.PROP_AXIS));
+    }
+
     @Override
     public SoundType getSoundType(final IBlockState state, final World world, final BlockPos pos, @Nullable final Entity entity) {
         return BlockBambooBundle.isDry(state) ? SoundType.WOOD : SoundType.PLANT;
@@ -131,6 +137,8 @@ public final class BlockBambooBundle extends Block {
 
     @Override
     public IBlockState getStateForPlacement(final World world, final BlockPos pos, final EnumFacing side, final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer, final EnumHand hand) {
-        return this.getDefaultState().withProperty(BlockBambooBundle.PROP_AXIS, side.getAxis()).withProperty(BlockBambooBundle.PROP_DRIED, BlockBambooBundle.isDry(meta) ? 3 : 0);
+        return this.getDefaultState()
+            .withProperty(BlockBambooBundle.PROP_AXIS, side.getAxis())
+            .withProperty(BlockBambooBundle.PROP_DRIED, BlockBambooBundle.isDry(meta) ? 3 : 0);
     }
 }
