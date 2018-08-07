@@ -2,10 +2,14 @@ package net.insomniakitten.bamboo;
 
 import lombok.val;
 import net.insomniakitten.bamboo.block.BlockBamboo;
+import net.insomniakitten.bamboo.block.entity.BlockEntityBambooChest;
+import net.insomniakitten.bamboo.client.render.BlockRendererBambooChest;
+import net.insomniakitten.bamboo.client.render.EntityRendererThrownSaltPile;
+import net.insomniakitten.bamboo.client.render.ItemRendererBambooChest;
 import net.insomniakitten.bamboo.entity.EntityFallingSaltBlock;
 import net.insomniakitten.bamboo.entity.EntityThrownSaltPile;
-import net.insomniakitten.bamboo.entity.render.RenderThrownSaltPile;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
@@ -13,6 +17,7 @@ import net.minecraft.client.renderer.entity.RenderFallingBlock;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -25,12 +30,20 @@ import java.util.function.Consumer;
 @SideOnly(Side.CLIENT)
 @EventBusSubscriber(modid = Bamboozled.ID, value = Side.CLIENT)
 public final class BamboozledClient {
+    public static final ItemRendererBambooChest BAMBOO_CHEST_ITEM_RENDERER = new ItemRendererBambooChest();
+    public static final BlockRendererBambooChest BAMBOO_CHEST_BLOCK_RENDERER = new BlockRendererBambooChest();
+
     private BamboozledClient() {}
 
     @SubscribeEvent
     static void onModelRegistry(final ModelRegistryEvent event) {
+        ClientRegistry.bindTileEntitySpecialRenderer(BlockEntityBambooChest.class, BamboozledClient.BAMBOO_CHEST_BLOCK_RENDERER);
+
+        BamboozledItems.BAMBOO_CHEST.setTileEntityItemStackRenderer(BamboozledClient.BAMBOO_CHEST_ITEM_RENDERER);
+        BamboozledItems.TRAPPED_BAMBOO_CHEST.setTileEntityItemStackRenderer(BamboozledClient.BAMBOO_CHEST_ITEM_RENDERER);
+
         RenderingRegistry.registerEntityRenderingHandler(EntityFallingSaltBlock.class, RenderFallingBlock::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityThrownSaltPile.class, RenderThrownSaltPile::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityThrownSaltPile.class, EntityRendererThrownSaltPile::new);
 
         BamboozledClient.registerMapper(BamboozledBlocks.BAMBOO, sm -> {
             sm.ignore(BlockBamboo.PROP_AGE, BlockBamboo.PROP_LEAVES);
@@ -38,6 +51,9 @@ public final class BamboozledClient {
         });
 
         BamboozledClient.registerMapper(BamboozledBlocks.BAMBOO_DOOR, sm -> sm.ignore(BlockDoor.POWERED));
+
+        BamboozledClient.registerMapper(BamboozledBlocks.BAMBOO_CHEST, sm -> sm.ignore(BlockChest.FACING));
+        BamboozledClient.registerMapper(BamboozledBlocks.TRAPPED_BAMBOO_CHEST, sm -> sm.ignore(BlockChest.FACING));
 
         BamboozledClient.registerModel(BamboozledItems.BAMBOO, 0, "inventory");
         BamboozledClient.registerModel(BamboozledItems.BAMBOO_DRIED, 0, "inventory");
@@ -58,6 +74,8 @@ public final class BamboozledClient {
         BamboozledClient.registerModel(BamboozledItems.SALT_BLOCK, 0, "normal");
         BamboozledClient.registerModel(BamboozledItems.ROPE, 0, "inventory");
         BamboozledClient.registerModel(BamboozledItems.ROPE_FENCE, 0, "inventory");
+        BamboozledClient.registerModel(BamboozledItems.BAMBOO_CHEST, 0, "inventory");
+        BamboozledClient.registerModel(BamboozledItems.TRAPPED_BAMBOO_CHEST, 0, "inventory");
     }
 
     private static void registerMapper(final Block block, final Consumer<StateMap.Builder> consumer) {

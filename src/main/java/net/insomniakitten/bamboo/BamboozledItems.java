@@ -23,6 +23,8 @@ public final class BamboozledItems {
     public static final Item SALT_BLOCK = Items.AIR;
     public static final Item ROPE = Items.AIR;
     public static final Item ROPE_FENCE = Items.AIR;
+    public static final Item BAMBOO_CHEST = Items.AIR;
+    public static final Item TRAPPED_BAMBOO_CHEST = Items.AIR;
 
     private BamboozledItems() {}
 }

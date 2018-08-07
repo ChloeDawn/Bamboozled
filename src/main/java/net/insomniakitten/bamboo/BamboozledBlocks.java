@@ -22,6 +22,8 @@ public final class BamboozledBlocks {
     public static final Block SALT_BLOCK = Blocks.AIR;
     public static final Block ROPE = Blocks.AIR;
     public static final Block ROPE_FENCE = Blocks.AIR;
+    public static final Block BAMBOO_CHEST = Blocks.AIR;
+    public static final Block TRAPPED_BAMBOO_CHEST = Blocks.AIR;
 
     private BamboozledBlocks() {}
 }

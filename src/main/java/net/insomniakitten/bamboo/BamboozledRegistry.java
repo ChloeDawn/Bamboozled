@@ -3,6 +3,7 @@ package net.insomniakitten.bamboo;
 import lombok.val;
 import net.insomniakitten.bamboo.block.BlockBamboo;
 import net.insomniakitten.bamboo.block.BlockBambooBundle;
+import net.insomniakitten.bamboo.block.BlockBambooChest;
 import net.insomniakitten.bamboo.block.BlockBambooDoor;
 import net.insomniakitten.bamboo.block.BlockBambooWall;
 import net.insomniakitten.bamboo.block.BlockRope;
@@ -13,6 +14,7 @@ import net.insomniakitten.bamboo.block.base.BlockFence;
 import net.insomniakitten.bamboo.block.base.BlockPlanks;
 import net.insomniakitten.bamboo.block.base.BlockSlab;
 import net.insomniakitten.bamboo.block.base.BlockStairs;
+import net.insomniakitten.bamboo.block.entity.BlockEntityBambooChest;
 import net.insomniakitten.bamboo.entity.EntityFallingSaltBlock;
 import net.insomniakitten.bamboo.entity.EntityThrownSaltPile;
 import net.insomniakitten.bamboo.item.ItemBambooBundle;
@@ -28,6 +30,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -57,6 +61,10 @@ public final class BamboozledRegistry {
         BamboozledRegistry.registerBlock(event, "salt_block", new BlockSalt());
         BamboozledRegistry.registerBlock(event, "rope", new BlockRope());
         BamboozledRegistry.registerBlock(event, "rope_fence", new BlockFence(Material.WOOD, SoundType.WOOD, 2.0F, 5.0F));
+        BamboozledRegistry.registerBlock(event, "bamboo_chest", new BlockBambooChest(BlockBambooChest.TYPE_BAMBOO));
+        BamboozledRegistry.registerBlock(event, "trapped_bamboo_chest", new BlockBambooChest(BlockBambooChest.TYPE_BAMBOO_TRAP));
+
+        BamboozledRegistry.registerBlockEntity(BlockEntityBambooChest.class, "bamboo_chest");
     }
 
     @SubscribeEvent
@@ -78,6 +86,8 @@ public final class BamboozledRegistry {
         BamboozledRegistry.registerItem(event, "salt_block", new ItemBlockBase(BamboozledBlocks.SALT_BLOCK));
         BamboozledRegistry.registerItem(event, "rope", new ItemBlockBase(BamboozledBlocks.ROPE));
         BamboozledRegistry.registerItem(event, "rope_fence", new ItemBlockBase(BamboozledBlocks.ROPE_FENCE));
+        BamboozledRegistry.registerItem(event, "bamboo_chest", new ItemBlockBase(BamboozledBlocks.BAMBOO_CHEST));
+        BamboozledRegistry.registerItem(event, "trapped_bamboo_chest", new ItemBlockBase(BamboozledBlocks.TRAPPED_BAMBOO_CHEST));
     }
 
     @SubscribeEvent
@@ -108,6 +118,8 @@ public final class BamboozledRegistry {
         BamboozledRegistry.registerOre(BamboozledItems.SALT_PILE, 0, "dustSalt");
         BamboozledRegistry.registerOre(BamboozledItems.SALT_BLOCK, 0, "blockSalt");
         BamboozledRegistry.registerOre(BamboozledItems.ROPE_FENCE, 0, "fenceWood", "fenceRope");
+        BamboozledRegistry.registerOre(BamboozledItems.BAMBOO_CHEST, 0, "chest", "chestBamboo");
+        BamboozledRegistry.registerOre(BamboozledItems.TRAPPED_BAMBOO_CHEST, 0, "chest", "chestTrapped", "chestBamboo");
     }
 
     private static void registerBlock(final RegistryEvent.Register<Block> event, final String name, final Block block) {
@@ -115,6 +127,11 @@ public final class BamboozledRegistry {
         block.setTranslationKey(Bamboozled.ID + "." + name);
         block.setCreativeTab(Bamboozled.getItemGroup());
         event.getRegistry().register(block);
+    }
+
+    private static void registerBlockEntity(final Class<? extends TileEntity> clazz, final String name) {
+        val key = new ResourceLocation(Bamboozled.ID, name);
+        GameRegistry.registerTileEntity(clazz, key);
     }
 
     private static void registerItem(final RegistryEvent.Register<Item> event, final String name, final Item item) {

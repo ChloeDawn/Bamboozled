@@ -1,4 +1,4 @@
-package net.insomniakitten.bamboo.entity.render;
+package net.insomniakitten.bamboo.client.render;
 
 import lombok.val;
 import net.insomniakitten.bamboo.BamboozledItems;
@@ -15,8 +15,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public final class RenderThrownSaltPile extends Render<EntityThrownSaltPile> {
-    public RenderThrownSaltPile(final RenderManager manager) {
+public final class EntityRendererThrownSaltPile extends Render<EntityThrownSaltPile> {
+    public EntityRendererThrownSaltPile(final RenderManager manager) {
         super(manager);
     }
 

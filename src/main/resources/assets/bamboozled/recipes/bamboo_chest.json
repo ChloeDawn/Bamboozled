@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "result": { "item": "bamboozled:bamboo_chest" },
+  "pattern": [ "BBB", "B B", "BBB" ],
+  "key": {
+    "B": { "item": "bamboozled:bamboo_planks", "data": 0 }
+  }
+}

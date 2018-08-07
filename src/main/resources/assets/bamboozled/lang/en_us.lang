@@ -28,6 +28,9 @@ tile.bamboozled.salt_ore.name=Halite
 tile.bamboozled.salt_pile.name=Pile of Salt
 tile.bamboozled.salt_block.name=Block of Salt
 
+tile.bamboozled.bamboo_chest.name=Bamboo Planks Chest
+tile.bamboozled.trapped_bamboo_chest.name=Trapped Bamboo Planks Chest
+
 item.bamboozled.bamboo_dried.name=Dried Bamboo Stalks
 item.bamboozled.bamboo_dried.desc=Can be crafted into various decorations
 
