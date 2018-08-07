@@ -1,5 +1,7 @@
 package net.insomniakitten.bamboo.block.entity;
 
+import lombok.val;
+import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.block.BlockBambooChest;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.state.IBlockState;
@@ -8,6 +10,8 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.Objects;
 
 public final class BlockEntityBambooChest extends TileEntityChest {
     private static final AxisAlignedBB RENDER_BOUNDING_BOX = new AxisAlignedBB(-1, 0, -1, 2, 2, 2);
@@ -22,7 +26,7 @@ public final class BlockEntityBambooChest extends TileEntityChest {
 
     @Override
     public String getName() {
-        return this.hasCustomName() ? this.customName : BlockBambooChest.CONTAINER_NAME;
+        return this.hasCustomName() ? this.customName : this.getContainerName();
     }
 
     @Override
@@ -93,4 +97,9 @@ public final class BlockEntityBambooChest extends TileEntityChest {
         return BlockEntityBambooChest.RENDER_BOUNDING_BOX.offset(this.getPos());
     }
 
+    private String getContainerName() {
+        val block = Objects.requireNonNull(this.getBlockType(), "block");
+        val name = Objects.requireNonNull(block.getRegistryName(), "registryName");
+        return "container." + Bamboozled.ID + "." + name.getPath();
+    }
 }

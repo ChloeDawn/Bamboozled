@@ -17,13 +17,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public final class BlockBambooChest extends BlockChest {
     public static final Type TYPE_BAMBOO = EnumHelper.addEnum(Type.class, "BAMBOO", new Class[0]);
     public static final Type TYPE_BAMBOO_TRAP = EnumHelper.addEnum(Type.class, "BAMBOO_TRAP", new Class[0]);
-
-    public static final String CONTAINER_NAME = "container." + Bamboozled.ID + ".bamboo_chest";
-    public static final String LARGE_CONTAINER_NAME = "container." + Bamboozled.ID + ".bamboo_chest_large";
 
     public BlockBambooChest(final Type type) {
         super(type);
@@ -60,9 +58,9 @@ public final class BlockBambooChest extends BlockChest {
 
                 if (otherTile instanceof TileEntityChest) {
                     if (horizontal != EnumFacing.WEST && horizontal != EnumFacing.NORTH) {
-                        lockable = new InventoryLargeChest(BlockBambooChest.LARGE_CONTAINER_NAME, lockable, (ILockableContainer) otherTile);
+                        lockable = new InventoryLargeChest(this.getLargeContainerName(), lockable, (ILockableContainer) otherTile);
                     } else {
-                        lockable = new InventoryLargeChest(BlockBambooChest.LARGE_CONTAINER_NAME, (ILockableContainer) otherTile, lockable);
+                        lockable = new InventoryLargeChest(this.getLargeContainerName(), (ILockableContainer) otherTile, lockable);
                     }
                 }
             }
@@ -80,5 +78,10 @@ public final class BlockBambooChest extends BlockChest {
     @Deprecated
     public boolean canProvidePower(final IBlockState state) {
         return BlockBambooChest.TYPE_BAMBOO_TRAP == this.chestType;
+    }
+
+    private String getLargeContainerName() {
+        val name = Objects.requireNonNull(this.getRegistryName(), "registryName");
+        return "container." + Bamboozled.ID + "." + name.getPath() + "_large";
     }
 }
