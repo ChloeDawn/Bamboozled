@@ -20,6 +20,8 @@ public final class Bamboozled {
 
     private static final Bamboozled INSTANCE = new Bamboozled();
 
+    public static final EnumPlantType TROPICAL_PLANT_TYPE = EnumPlantType.getPlantType("Tropical");
+
     private static final CreativeTabs ITEM_GROUP = new CreativeTabs(Bamboozled.ID) {
         @Override
         @SideOnly(Side.CLIENT)
@@ -44,9 +46,6 @@ public final class Bamboozled {
     public static CreativeTabs getItemGroup() {
         return Bamboozled.ITEM_GROUP;
     }
-
-    public static final EnumPlantType TROPICAL_PLANT_TYPE =
-        EnumPlantType.getPlantType("Tropical");
 
     public static BamboozledConfig.General getConfig() {
         return BamboozledConfig.GENERAL;

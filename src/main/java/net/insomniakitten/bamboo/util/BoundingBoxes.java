@@ -1,9 +1,10 @@
 package net.insomniakitten.bamboo.util;
 
-import lombok.experimental.UtilityClass;
 import lombok.experimental.var;
 import lombok.val;
-import net.minecraft.client.renderer.GlStateManager.*;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -15,22 +16,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 
-import static net.minecraft.client.renderer.GlStateManager.*;
-
 public final class BoundingBoxes {
     private BoundingBoxes() {}
 
     @SideOnly(Side.CLIENT)
     public static void renderAt(final Iterable<AxisAlignedBB> boxes, final Entity entity, final BlockPos pos, final float partialTicks) {
-        disableAlpha();
-        enableBlend();
-        tryBlendFuncSeparate(
+        GlStateManager.disableAlpha();
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(
             SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA,
             SourceFactor.ONE, DestFactor.ZERO
         );
-        glLineWidth(2.0F);
-        disableTexture2D();
-        depthMask(false);
+        GlStateManager.glLineWidth(2.0F);
+        GlStateManager.disableTexture2D();
+        GlStateManager.depthMask(false);
 
         val x = pos.getX() - (entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks);
         val y = pos.getY() - (entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks);
@@ -40,10 +39,10 @@ public final class BoundingBoxes {
             RenderGlobal.drawSelectionBoundingBox(box.grow(0.002D).offset(x, y, z), 0.0F, 0.0F, 0.0F, 0.4F);
         }
 
-        depthMask(true);
-        enableTexture2D();
-        disableBlend();
-        enableAlpha();
+        GlStateManager.depthMask(true);
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
     }
 
     public static RayTraceResult rayTrace(final Iterable<AxisAlignedBB> boxes, final BlockPos pos, final Vec3d start, final Vec3d end) {
