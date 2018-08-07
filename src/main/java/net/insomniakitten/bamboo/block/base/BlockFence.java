@@ -1,5 +1,6 @@
 package net.insomniakitten.bamboo.block.base;
 
+import lombok.val;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -34,8 +35,8 @@ public class BlockFence extends net.minecraft.block.BlockFence {
     @Deprecated
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(final IBlockState state, final IBlockAccess access, final BlockPos pos, final EnumFacing side) {
-        final BlockPos offset = pos.offset(side);
-        final IBlockState other = access.getBlockState(offset);
+        val offset = pos.offset(side);
+        val other = access.getBlockState(offset);
         return other.getBlock() != this && !other.doesSideBlockRendering(access, offset, side.getOpposite());
     }
 }
