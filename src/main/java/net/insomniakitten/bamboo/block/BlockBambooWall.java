@@ -165,6 +165,11 @@ public final class BlockBambooWall extends Block {
         }
     }
 
+    @Override
+    public boolean canPlaceTorchOnTop(final IBlockState state, final IBlockAccess world, final BlockPos pos) {
+        return true;
+    }
+
     public boolean canConnectTo(final IBlockAccess access, final BlockPos pos, final EnumFacing side) {
         val state = access.getBlockState(pos);
 
