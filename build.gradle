@@ -46,6 +46,10 @@ dependencies {
   deobfCompile "mezz.jei:jei_$jeiVersion"
 }
 
+jar {
+  manifest { attributes 'FMLAT': 'bamboozled_at.cfg' }
+}
+
 processResources {
   filesMatching(['**/*.info', '**/*.mcmeta', '**/*.json', '**/*.properties']) {
     filter ReplaceTokens, tokens: ['mod.version': modVersion]
