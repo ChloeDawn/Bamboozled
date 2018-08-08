@@ -72,6 +72,15 @@ public final class BamboozledClient {
         BamboozledClient.registerModel(BamboozledItems.SALT_ORE, 0, "normal");
         BamboozledClient.registerModel(BamboozledItems.SALT_PILE, 0, "inventory");
         BamboozledClient.registerModel(BamboozledItems.SALT_BLOCK, 0, "normal");
+        BamboozledClient.registerModel(BamboozledItems.SALT_CRYSTAL, 0, "inventory");
+        BamboozledClient.registerModel(BamboozledItems.SALT_CRYSTAL_BLOCK, 0, "variant=block");
+        BamboozledClient.registerModel(BamboozledItems.SALT_CRYSTAL_BLOCK, 1, "variant=bricks");
+        BamboozledClient.registerModel(BamboozledItems.SALT_CRYSTAL_BLOCK, 2, "variant=bricks_cracked");
+        BamboozledClient.registerModel(BamboozledItems.SALT_CRYSTAL_BLOCK, 3, "variant=bricks_chiseled");
+        BamboozledClient.registerModel(BamboozledItems.SALT_CRYSTAL_BLOCK_STAIRS, 0, "facing=east,half=bottom,shape=straight");
+        BamboozledClient.registerModel(BamboozledItems.SALT_CRYSTAL_BRICK_STAIRS, 0, "facing=east,half=bottom,shape=straight");
+        BamboozledClient.registerModel(BamboozledItems.SALT_CRYSTAL_BLOCK_SLAB, 0, "variant=lower");
+        BamboozledClient.registerModel(BamboozledItems.SALT_CRYSTAL_BRICK_SLAB, 0, "variant=lower");
         BamboozledClient.registerModel(BamboozledItems.ROPE, 0, "inventory");
         BamboozledClient.registerModel(BamboozledItems.ROPE_FENCE, 0, "inventory");
         BamboozledClient.registerModel(BamboozledItems.BAMBOO_CHEST, 0, "inventory");

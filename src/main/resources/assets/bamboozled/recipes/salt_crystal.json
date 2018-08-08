@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "result": { "item": "bamboozled:salt_crystal", "count": 4 },
+  "ingredients": [
+    { "item": "bamboozled:salt_crystal_block", "data": 0 }
+  ]
+}

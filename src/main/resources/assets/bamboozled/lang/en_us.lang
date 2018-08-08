@@ -28,11 +28,22 @@ tile.bamboozled.salt_ore.name=Halite
 tile.bamboozled.salt_pile.name=Pile of Salt
 tile.bamboozled.salt_block.name=Block of Salt
 
+tile.bamboozled.salt_crystal_block.name=Salt Crystal Block
+tile.bamboozled.salt_crystal_block_bricks.name=Salt Crystal Bricks
+tile.bamboozled.salt_crystal_block_bricks_cracked.name=Cracked Salt Crystal Bricks
+tile.bamboozled.salt_crystal_block_bricks_chiseled.name=Chiseled Salt Crystal Bricks
+tile.bamboozled.salt_crystal_block_stairs.name=Salt Crystal Block Stairs
+tile.bamboozled.salt_crystal_brick_stairs.name=Salt Crystal Brick Stairs
+tile.bamboozled.salt_crystal_block_slab.name=Salt Crystal Block Slab
+tile.bamboozled.salt_crystal_brick_slab.name=Salt Crystal Brick Slab
+
 tile.bamboozled.bamboo_chest.name=Bamboo Planks Chest
 tile.bamboozled.trapped_bamboo_chest.name=Trapped Bamboo Planks Chest
 
 item.bamboozled.bamboo_dried.name=Dried Bamboo Stalks
 item.bamboozled.bamboo_dried.desc=Can be crafted into various decorations
+
+item.bamboozled.salt_crystal.name=Salt Crystal
 
 entity.bamboozled.falling_salt_block.name=Falling Block of Salt
 

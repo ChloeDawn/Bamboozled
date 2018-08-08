@@ -167,7 +167,7 @@ public class BlockSlab extends Block {
         return side == EnumFacing.UP || hitY <= 0.5D ? this.getLower() : this.getUpper();
     }
 
-    private enum Variant implements IStringSerializable {
+    public enum Variant implements IStringSerializable {
         DOUBLE(Block.FULL_BLOCK_AABB, null, null),
         LOWER(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D), EnumFacing.DOWN, EnumBlockHalf.BOTTOM),
         UPPER(new AxisAlignedBB(0.0D, 0.5D, 0.0D, 1.0D, 1.0D, 1.0D), EnumFacing.UP, EnumBlockHalf.TOP);
@@ -201,7 +201,7 @@ public class BlockSlab extends Block {
         }
 
         public boolean isSideSolid(final EnumFacing side) {
-            return this.side == side;
+            return this.side == null || this.side == side;
         }
 
         public boolean doesMatchHalf(final EnumBlockHalf half) {

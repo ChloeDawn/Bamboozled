@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "result": { "item": "bamboozled:salt_crystal_block_stairs", "count": 4 },
+  "pattern": [ "S  ", "SS ", "SSS" ],
+  "key": {
+    "S": { "item": "bamboozled:salt_crystal_block", "data": 0 }
+  }
+}

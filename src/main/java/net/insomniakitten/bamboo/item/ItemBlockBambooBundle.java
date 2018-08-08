@@ -13,8 +13,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public final class ItemBambooBundle extends ItemSubBlockBase {
-    public ItemBambooBundle(final Block block) {
+public final class ItemBlockBambooBundle extends ItemSubBlockBase {
+    public ItemBlockBambooBundle(final Block block) {
         super(block);
     }
 

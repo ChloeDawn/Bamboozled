@@ -1,0 +1,30 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cube_all"
+  },
+  "variants": {
+    "variant": {
+      "block": {
+        "textures": {
+          "all": "bamboozled:blocks/salt_crystal_block"
+        }
+      },
+      "bricks": {
+        "textures": {
+          "all": "bamboozled:blocks/salt_crystal_bricks"
+        }
+      },
+      "bricks_cracked": {
+        "textures": {
+          "all": "bamboozled:blocks/salt_crystal_bricks_cracked"
+        }
+      },
+      "bricks_chiseled": {
+        "textures": {
+          "all": "bamboozled:blocks/salt_crystal_bricks_chiseled"
+        }
+      }
+    }
+  }
+}

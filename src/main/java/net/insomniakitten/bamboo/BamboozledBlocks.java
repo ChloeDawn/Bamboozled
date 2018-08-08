@@ -20,6 +20,11 @@ public final class BamboozledBlocks {
     public static final Block SALT_ORE = Blocks.AIR;
     public static final Block SALT_PILE = Blocks.AIR;
     public static final Block SALT_BLOCK = Blocks.AIR;
+    public static final Block SALT_CRYSTAL_BLOCK = Blocks.AIR;
+    public static final Block SALT_CRYSTAL_BLOCK_STAIRS = Blocks.AIR;
+    public static final Block SALT_CRYSTAL_BRICK_STAIRS = Blocks.AIR;
+    public static final Block SALT_CRYSTAL_BLOCK_SLAB = Blocks.AIR;
+    public static final Block SALT_CRYSTAL_BRICK_SLAB = Blocks.AIR;
     public static final Block ROPE = Blocks.AIR;
     public static final Block ROPE_FENCE = Blocks.AIR;
     public static final Block BAMBOO_CHEST = Blocks.AIR;

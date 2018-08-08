@@ -1,15 +1,7 @@
 package net.insomniakitten.bamboo;
 
 import lombok.val;
-import net.insomniakitten.bamboo.block.BlockBamboo;
-import net.insomniakitten.bamboo.block.BlockBambooBundle;
-import net.insomniakitten.bamboo.block.BlockBambooChest;
-import net.insomniakitten.bamboo.block.BlockBambooDoor;
-import net.insomniakitten.bamboo.block.BlockBambooWall;
-import net.insomniakitten.bamboo.block.BlockRope;
-import net.insomniakitten.bamboo.block.BlockSalt;
-import net.insomniakitten.bamboo.block.BlockSaltOre;
-import net.insomniakitten.bamboo.block.BlockSaltPile;
+import net.insomniakitten.bamboo.block.*;
 import net.insomniakitten.bamboo.block.base.BlockFence;
 import net.insomniakitten.bamboo.block.base.BlockPlanks;
 import net.insomniakitten.bamboo.block.base.BlockSlab;
@@ -17,7 +9,8 @@ import net.insomniakitten.bamboo.block.base.BlockStairs;
 import net.insomniakitten.bamboo.block.entity.BlockEntityBambooChest;
 import net.insomniakitten.bamboo.entity.EntityFallingSaltBlock;
 import net.insomniakitten.bamboo.entity.EntityThrownSaltPile;
-import net.insomniakitten.bamboo.item.ItemBambooBundle;
+import net.insomniakitten.bamboo.item.ItemBlockBambooBundle;
+import net.insomniakitten.bamboo.item.ItemBlockSaltCrystal;
 import net.insomniakitten.bamboo.item.ItemSaltPile;
 import net.insomniakitten.bamboo.item.base.ItemBase;
 import net.insomniakitten.bamboo.item.base.ItemBlockBase;
@@ -26,6 +19,7 @@ import net.insomniakitten.bamboo.item.base.ItemBlockPlanksBase;
 import net.insomniakitten.bamboo.item.base.ItemBlockSlabBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -59,6 +53,11 @@ public final class BamboozledRegistry {
         BamboozledRegistry.registerBlock(event, "salt_ore", new BlockSaltOre());
         BamboozledRegistry.registerBlock(event, "salt_pile", new BlockSaltPile());
         BamboozledRegistry.registerBlock(event, "salt_block", new BlockSalt());
+        BamboozledRegistry.registerBlock(event, "salt_crystal_block", new BlockSaltCrystal());
+        BamboozledRegistry.registerBlock(event, "salt_crystal_block_stairs", new BlockStairs(Material.ROCK, MapColor.SNOW, SoundType.STONE, 1.5F, 17.5F));
+        BamboozledRegistry.registerBlock(event, "salt_crystal_brick_stairs", new BlockStairs(Material.ROCK, MapColor.SNOW, SoundType.STONE, 1.5F, 17.5F));
+        BamboozledRegistry.registerBlock(event, "salt_crystal_block_slab", new BlockSlab(Material.ROCK, MapColor.SNOW, SoundType.STONE, 1.5F, 17.5F));
+        BamboozledRegistry.registerBlock(event, "salt_crystal_brick_slab", new BlockSlab(Material.ROCK, MapColor.SNOW, SoundType.STONE, 1.5F, 17.5F));
         BamboozledRegistry.registerBlock(event, "rope", new BlockRope());
         BamboozledRegistry.registerBlock(event, "rope_fence", new BlockFence(Material.WOOD, SoundType.WOOD, 2.0F, 5.0F));
         BamboozledRegistry.registerBlock(event, "bamboo_chest", new BlockBambooChest(BlockBambooChest.TYPE_BAMBOO));
@@ -71,7 +70,7 @@ public final class BamboozledRegistry {
     static void onItemRegistry(final RegistryEvent.Register<Item> event) {
         BamboozledRegistry.registerItem(event, "bamboo", new ItemBlockBase(BamboozledBlocks.BAMBOO));
         BamboozledRegistry.registerItem(event, "bamboo_dried", new ItemBase());
-        BamboozledRegistry.registerItem(event, "bamboo_bundle", new ItemBambooBundle(BamboozledBlocks.BAMBOO_BUNDLE));
+        BamboozledRegistry.registerItem(event, "bamboo_bundle", new ItemBlockBambooBundle(BamboozledBlocks.BAMBOO_BUNDLE));
         BamboozledRegistry.registerItem(event, "bamboo_dried_stairs", new ItemBlockBase(BamboozledBlocks.BAMBOO_DRIED_STAIRS));
         BamboozledRegistry.registerItem(event, "bamboo_dried_slab", new ItemBlockSlabBase(BamboozledBlocks.BAMBOO_DRIED_SLAB));
         BamboozledRegistry.registerItem(event, "bamboo_planks", new ItemBlockPlanksBase(BamboozledBlocks.BAMBOO_PLANKS));
@@ -84,6 +83,12 @@ public final class BamboozledRegistry {
         BamboozledRegistry.registerItem(event, "salt_ore", new ItemBlockBase(BamboozledBlocks.SALT_ORE));
         BamboozledRegistry.registerItem(event, "salt_pile", new ItemSaltPile(BamboozledBlocks.SALT_PILE));
         BamboozledRegistry.registerItem(event, "salt_block", new ItemBlockBase(BamboozledBlocks.SALT_BLOCK));
+        BamboozledRegistry.registerItem(event, "salt_crystal", new ItemBase());
+        BamboozledRegistry.registerItem(event, "salt_crystal_block", new ItemBlockSaltCrystal(BamboozledBlocks.SALT_CRYSTAL_BLOCK));
+        BamboozledRegistry.registerItem(event, "salt_crystal_block_stairs", new ItemBlockBase(BamboozledBlocks.SALT_CRYSTAL_BLOCK_STAIRS));
+        BamboozledRegistry.registerItem(event, "salt_crystal_brick_stairs", new ItemBlockBase(BamboozledBlocks.SALT_CRYSTAL_BRICK_STAIRS));
+        BamboozledRegistry.registerItem(event, "salt_crystal_block_slab", new ItemBlockSlabBase(BamboozledBlocks.SALT_CRYSTAL_BLOCK_SLAB));
+        BamboozledRegistry.registerItem(event, "salt_crystal_brick_slab", new ItemBlockSlabBase(BamboozledBlocks.SALT_CRYSTAL_BRICK_SLAB));
         BamboozledRegistry.registerItem(event, "rope", new ItemBlockBase(BamboozledBlocks.ROPE));
         BamboozledRegistry.registerItem(event, "rope_fence", new ItemBlockBase(BamboozledBlocks.ROPE_FENCE));
         BamboozledRegistry.registerItem(event, "bamboo_chest", new ItemBlockBase(BamboozledBlocks.BAMBOO_CHEST));
@@ -98,8 +103,9 @@ public final class BamboozledRegistry {
 
     @SubscribeEvent
     static void onRecipeRegistry(final RegistryEvent.Register<IRecipe> event) {
-        BamboozledRegistry.registerSmelting(BamboozledItems.BAMBOO, BamboozledItems.BAMBOO_DRIED, 1);
-        BamboozledRegistry.registerSmelting(BamboozledItems.SALT_BLOCK, BamboozledItems.SALT_PILE, 4);
+        GameRegistry.addSmelting(BamboozledItems.BAMBOO, new ItemStack(BamboozledItems.BAMBOO_DRIED, 1), 0.0F);
+        GameRegistry.addSmelting(BamboozledItems.SALT_BLOCK, new ItemStack(BamboozledItems.SALT_PILE, 4), 0.0F);
+        GameRegistry.addSmelting(new ItemStack(BamboozledItems.SALT_CRYSTAL_BLOCK, 1, 1), new ItemStack(BamboozledItems.SALT_CRYSTAL_BLOCK, 1, 2), 0.1F);
 
         BamboozledRegistry.registerOre(BamboozledItems.BAMBOO, 0, "bamboo");
         BamboozledRegistry.registerOre(BamboozledItems.BAMBOO_BUNDLE, 0, "blockBamboo");
@@ -117,6 +123,15 @@ public final class BamboozledRegistry {
         BamboozledRegistry.registerOre(BamboozledItems.SALT_ORE, 0, "oreSalt", "oreHalite");
         BamboozledRegistry.registerOre(BamboozledItems.SALT_PILE, 0, "dustSalt");
         BamboozledRegistry.registerOre(BamboozledItems.SALT_BLOCK, 0, "blockSalt");
+        BamboozledRegistry.registerOre(BamboozledItems.SALT_CRYSTAL, 0, "crystalSalt", "gemSalt");
+        BamboozledRegistry.registerOre(BamboozledItems.SALT_CRYSTAL_BLOCK, 0, "blockSaltCrystal");
+        BamboozledRegistry.registerOre(BamboozledItems.SALT_CRYSTAL_BLOCK, 1, "blockSaltCrystal", "blockSaltCrystalBrick");
+        BamboozledRegistry.registerOre(BamboozledItems.SALT_CRYSTAL_BLOCK, 2, "blockSaltCrystal", "blockSaltCrystalBrick");
+        BamboozledRegistry.registerOre(BamboozledItems.SALT_CRYSTAL_BLOCK, 2, "blockSaltCrystal", "blockSaltCrystalChiseled");
+        BamboozledRegistry.registerOre(BamboozledItems.SALT_CRYSTAL_BLOCK_STAIRS, 0, "stairsSaltCrystal");
+        BamboozledRegistry.registerOre(BamboozledItems.SALT_CRYSTAL_BRICK_STAIRS, 0, "stairsSaltCrystal");
+        BamboozledRegistry.registerOre(BamboozledItems.SALT_CRYSTAL_BLOCK_SLAB, 0, "slabSaltCrystal");
+        BamboozledRegistry.registerOre(BamboozledItems.SALT_CRYSTAL_BRICK_SLAB, 0, "slabSaltCrystal");
         BamboozledRegistry.registerOre(BamboozledItems.ROPE_FENCE, 0, "fenceWood", "fenceRope");
         BamboozledRegistry.registerOre(BamboozledItems.BAMBOO_CHEST, 0, "chest", "chestBamboo");
         BamboozledRegistry.registerOre(BamboozledItems.TRAPPED_BAMBOO_CHEST, 0, "chest", "chestTrapped", "chestBamboo");
@@ -139,10 +154,6 @@ public final class BamboozledRegistry {
         item.setTranslationKey(Bamboozled.ID + "." + name);
         item.setCreativeTab(Bamboozled.getItemGroup());
         event.getRegistry().register(item);
-    }
-
-    private static void registerSmelting(final Item input, final Item output, final int amount) {
-        GameRegistry.addSmelting(input, new ItemStack(output, amount), 0.0F);
     }
 
     private static void registerOre(final Item item, final int meta, final String... ores) {
