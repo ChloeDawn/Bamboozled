@@ -7,10 +7,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class BamboozledItemGroup extends CreativeTabs {
+    static final CreativeTabs INSTANCE = new BamboozledItemGroup();
+
     private final String translationKey = "item_group." + Bamboozled.ID + ".label";
     private final ResourceLocation backgroundImage = new ResourceLocation(Bamboozled.ID, "textures/gui/item_group.png");
 
-    BamboozledItemGroup() {
+    private BamboozledItemGroup() {
         super(Bamboozled.ID);
     }
 

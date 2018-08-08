@@ -19,8 +19,6 @@ public final class Bamboozled {
 
     private static final Bamboozled INSTANCE = new Bamboozled();
 
-    private static final CreativeTabs ITEM_GROUP = new BamboozledItemGroup();
-
     private Bamboozled() {}
 
     @Mod.InstanceFactory
@@ -29,7 +27,7 @@ public final class Bamboozled {
     }
 
     public static CreativeTabs getItemGroup() {
-        return Bamboozled.ITEM_GROUP;
+        return BamboozledItemGroup.INSTANCE;
     }
 
     public static BamboozledConfig.General getConfig() {
