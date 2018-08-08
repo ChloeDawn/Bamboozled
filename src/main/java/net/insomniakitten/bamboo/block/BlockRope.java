@@ -1,7 +1,6 @@
 package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableMap;
-import lombok.experimental.var;
 import lombok.val;
 import net.insomniakitten.bamboo.BamboozledItems;
 import net.minecraft.block.Block;
@@ -29,7 +28,7 @@ import net.minecraft.world.World;
 public final class BlockRope extends Block {
     private static final IProperty<EnumFacing> PROP_FACING = PropertyDirection.create("facing", f -> f != EnumFacing.UP);
 
-    private static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB = ImmutableMap.of(
+    private static final ImmutableMap<EnumFacing, AxisAlignedBB> BOUNDING_BOX = ImmutableMap.of(
         EnumFacing.DOWN, new AxisAlignedBB(0.375D, 0.0, 0.375D, 0.625D, 1.0D, 0.625D),
         EnumFacing.NORTH, new AxisAlignedBB(0.375D, 0.0D, 0.8125D, 0.625D, 1.0D, 1.0D),
         EnumFacing.SOUTH, new AxisAlignedBB(0.375D, 0.0D, 0.0D, 0.625D, 1.0D, 0.1875D),
@@ -62,13 +61,21 @@ public final class BlockRope extends Block {
     @Override
     @Deprecated
     public IBlockState withRotation(final IBlockState state, final Rotation rotation) {
-        return state.withProperty(BlockRope.PROP_FACING, rotation.rotate(state.getValue(BlockRope.PROP_FACING)));
+        val facing = state.getValue(BlockRope.PROP_FACING);
+        if (facing.getAxis().isHorizontal()) {
+            return state.withProperty(BlockRope.PROP_FACING, rotation.rotate(facing));
+        }
+        return state;
     }
 
     @Override
     @Deprecated
     public IBlockState withMirror(final IBlockState state, final Mirror mirror) {
-        return state.withRotation(mirror.toRotation(state.getValue(BlockRope.PROP_FACING)));
+        val facing = state.getValue(BlockRope.PROP_FACING);
+        if (facing.getAxis().isHorizontal()) {
+            return state.withRotation(mirror.toRotation(facing));
+        }
+        return state;
     }
 
     @Override
@@ -80,7 +87,7 @@ public final class BlockRope extends Block {
     @Override
     @Deprecated
     public AxisAlignedBB getBoundingBox(final IBlockState state, final IBlockAccess access, final BlockPos pos) {
-        return BlockRope.AABB.get(state.getValue(BlockRope.PROP_FACING));
+        return BlockRope.BOUNDING_BOX.get(state.getValue(BlockRope.PROP_FACING));
     }
 
     @Override
@@ -116,16 +123,14 @@ public final class BlockRope extends Block {
             if (above.getBlock() == this && above.getValue(BlockRope.PROP_FACING) == side) {
                 return true;
             }
-
             if (side == EnumFacing.DOWN) {
                 return shape == BlockFaceShape.SOLID
                     || shape == BlockFaceShape.CENTER
                     || shape == BlockFaceShape.CENTER_BIG;
             }
-
             return shape == BlockFaceShape.SOLID;
         }
-        return false;
+        return this.canPlaceBlockAt(world, pos);
     }
 
     @Override
@@ -144,14 +149,12 @@ public final class BlockRope extends Block {
         if (!stack.isEmpty() && stack.getItem() == BamboozledItems.ROPE) {
             val chunk = world.getChunk(pos);
             val target = new BlockPos.MutableBlockPos(pos);
-
             do {
                 target.move(EnumFacing.DOWN);
-            } while (!world.isOutsideBuildHeight(target) && chunk.getBlockState(target).getBlock() == this);
-
+            } while (!world.isOutsideBuildHeight(target) && chunk.getBlockState(target) == state);
             if (chunk.getBlockState(target).getBlock().isReplaceable(world, target) && world.setBlockState(target, state)) {
                 world.playSound(null, target, SoundEvents.BLOCK_CLOTH_PLACE, SoundCategory.BLOCKS, 1.0F, 0.8F);
-                if (!player.isCreative()) {
+                if (!player.capabilities.isCreativeMode) {
                     stack.shrink(1);
                 }
                 return true;
@@ -181,25 +184,27 @@ public final class BlockRope extends Block {
         if (side.getAxis().isHorizontal()) {
             return false;
         }
-
         val other = access.getBlockState(pos.offset(side));
         return other.getBlock() == this && state.getValue(BlockRope.PROP_FACING) == other.getValue(BlockRope.PROP_FACING);
     }
 
     @Override
     public boolean rotateBlock(final World world, final BlockPos pos, final EnumFacing axis) {
-        val neg = axis.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE;
-        val rot = neg ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90;
-        var state = world.getBlockState(pos);
-        var facing = state.getValue(BlockRope.PROP_FACING);
-        val original = facing;
+        val state = world.getBlockState(pos);
+        val facing = state.getValue(BlockRope.PROP_FACING);
 
-        do {
-            facing = rot.rotate(facing);
-            state = state.withProperty(BlockRope.PROP_FACING, facing.getOpposite());
-        } while (original != facing && !this.canPlaceBlockOnSide(world, pos, facing.getOpposite()));
-
-        return this.canPlaceBlockOnSide(world, pos, facing.getOpposite()) && world.setBlockState(pos, state);
+        if (facing.getAxis().isHorizontal()) {
+            if (this.canPlaceBlockOnSide(world, pos, facing.rotateY())) {
+                return world.setBlockState(pos, state.withProperty(BlockRope.PROP_FACING, facing.rotateY()));
+            }
+            if (this.canPlaceBlockOnSide(world, pos, facing.getOpposite())) {
+                return world.setBlockState(pos, state.withProperty(BlockRope.PROP_FACING, facing.getOpposite()));
+            }
+            if (this.canPlaceBlockOnSide(world, pos, facing.rotateYCCW())) {
+                return world.setBlockState(pos, state.withProperty(BlockRope.PROP_FACING, facing.rotateYCCW()));
+            }
+        }
+        return false;
     }
 
     @Override
@@ -209,7 +214,7 @@ public final class BlockRope extends Block {
         if (above.getBlock() == this && above.getValue(BlockRope.PROP_FACING) == side) {
             return this.withFacing(above.getValue(BlockRope.PROP_FACING));
         }
-        if (this.canPlaceBlockOnSide(world, pos, side)) {
+        if (EnumFacing.UP != side && this.canPlaceBlockOnSide(world, pos, side)) {
             return this.withFacing(side);
         }
         if (this.canPlaceBlockOnSide(world, pos, placerFacing)) {
