@@ -4,37 +4,22 @@ import net.insomniakitten.bamboo.block.BlockBamboo;
 import net.insomniakitten.bamboo.world.GeneratorBamboo;
 import net.insomniakitten.bamboo.world.GeneratorSaltOre;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod(modid = Bamboozled.ID, useMetadata = true)
 public final class Bamboozled {
     public static final String ID = "bamboozled";
 
-    private static final Bamboozled INSTANCE = new Bamboozled();
-
     public static final EnumPlantType TROPICAL_PLANT_TYPE = EnumPlantType.getPlantType("Tropical");
 
-    private static final CreativeTabs ITEM_GROUP = new CreativeTabs(Bamboozled.ID) {
-        @Override
-        @SideOnly(Side.CLIENT)
-        public String getTranslationKey() {
-            return "item_group.bamboozled.label";
-        }
+    private static final Bamboozled INSTANCE = new Bamboozled();
 
-        @Override
-        @SideOnly(Side.CLIENT)
-        public ItemStack createIcon() {
-            return new ItemStack(BamboozledItems.BAMBOO);
-        }
-    };
+    private static final CreativeTabs ITEM_GROUP = new BamboozledItemGroup();
 
     private Bamboozled() {}
 
