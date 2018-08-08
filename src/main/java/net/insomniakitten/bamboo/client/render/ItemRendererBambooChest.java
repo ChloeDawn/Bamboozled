@@ -20,8 +20,9 @@ public final class ItemRendererBambooChest extends TileEntityItemStackRenderer {
             val block = ((ItemBlock) item).getBlock();
             if (block instanceof BlockBambooChest) {
                 val type = ((BlockChest) block).chestType;
-                val te = new BlockEntityBambooChest(type);
-                TileEntityRendererDispatcher.instance.render(te, 0.0D, 0.0D, 0.0D, partialTicks, 1.0F);
+                val entity = new BlockEntityBambooChest(type);
+                val dispatcher = TileEntityRendererDispatcher.instance;
+                dispatcher.render(entity, 0.0, 0.0, 0.0, partialTicks, 1.0F);
             }
         }
     }
