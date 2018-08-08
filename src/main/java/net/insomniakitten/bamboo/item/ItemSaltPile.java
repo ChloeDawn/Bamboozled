@@ -34,7 +34,9 @@ public final class ItemSaltPile extends ItemBlock {
             return new ActionResult<>(EnumActionResult.PASS, stack);
         }
 
-        if (!player.isCreative()) stack.shrink(1);
+        if (!player.capabilities.isCreativeMode) {
+            stack.shrink(1);
+        }
 
         player.playSound(SoundEvents.ENTITY_SNOWBALL_THROW, 0.5F, 0.4F / (Item.itemRand.nextFloat() * 0.4F + 0.8F));
         player.getCooldownTracker().setCooldown(this, 10);
@@ -45,7 +47,7 @@ public final class ItemSaltPile extends ItemBlock {
             world.spawnEntity(saltPile);
         }
 
-        player.addStat(Objects.requireNonNull(StatList.getObjectUseStats(this)));
+        player.addStat(Objects.requireNonNull(StatList.getObjectUseStats(this), "objectUseStats"));
 
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
