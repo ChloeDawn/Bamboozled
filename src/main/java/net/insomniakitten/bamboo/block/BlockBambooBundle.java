@@ -105,6 +105,23 @@ public final class BlockBambooBundle extends Block {
     }
 
     @Override
+    public void onFallenUpon(World world, BlockPos pos, Entity entity, float fallDistance) {
+        super.onFallenUpon(world, pos, entity, fallDistance * 0.5F);
+    }
+
+    @Override
+    public void onLanded(World world, Entity entity) {
+        if (entity.isSneaking()) {
+            super.onLanded(world, entity);
+        } else if (entity.motionY < 0.0) {
+            entity.motionY = -entity.motionY * 0.66;
+            if (!(entity instanceof EntityLivingBase)) {
+                entity.motionY *= 0.8;
+            }
+        }
+    }
+
+    @Override
     public void getSubBlocks(final CreativeTabs tab, final NonNullList<ItemStack> items) {
         items.add(new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, 0));
         items.add(new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, 1));
