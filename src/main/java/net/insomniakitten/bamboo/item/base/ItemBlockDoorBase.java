@@ -6,6 +6,8 @@ import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
+import javax.annotation.Nullable;
+
 public class ItemBlockDoorBase extends ItemDoor {
     private final Block door;
 
@@ -25,13 +27,14 @@ public class ItemBlockDoorBase extends ItemDoor {
     }
 
     @Override
-    public void getSubItems(final CreativeTabs tab, final NonNullList<ItemStack> items) {
-        if (this.isInCreativeTab(tab)) {
+    public void getSubItems(final CreativeTabs group, final NonNullList<ItemStack> items) {
+        if (this.isInCreativeTab(group)) {
             items.add(new ItemStack(this));
         }
     }
 
     @Override
+    @Nullable
     public CreativeTabs getCreativeTab() {
         return this.door.getCreativeTab();
     }

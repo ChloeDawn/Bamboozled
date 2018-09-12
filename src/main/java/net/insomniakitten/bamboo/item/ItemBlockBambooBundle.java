@@ -1,6 +1,6 @@
 package net.insomniakitten.bamboo.item;
 
-import lombok.experimental.var;
+import lombok.var;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.block.BlockBambooBundle;
 import net.insomniakitten.bamboo.item.base.ItemSubBlockBase;
@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public final class ItemBlockBambooBundle extends ItemSubBlockBase {
@@ -20,7 +21,7 @@ public final class ItemBlockBambooBundle extends ItemSubBlockBase {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final World world, final List<String> tooltip, final ITooltipFlag flag) {
+    public void addInformation(final ItemStack stack, @Nullable final World world, final List<String> tooltip, final ITooltipFlag flag) {
         if (Bamboozled.getConfig().isInWorldBambooDryingEnabled() || BlockBambooBundle.isDry(stack.getMetadata())) {
             super.addInformation(stack, world, tooltip, flag);
         }
@@ -34,9 +35,11 @@ public final class ItemBlockBambooBundle extends ItemSubBlockBase {
     @Override
     public String getTranslationKey(final ItemStack stack) {
         var name = super.getTranslationKey(stack);
+
         if (BlockBambooBundle.isDry(stack.getMetadata())) {
             name += "_dried";
         }
+
         return name;
     }
 }

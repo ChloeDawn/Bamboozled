@@ -1,8 +1,10 @@
 package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import lombok.val;
-import net.insomniakitten.bamboo.BamboozledItems;
+import net.insomniakitten.bamboo.util.LazyBlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
@@ -15,6 +17,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
@@ -25,16 +28,29 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public final class BlockRope extends Block {
-    private static final IProperty<EnumFacing> PROP_FACING = PropertyDirection.create("facing", f -> f != EnumFacing.UP);
+import java.util.Set;
+import java.util.function.Supplier;
 
-    private static final ImmutableMap<EnumFacing, AxisAlignedBB> BOUNDING_BOX = ImmutableMap.of(
-        EnumFacing.DOWN, new AxisAlignedBB(0.375D, 0.0, 0.375D, 0.625D, 1.0D, 0.625D),
-        EnumFacing.NORTH, new AxisAlignedBB(0.375D, 0.0D, 0.8125D, 0.625D, 1.0D, 1.0D),
-        EnumFacing.SOUTH, new AxisAlignedBB(0.375D, 0.0D, 0.0D, 0.625D, 1.0D, 0.1875D),
-        EnumFacing.WEST, new AxisAlignedBB(0.8125D, 0.0D, 0.375D, 1.0D, 1.0D, 0.625D),
-        EnumFacing.EAST, new AxisAlignedBB(0.0D, 0.0D, 0.375D, 0.1875D, 1.0D, 0.625D)
+public final class BlockRope extends Block {
+    public static final IProperty<EnumFacing> FACING = PropertyDirection.create(
+        "facing", facing -> EnumFacing.UP != facing
     );
+
+    public static final ImmutableMap<EnumFacing, AxisAlignedBB> FACING_AABB = Maps.immutableEnumMap(
+        ImmutableMap.of(
+            EnumFacing.DOWN, new AxisAlignedBB(0.375D, 0.0, 0.375D, 0.625D, 1.0D, 0.625D),
+            EnumFacing.NORTH, new AxisAlignedBB(0.375D, 0.0D, 0.8125D, 0.625D, 1.0D, 1.0D),
+            EnumFacing.SOUTH, new AxisAlignedBB(0.375D, 0.0D, 0.0D, 0.625D, 1.0D, 0.1875D),
+            EnumFacing.WEST, new AxisAlignedBB(0.8125D, 0.0D, 0.375D, 1.0D, 1.0D, 0.625D),
+            EnumFacing.EAST, new AxisAlignedBB(0.0D, 0.0D, 0.375D, 0.1875D, 1.0D, 0.625D)
+        )
+    );
+
+    public static final Set<BlockFaceShape> CONNECTABLE_CEILING_SHAPES = Sets.immutableEnumSet(
+        BlockFaceShape.SOLID, BlockFaceShape.CENTER, BlockFaceShape.CENTER_BIG
+    );
+
+    private final Supplier<ItemBlock> item = new LazyBlockItem(this);
 
     public BlockRope() {
         super(Material.CIRCUITS);
@@ -44,37 +60,49 @@ public final class BlockRope extends Block {
     }
 
     public IBlockState withFacing(final EnumFacing facing) {
-        return this.getDefaultState().withProperty(BlockRope.PROP_FACING, facing);
+        val state = this.getDefaultState();
+
+        return state.withProperty(BlockRope.FACING, facing);
     }
 
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(final int meta) {
-        return this.withFacing(EnumFacing.values()[meta & 7]);
+        val facing = EnumFacing.byIndex(meta);
+
+        return this.withFacing(facing);
     }
 
     @Override
     public int getMetaFromState(final IBlockState state) {
-        return state.getValue(BlockRope.PROP_FACING).ordinal();
+        return state.getValue(BlockRope.FACING).ordinal();
     }
 
     @Override
     @Deprecated
     public IBlockState withRotation(final IBlockState state, final Rotation rotation) {
-        val facing = state.getValue(BlockRope.PROP_FACING);
+        val facing = state.getValue(BlockRope.FACING);
+
         if (facing.getAxis().isHorizontal()) {
-            return state.withProperty(BlockRope.PROP_FACING, rotation.rotate(facing));
+            val rotated = rotation.rotate(facing);
+
+            return state.withProperty(BlockRope.FACING, rotated);
         }
+
         return state;
     }
 
     @Override
     @Deprecated
     public IBlockState withMirror(final IBlockState state, final Mirror mirror) {
-        val facing = state.getValue(BlockRope.PROP_FACING);
+        val facing = state.getValue(BlockRope.FACING);
+
         if (facing.getAxis().isHorizontal()) {
-            return state.withRotation(mirror.toRotation(facing));
+            val rotation = mirror.toRotation(facing);
+
+            return state.withRotation(rotation);
         }
+
         return state;
     }
 
@@ -86,13 +114,15 @@ public final class BlockRope extends Block {
 
     @Override
     @Deprecated
-    public AxisAlignedBB getBoundingBox(final IBlockState state, final IBlockAccess access, final BlockPos pos) {
-        return BlockRope.BOUNDING_BOX.get(state.getValue(BlockRope.PROP_FACING));
+    public AxisAlignedBB getBoundingBox(final IBlockState state, final IBlockAccess access, final BlockPos position) {
+        val facing = state.getValue(BlockRope.FACING);
+
+        return BlockRope.FACING_AABB.get(facing);
     }
 
     @Override
     @Deprecated
-    public BlockFaceShape getBlockFaceShape(final IBlockAccess access, final IBlockState state, final BlockPos pos, final EnumFacing face) {
+    public BlockFaceShape getBlockFaceShape(final IBlockAccess access, final IBlockState state, final BlockPos position, final EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 
@@ -104,63 +134,87 @@ public final class BlockRope extends Block {
 
     @Override
     @Deprecated
-    public void neighborChanged(final IBlockState state, final World world, final BlockPos pos, final Block block, final BlockPos fromPos) {
-        this.checkForDrop(world, pos, state);
-    }
+    public void neighborChanged(final IBlockState state, final World world, final BlockPos position, final Block neighbor, final BlockPos offset) {
+        val facing = state.getValue(BlockRope.FACING);
 
-    @Override
-    public void onBlockAdded(final World world, final BlockPos pos, final IBlockState state) {
-        this.checkForDrop(world, pos, state);
-    }
-
-    @Override
-    public boolean canPlaceBlockOnSide(final World world, final BlockPos pos, final EnumFacing side) {
-        val offset = pos.offset(side.getOpposite());
-        val state = world.getBlockState(offset);
-        val shape = state.getBlockFaceShape(world, offset, side);
-        if (BlockRope.PROP_FACING.getAllowedValues().contains(side)) {
-            val above = world.getBlockState(pos.up());
-            if (above.getBlock() == this && above.getValue(BlockRope.PROP_FACING) == side) {
-                return true;
-            }
-            if (side == EnumFacing.DOWN) {
-                return shape == BlockFaceShape.SOLID
-                    || shape == BlockFaceShape.CENTER
-                    || shape == BlockFaceShape.CENTER_BIG;
-            }
-            return shape == BlockFaceShape.SOLID;
+        if (!world.isRemote && !this.canPlaceBlockOnSide(world, position, facing)) {
+            world.destroyBlock(position, true);
         }
-        return this.canPlaceBlockAt(world, pos);
+    }
+
+    @Override
+    public void onBlockAdded(final World world, final BlockPos position, final IBlockState state) {
+        val facing = state.getValue(BlockRope.FACING);
+
+        if (!world.isRemote && !this.canPlaceBlockOnSide(world, position, facing)) {
+            world.destroyBlock(position, true);
+        }
+    }
+
+    @Override
+    public boolean canPlaceBlockOnSide(final World world, final BlockPos position, final EnumFacing face) {
+        val offset = position.offset(face.getOpposite());
+        val other = world.getBlockState(offset);
+        val shape = other.getBlockFaceShape(world, offset, face);
+
+        if (!BlockRope.FACING.getAllowedValues().contains(face)) {
+            return this.canPlaceBlockAt(world, position);
+        }
+
+        val above = world.getBlockState(position.up());
+
+        if (this == above.getBlock() && face == above.getValue(BlockRope.FACING)) {
+            return true;
+        }
+
+        if (EnumFacing.DOWN == face) {
+            return BlockRope.CONNECTABLE_CEILING_SHAPES.contains(shape);
+        }
+
+        return BlockFaceShape.SOLID == shape;
     }
 
     @Override
     public boolean canPlaceBlockAt(final World world, final BlockPos pos) {
-        for (val side : BlockRope.PROP_FACING.getAllowedValues()) {
-            if (this.canPlaceBlockOnSide(world, pos, side)) {
+        for (val facing : BlockRope.FACING.getAllowedValues()) {
+            if (this.canPlaceBlockOnSide(world, pos, facing)) {
                 return true;
             }
         }
+
         return false;
     }
 
     @Override
-    public boolean onBlockActivated(final World world, final BlockPos pos, final IBlockState state, final EntityPlayer player, final EnumHand hand, final EnumFacing facing, final float hitX, final float hitY, final float hitZ) {
+    public boolean onBlockActivated(final World world, final BlockPos position, final IBlockState state, final EntityPlayer player, final EnumHand hand, final EnumFacing facing, final float hitX, final float hitY, final float hitZ) {
         val stack = player.getHeldItem(hand);
-        if (!stack.isEmpty() && stack.getItem() == BamboozledItems.ROPE) {
-            val chunk = world.getChunk(pos);
-            val target = new BlockPos.MutableBlockPos(pos);
-            do {
-                target.move(EnumFacing.DOWN);
-            } while (!world.isOutsideBuildHeight(target) && chunk.getBlockState(target) == state);
-            if (chunk.getBlockState(target).getBlock().isReplaceable(world, target) && world.setBlockState(target, state)) {
-                world.playSound(null, target, SoundEvents.BLOCK_CLOTH_PLACE, SoundCategory.BLOCKS, 1.0F, 0.8F);
-                if (!player.capabilities.isCreativeMode) {
-                    stack.shrink(1);
-                }
-                return true;
-            }
+
+        if (stack.isEmpty() || this.item.get() != stack.getItem()) {
+            return false;
         }
-        return false;
+
+        val chunk = world.getChunk(position);
+        val target = new BlockPos.MutableBlockPos(position);
+
+        do {
+            target.move(EnumFacing.DOWN);
+        } while (!world.isOutsideBuildHeight(target) && state == chunk.getBlockState(target));
+
+        if (!chunk.getBlockState(target).getBlock().isReplaceable(world, target)) {
+            return false;
+        }
+
+        if (!world.setBlockState(target, state)) {
+            return false;
+        }
+
+        world.playSound(null, target, SoundEvents.BLOCK_CLOTH_PLACE, SoundCategory.BLOCKS, 1.0F, 0.8F);
+
+        if (!player.capabilities.isCreativeMode) {
+            stack.shrink(1);
+        }
+
+        return true;
     }
 
     @Override
@@ -171,67 +225,72 @@ public final class BlockRope extends Block {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, BlockRope.PROP_FACING);
+        return new BlockStateContainer(this, BlockRope.FACING);
     }
 
     @Override
-    public boolean isLadder(final IBlockState state, final IBlockAccess access, final BlockPos pos, final EntityLivingBase entity) {
+    public boolean isLadder(final IBlockState state, final IBlockAccess access, final BlockPos position, final EntityLivingBase entity) {
         return true;
     }
 
     @Override
-    public boolean doesSideBlockRendering(final IBlockState state, final IBlockAccess access, final BlockPos pos, final EnumFacing side) {
-        if (side.getAxis().isHorizontal()) {
+    public boolean doesSideBlockRendering(final IBlockState state, final IBlockAccess access, final BlockPos position, final EnumFacing face) {
+        if (face.getAxis().isHorizontal()) {
             return false;
         }
-        val other = access.getBlockState(pos.offset(side));
-        return other.getBlock() == this && state.getValue(BlockRope.PROP_FACING) == other.getValue(BlockRope.PROP_FACING);
+
+        val other = access.getBlockState(position.offset(face));
+
+        return other.getBlock() == this && state.getValue(BlockRope.FACING) == other.getValue(BlockRope.FACING);
     }
 
     @Override
-    public boolean rotateBlock(final World world, final BlockPos pos, final EnumFacing axis) {
-        val state = world.getBlockState(pos);
-        val facing = state.getValue(BlockRope.PROP_FACING);
+    public boolean rotateBlock(final World world, final BlockPos position, final EnumFacing face) {
+        val state = world.getBlockState(position);
+        val facing = state.getValue(BlockRope.FACING);
 
-        if (facing.getAxis().isHorizontal()) {
-            if (this.canPlaceBlockOnSide(world, pos, facing.rotateY())) {
-                return world.setBlockState(pos, state.withProperty(BlockRope.PROP_FACING, facing.rotateY()));
-            }
-            if (this.canPlaceBlockOnSide(world, pos, facing.getOpposite())) {
-                return world.setBlockState(pos, state.withProperty(BlockRope.PROP_FACING, facing.getOpposite()));
-            }
-            if (this.canPlaceBlockOnSide(world, pos, facing.rotateYCCW())) {
-                return world.setBlockState(pos, state.withProperty(BlockRope.PROP_FACING, facing.rotateYCCW()));
-            }
+        if (facing.getAxis().isVertical()) {
+            return false;
         }
+
+        if (this.canPlaceBlockOnSide(world, position, facing.rotateY())) {
+            return world.setBlockState(position, state.withProperty(BlockRope.FACING, facing.rotateY()));
+        }
+
+        if (this.canPlaceBlockOnSide(world, position, facing.getOpposite())) {
+            return world.setBlockState(position, state.withProperty(BlockRope.FACING, facing.getOpposite()));
+        }
+
+        if (this.canPlaceBlockOnSide(world, position, facing.rotateYCCW())) {
+            return world.setBlockState(position, state.withProperty(BlockRope.FACING, facing.rotateYCCW()));
+        }
+
         return false;
     }
 
     @Override
-    public IBlockState getStateForPlacement(final World world, final BlockPos pos, final EnumFacing side, final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer, final EnumHand hand) {
+    public IBlockState getStateForPlacement(final World world, final BlockPos position, final EnumFacing face, final float x, final float y, final float z, final int meta, final EntityLivingBase placer, final EnumHand hand) {
         val placerFacing = placer.getHorizontalFacing().getOpposite();
-        val above = world.getBlockState(pos.up());
-        if (above.getBlock() == this && above.getValue(BlockRope.PROP_FACING) == side) {
-            return this.withFacing(above.getValue(BlockRope.PROP_FACING));
+        val above = world.getBlockState(position.up());
+
+        if (this == above.getBlock() && face == above.getValue(BlockRope.FACING)) {
+            return this.withFacing(above.getValue(BlockRope.FACING));
         }
-        if (EnumFacing.UP != side && this.canPlaceBlockOnSide(world, pos, side)) {
-            return this.withFacing(side);
+
+        if (EnumFacing.UP != face && this.canPlaceBlockOnSide(world, position, face)) {
+            return this.withFacing(face);
         }
-        if (this.canPlaceBlockOnSide(world, pos, placerFacing)) {
+
+        if (this.canPlaceBlockOnSide(world, position, placerFacing)) {
             return this.withFacing(placerFacing);
         }
-        for (val facing : BlockRope.PROP_FACING.getAllowedValues()) {
-            if (this.canPlaceBlockOnSide(world, pos, facing)) {
+
+        for (val facing : BlockRope.FACING.getAllowedValues()) {
+            if (this.canPlaceBlockOnSide(world, position, facing)) {
                 return this.withFacing(facing);
             }
         }
-        return this.withFacing(EnumFacing.DOWN);
-    }
 
-    private void checkForDrop(final World world, final BlockPos pos, final IBlockState state) {
-        if (!this.canPlaceBlockOnSide(world, pos, state.getValue(BlockRope.PROP_FACING))) {
-            this.dropBlockAsItem(world, pos, state, 0);
-            world.setBlockToAir(pos);
-        }
+        return this.withFacing(EnumFacing.DOWN);
     }
 }

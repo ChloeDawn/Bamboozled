@@ -2,8 +2,8 @@ package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import lombok.experimental.var;
 import lombok.val;
+import lombok.var;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -13,7 +13,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.BlockStateContainer.Builder;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,15 +27,34 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 public final class BlockSaltPile extends Block {
-    private static final ImmutableMap<EnumFacing, IProperty<ConnectionType>> PROP_CONNECTIONS = Stream.of(EnumFacing.HORIZONTALS)
-        .collect(ImmutableMap.toImmutableMap(Function.identity(), it -> PropertyEnum.create(it.getName(), ConnectionType.class)));
+    public static final ImmutableMap<EnumFacing, IProperty<Connection>> CONNECTIONS = Stream.of(EnumFacing.values())
+        .filter(facing -> facing.getAxis().isHorizontal())
+        .collect(ImmutableMap.toImmutableMap(Function.identity(), it -> PropertyEnum.create(it.getName(), Connection.class)));
 
-    private static final ImmutableList<AxisAlignedBB> AABB = ImmutableList.of(new AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.0625, 0.8125), new AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.0625, 1.0), new AxisAlignedBB(0.0, 0.0, 0.1875, 0.8125, 0.0625, 0.8125), new AxisAlignedBB(0.0, 0.0, 0.1875, 0.8125, 0.0625, 1.0), new AxisAlignedBB(0.1875, 0.0, 0.0, 0.8125, 0.0625, 0.8125), new AxisAlignedBB(0.1875, 0.0, 0.0, 0.8125, 0.0625, 1.0), new AxisAlignedBB(0.0, 0.0, 0.0, 0.8125, 0.0625, 0.8125), new AxisAlignedBB(0.0, 0.0, 0.0, 0.8125, 0.0625, 1.0), new AxisAlignedBB(0.1875, 0.0, 0.1875, 1.0, 0.0625, 0.8125), new AxisAlignedBB(0.1875, 0.0, 0.1875, 1.0, 0.0625, 1.0), new AxisAlignedBB(0.0, 0.0, 0.1875, 1.0, 0.0625, 0.8125), new AxisAlignedBB(0.0, 0.0, 0.1875, 1.0, 0.0625, 1.0), new AxisAlignedBB(0.1875, 0.0, 0.0, 1.0, 0.0625, 0.8125), new AxisAlignedBB(0.1875, 0.0, 0.0, 1.0, 0.0625, 1.0), new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.0625, 0.8125), new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.0625, 1.0));
+    public static final ImmutableList<AxisAlignedBB> CONNECTION_AABB = ImmutableList.of(
+        new AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.0625, 0.8125),
+        new AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.0625, 1.0),
+        new AxisAlignedBB(0.0, 0.0, 0.1875, 0.8125, 0.0625, 0.8125),
+        new AxisAlignedBB(0.0, 0.0, 0.1875, 0.8125, 0.0625, 1.0),
+        new AxisAlignedBB(0.1875, 0.0, 0.0, 0.8125, 0.0625, 0.8125),
+        new AxisAlignedBB(0.1875, 0.0, 0.0, 0.8125, 0.0625, 1.0),
+        new AxisAlignedBB(0.0, 0.0, 0.0, 0.8125, 0.0625, 0.8125),
+        new AxisAlignedBB(0.0, 0.0, 0.0, 0.8125, 0.0625, 1.0),
+        new AxisAlignedBB(0.1875, 0.0, 0.1875, 1.0, 0.0625, 0.8125),
+        new AxisAlignedBB(0.1875, 0.0, 0.1875, 1.0, 0.0625, 1.0),
+        new AxisAlignedBB(0.0, 0.0, 0.1875, 1.0, 0.0625, 0.8125),
+        new AxisAlignedBB(0.0, 0.0, 0.1875, 1.0, 0.0625, 1.0),
+        new AxisAlignedBB(0.1875, 0.0, 0.0, 1.0, 0.0625, 0.8125),
+        new AxisAlignedBB(0.1875, 0.0, 0.0, 1.0, 0.0625, 1.0),
+        new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.0625, 0.8125),
+        new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.0625, 1.0)
+    );
 
     public BlockSaltPile() {
         super(Material.CIRCUITS, MapColor.SNOW);
@@ -52,11 +70,16 @@ public final class BlockSaltPile extends Block {
 
     @Override
     @Deprecated
-    public IBlockState getActualState(final IBlockState state, final IBlockAccess access, final BlockPos pos) {
+    public IBlockState getActualState(final IBlockState state, final IBlockAccess access, final BlockPos position) {
         var actualState = state;
-        for (val side : EnumFacing.HORIZONTALS) {
-            actualState = actualState.withProperty(BlockSaltPile.PROP_CONNECTIONS.get(side), this.getConnectionType(access, pos, side));
+
+        for (val facing : BlockSaltPile.CONNECTIONS.keySet()) {
+            val property = BlockSaltPile.CONNECTIONS.get(facing);
+            val connection = this.getConnection(access, position, facing);
+
+            actualState = actualState.withProperty(property, connection);
         }
+
         return actualState;
     }
 
@@ -67,25 +90,29 @@ public final class BlockSaltPile extends Block {
     }
 
     @Override
-    public boolean isPassable(final IBlockAccess access, final BlockPos pos) {
+    public boolean isPassable(final IBlockAccess access, final BlockPos position) {
         return false;
     }
 
-    @Deprecated
     @Override
-    public AxisAlignedBB getBoundingBox(final IBlockState state, final IBlockAccess access, final BlockPos pos) {
-        return BlockSaltPile.AABB.get(this.getBoundingBoxIndex(state.getActualState(access, pos)));
+    @Deprecated
+    public AxisAlignedBB getBoundingBox(final IBlockState state, final IBlockAccess access, final BlockPos position) {
+        val actualState = state.getActualState(access, position);
+        val index = this.getBoundingBoxIndex(actualState);
+
+        return BlockSaltPile.CONNECTION_AABB.get(index);
     }
 
     @Override
     @Deprecated
-    public BlockFaceShape getBlockFaceShape(final IBlockAccess access, final IBlockState state, final BlockPos pos, final EnumFacing face) {
+    public BlockFaceShape getBlockFaceShape(final IBlockAccess access, final IBlockState state, final BlockPos position, final EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 
     @Override
     @Deprecated
-    public AxisAlignedBB getCollisionBoundingBox(final IBlockState state, final IBlockAccess access, final BlockPos pos) {
+    @Nullable
+    public AxisAlignedBB getCollisionBoundingBox(final IBlockState state, final IBlockAccess access, final BlockPos position) {
         return Block.NULL_AABB;
     }
 
@@ -97,13 +124,17 @@ public final class BlockSaltPile extends Block {
 
     @Override
     @Deprecated
-    public void neighborChanged(final IBlockState state, final World world, final BlockPos pos, final Block block, final BlockPos fromPos) {
-        this.checkForDrop(state, world, pos);
+    public void neighborChanged(final IBlockState state, final World world, final BlockPos position, final Block neighbor, final BlockPos offset) {
+        if (!world.isRemote && !this.canPlaceBlockAt(world, position)) {
+            world.destroyBlock(position, true);
+        }
     }
 
     @Override
-    public void onBlockAdded(final World world, final BlockPos pos, final IBlockState state) {
-        this.checkForDrop(state, world, pos);
+    public void onBlockAdded(final World world, final BlockPos position, final IBlockState state) {
+        if (!world.isRemote && !this.canPlaceBlockAt(world, position)) {
+            world.destroyBlock(position, true);
+        }
     }
 
     @Override
@@ -113,14 +144,16 @@ public final class BlockSaltPile extends Block {
     }
 
     @Override
-    public boolean canPlaceBlockAt(final World world, final BlockPos pos) {
-        val below = pos.down();
+    public boolean canPlaceBlockAt(final World world, final BlockPos position) {
+        val below = position.down();
         val state = world.getBlockState(below);
-        return state.getBlockFaceShape(world, below, EnumFacing.UP) == BlockFaceShape.SOLID;
+        val shape = state.getBlockFaceShape(world, below, EnumFacing.UP);
+
+        return BlockFaceShape.SOLID == shape;
     }
 
     @Override
-    public void onEntityCollision(final World world, final BlockPos pos, final IBlockState state, final Entity entity) {
+    public void onEntityCollision(final World world, final BlockPos position, final IBlockState state, final Entity entity) {
         if (!Bamboozled.getConfig().isInWorldBambooDryingEnabled()) {
             return;
         }
@@ -138,73 +171,80 @@ public final class BlockSaltPile extends Block {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        val builder = new Builder(this);
-        BlockSaltPile.PROP_CONNECTIONS.values().forEach(builder::add);
+        val builder = new BlockStateContainer.Builder(this);
+
+        BlockSaltPile.CONNECTIONS.values().forEach(builder::add);
+
         return builder.build();
     }
 
     @SuppressWarnings("OverlyComplexBooleanExpression")
     private int getBoundingBoxIndex(final IBlockState state) {
-        val north = state.getValue(BlockSaltPile.PROP_CONNECTIONS.get(EnumFacing.NORTH)).isConnected();
-        val south = state.getValue(BlockSaltPile.PROP_CONNECTIONS.get(EnumFacing.SOUTH)).isConnected();
-        val east = state.getValue(BlockSaltPile.PROP_CONNECTIONS.get(EnumFacing.EAST)).isConnected();
-        val west = state.getValue(BlockSaltPile.PROP_CONNECTIONS.get(EnumFacing.WEST)).isConnected();
+        val n = this.getConnection(state, EnumFacing.NORTH).isConnected();
+        val s = this.getConnection(state, EnumFacing.SOUTH).isConnected();
+        val e = this.getConnection(state, EnumFacing.EAST).isConnected();
+        val w = this.getConnection(state, EnumFacing.WEST).isConnected();
 
         var index = 0;
 
-        if (north || south && !east && !west) {
+        if (n || s && !e && !w) {
             index |= 1 << EnumFacing.NORTH.getHorizontalIndex();
         }
 
-        if (south || north && !east && !west) {
+        if (s || n && !e && !w) {
             index |= 1 << EnumFacing.SOUTH.getHorizontalIndex();
         }
 
-        if (east || west && !north && !south) {
+        if (e || w && !n && !s) {
             index |= 1 << EnumFacing.EAST.getHorizontalIndex();
         }
 
-        if (west || east && !north && !south) {
+        if (w || e && !n && !s) {
             index |= 1 << EnumFacing.WEST.getHorizontalIndex();
         }
 
         return index;
     }
 
-    private void checkForDrop(final IBlockState state, final World world, final BlockPos pos) {
-        if (!world.isRemote && !this.canPlaceBlockAt(world, pos)) {
-            this.dropBlockAsItem(world, pos, state, 0);
-            world.setBlockToAir(pos);
+    private Connection getConnection(final IBlockAccess access, final BlockPos position, final EnumFacing face) {
+        val offset = position.offset(face);
+
+        if (this == access.getBlockState(offset).getBlock()) {
+            return Connection.SIDE;
         }
+
+        if (this == access.getBlockState(offset.down()).getBlock()) {
+            return Connection.SIDE;
+        }
+
+        if (this == access.getBlockState(offset.up()).getBlock()) {
+            return Connection.UP;
+        }
+
+        return Connection.NONE;
     }
 
-    private ConnectionType getConnectionType(final IBlockAccess access, final BlockPos pos, final EnumFacing direction) {
-        val offset = pos.offset(direction);
+    private Connection getConnection(final IBlockState state, final EnumFacing face) {
+        val property = BlockSaltPile.CONNECTIONS.get(face);
 
-        if (access.getBlockState(offset).getBlock() == this) {
-            return ConnectionType.SIDE;
-        }
-
-        if (access.getBlockState(offset.down()).getBlock() == this) {
-            return ConnectionType.SIDE;
-        }
-
-        if (access.getBlockState(offset.up()).getBlock() == this) {
-            return ConnectionType.UP;
-        }
-
-        return ConnectionType.NONE;
+        return state.getValue(property);
     }
 
-    private enum ConnectionType implements IStringSerializable {
+    private enum Connection implements IStringSerializable {
         NONE, SIDE, UP;
 
-        public String getName() {
-            return this.name().toLowerCase(Locale.ROOT);
+        public final boolean isConnected() {
+            return Connection.NONE != this;
         }
 
-        public boolean isConnected() {
-            return this != ConnectionType.NONE;
+        @Override
+        public final String getName() {
+            return this.toString();
+        }
+
+        @Override
+        public final String toString() {
+            return this.name().toLowerCase(Locale.ROOT);
         }
     }
 }

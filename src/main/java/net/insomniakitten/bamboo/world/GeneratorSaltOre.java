@@ -1,9 +1,9 @@
 package net.insomniakitten.bamboo.world;
 
-import lombok.experimental.var;
+import lombok.var;
 import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
-import net.insomniakitten.bamboo.BamboozledBlocks;
+import net.insomniakitten.bamboo.init.BamboozledBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
@@ -16,42 +16,60 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.Random;
 
 public final class GeneratorSaltOre {
-    private GeneratorSaltOre() {}
+    private GeneratorSaltOre() {
+        throw new UnsupportedOperationException("Cannot instantiate " + this.getClass());
+    }
 
     @SubscribeEvent
     static void onChunkPopulation(final PopulateChunkEvent.Post event) {
         val x = event.getChunkX() << 4;
         val z = event.getChunkZ() << 4;
-        val pos = new MutableBlockPos(x, 0, z);
-        val randX = event.getRand().nextInt(16) + 8;
-        val randZ = event.getRand().nextInt(16) + 8;
-        GeneratorSaltOre.findSurface(event.getWorld(), pos.setPos(x + randX, 0, z + randZ));
-        GeneratorSaltOre.generateCluster(event.getWorld(), event.getRand(), pos.toImmutable());
+        val position = new MutableBlockPos(x, 0, z);
+        val rX = event.getRand().nextInt(16) + 8;
+        val rZ = event.getRand().nextInt(16) + 8;
+
+        GeneratorSaltOre.movePositionToSurface(event.getWorld(), position.setPos(x + rX, 0, z + rZ));
+        GeneratorSaltOre.generateCluster(event.getWorld(), event.getRand(), position.toImmutable());
     }
 
-    private static void findSurface(final World world, final MutableBlockPos pos) {
-        val chunk = world.getChunk(pos);
+    private static void movePositionToSurface(final World world, final MutableBlockPos position) {
+        val chunk = world.getChunk(position);
+        val x = position.getX();
+        val z = position.getZ();
+        val height = world.getHeight(x, z);
+
+        position.setY(height);
+
         IBlockState target;
-        pos.setY(world.getHeight(pos.getX(), pos.getZ()));
+
         do {
-            target = chunk.getBlockState(pos.move(EnumFacing.DOWN));
-        } while (!world.isOutsideBuildHeight(pos) && target.getMaterial().isReplaceable());
+            target = chunk.getBlockState(position.move(EnumFacing.DOWN));
+        } while (!world.isOutsideBuildHeight(position) && target.getMaterial().isReplaceable());
     }
 
-    private static void generateCluster(final World world, final Random rand, final BlockPos pos) {
-        if (!world.getBlockState(pos.up()).getMaterial().isLiquid()) return;
-        val target = new MutableBlockPos(pos);
-        val size = rand.nextInt(Math.max(Bamboozled.getWorldConfig().getSaltClusterSize() - 2, 1)) + 2;
-        for (var x = pos.getX() - size; x <= pos.getX() + size; ++x) {
-            for (var z = pos.getZ() - size; z <= pos.getZ() + size; ++z) {
-                val rX = x - pos.getX();
-                val rZ = z - pos.getZ();
-                if (rX * rX + rZ * rZ <= size * size) {
-                    for (var y = pos.getY() - 1; y <= pos.getY() + 1; ++y) {
-                        val block = world.getBlockState(target.setPos(x, y, z)).getBlock();
-                        if (block == Blocks.DIRT || block == Blocks.CLAY) {
-                            world.setBlockState(target, BamboozledBlocks.SALT_ORE.getDefaultState(), 2 | 16);
-                        }
+    private static void generateCluster(final World world, final Random random, final BlockPos position) {
+        if (!world.getBlockState(position.up()).getMaterial().isLiquid()) {
+            return;
+        }
+
+        val target = new MutableBlockPos(position);
+        val clusterSize = Bamboozled.getWorldConfig().getSaltClusterSize();
+        val size = random.nextInt(Math.max(clusterSize - 2, 1)) + 2;
+
+        for (var x = position.getX() - size; x <= position.getX() + size; ++x) {
+            for (var z = position.getZ() - size; z <= position.getZ() + size; ++z) {
+                val rX = x - position.getX();
+                val rZ = z - position.getZ();
+
+                if (rX * rX + rZ * rZ > size * size) {
+                    continue;
+                }
+
+                for (var y = position.getY() - 1; y <= position.getY() + 1; ++y) {
+                    val block = world.getBlockState(target.setPos(x, y, z)).getBlock();
+
+                    if (Blocks.DIRT == block || Blocks.CLAY == block) {
+                        world.setBlockState(target, BamboozledBlocks.SALT_ORE.getDefaultState(), 2 | 16);
                     }
                 }
             }

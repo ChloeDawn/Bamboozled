@@ -37,8 +37,7 @@ tile.bamboozled.salt_crystal_brick_stairs.name=Salt Crystal Brick Stairs
 tile.bamboozled.salt_crystal_block_slab.name=Salt Crystal Block Slab
 tile.bamboozled.salt_crystal_brick_slab.name=Salt Crystal Brick Slab
 
-tile.bamboozled.bamboo_chest.name=Bamboo Planks Chest
-tile.bamboozled.trapped_bamboo_chest.name=Trapped Bamboo Planks Chest
+tile.bamboozled.bamboo_crate.name=Bamboo Crate
 
 item.bamboozled.bamboo_dried.name=Dried Bamboo Stalks
 item.bamboozled.bamboo_dried.desc=Can be crafted into various decorations
@@ -49,7 +48,4 @@ entity.bamboozled.falling_salt_block.name=Falling Block of Salt
 
 waila.bamboozled.bamboo_bundle.dry_progress=Drying %d%%
 
-container.bamboozled.bamboo_chest=Bamboo Chest
-container.bamboozled.bamboo_chest_large=Large Bamboo Chest
-container.bamboozled.trapped_bamboo_chest=Bamboo Chest
-container.bamboozled.trapped_bamboo_chest_large=Large Bamboo Chest
+container.bamboozled.bamboo_crate=Bamboo Crate

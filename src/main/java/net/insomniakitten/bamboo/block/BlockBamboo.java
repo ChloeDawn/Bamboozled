@@ -3,13 +3,12 @@ package net.insomniakitten.bamboo.block;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import lombok.experimental.var;
+import com.google.common.collect.Maps;
 import lombok.val;
+import lombok.var;
 import net.insomniakitten.bamboo.Bamboozled;
-import net.insomniakitten.bamboo.BamboozledBlocks;
-import net.insomniakitten.bamboo.util.BoundingBoxes;
+import net.insomniakitten.bamboo.init.BamboozledBlocks;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockSapling;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -19,6 +18,10 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockRenderLayer;
@@ -41,22 +44,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public final class BlockBamboo extends Block implements IPlantable {
-    public static final IProperty<Integer> PROP_AGE = PropertyInteger.create("age", 0, 15);
-    public static final IProperty<Integer> PROP_LEAVES = PropertyInteger.create("leaves", 0, 3);
+    public static final IProperty<Integer> AGE = PropertyInteger.create("age", 0, 15);
+    public static final IProperty<Integer> LEAVES = PropertyInteger.create("leaves", 0, 3);
 
-    public static final ImmutableMap<EnumFacing, PropertyBool> PROP_SIDES = ImmutableMap.of(
-        EnumFacing.UP, PropertyBool.create("up"),
-        EnumFacing.NORTH, PropertyBool.create("north"),
-        EnumFacing.SOUTH, PropertyBool.create("south"),
-        EnumFacing.WEST, PropertyBool.create("west"),
-        EnumFacing.EAST, PropertyBool.create("east")
-    );
+    public static final ImmutableMap<EnumFacing, IProperty<Boolean>> SIDES = Stream.of(EnumFacing.values())
+        .filter(facing -> facing.getAxis().isHorizontal())
+        .collect(Maps.toImmutableEnumMap(Function.identity(), it -> PropertyBool.create(it.getName())));
 
-    private static final AxisAlignedBB AABB_SIMPLE = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 1.0, 0.9375);
+    public static final AxisAlignedBB SIMPLE_AABB = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 1.0, 0.9375);
 
-    private static final ImmutableList<AxisAlignedBB> AABB_NORMAL = ImmutableList.of(
+    public static final ImmutableList<AxisAlignedBB> FANCY_AABB = ImmutableList.of(
         new AxisAlignedBB(0.125, 0.0, 0.125, 0.3125, 1.0, 0.3125),
         new AxisAlignedBB(0.6875, 0.0, 0.25, 0.875, 1.0, 0.4375),
         new AxisAlignedBB(0.125, 0.0, 0.625, 0.3125, 1.0, 0.8125),
@@ -67,7 +68,7 @@ public final class BlockBamboo extends Block implements IPlantable {
         new AxisAlignedBB(0.1875, 0.0, 0.375, 0.375, 1.0, 0.5625)
     );
 
-    private static final ImmutableList<AxisAlignedBB> AABB_NORMAL_TOP = ImmutableList.of(
+    public static final ImmutableList<AxisAlignedBB> FANCY_AABB_TOP = ImmutableList.of(
         new AxisAlignedBB(0.125, 0.0, 0.125, 0.3125, 0.75, 0.3125),
         new AxisAlignedBB(0.6875, 0.0, 0.25, 0.875, 0.625, 0.4375),
         new AxisAlignedBB(0.125, 0.0, 0.625, 0.3125, 0.6875, 0.8125),
@@ -78,10 +79,12 @@ public final class BlockBamboo extends Block implements IPlantable {
         new AxisAlignedBB(0.1875, 0.0, 0.375, 0.375, 0.8125, 0.5625)
     );
 
-    private static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB_SIDE = ImmutableMap.of(
-        EnumFacing.NORTH, new AxisAlignedBB(0.75, 0.0, -0.0625, 0.9375, 1.0, 0.125),
-        EnumFacing.SOUTH, new AxisAlignedBB(0.0625, 0.0, 0.875, 0.25, 1.0, 1.0625),
-        EnumFacing.WEST, new AxisAlignedBB(-0.0625, 0.0, 0.375, 0.125, 1.0, 0.5625)
+    public static final ImmutableMap<EnumFacing, AxisAlignedBB> FANCY_AABB_SIDE = Maps.immutableEnumMap(
+        ImmutableMap.of(
+            EnumFacing.NORTH, new AxisAlignedBB(0.75, 0.0, -0.0625, 0.9375, 1.0, 0.125),
+            EnumFacing.SOUTH, new AxisAlignedBB(0.0625, 0.0, 0.875, 0.25, 1.0, 1.0625),
+            EnumFacing.WEST, new AxisAlignedBB(-0.0625, 0.0, 0.375, 0.125, 1.0, 0.5625)
+        )
     );
 
     public BlockBamboo() {
@@ -96,33 +99,56 @@ public final class BlockBamboo extends Block implements IPlantable {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     static void onDrawBlockHighlight(final DrawBlockHighlightEvent event) {
-        if (event.getTarget() == null) {
-            return;
-        }
-        if (event.getTarget().typeOfHit != RayTraceResult.Type.BLOCK) {
+        @Nullable val hit = event.getTarget();
+
+        if (hit == null || RayTraceResult.Type.BLOCK != hit.typeOfHit) {
             return;
         }
 
-        val pos = event.getTarget().getBlockPos();
+        val position = hit.getBlockPos();
         val player = event.getPlayer();
         val world = player.world;
-        val state = world.getBlockState(pos);
+        val state = world.getBlockState(position);
 
-        if (state.getBlock() != BamboozledBlocks.BAMBOO) {
+        if (BamboozledBlocks.BAMBOO != state.getBlock()) {
             return;
         }
 
-        val actual = state.getActualState(world, pos);
-        val up = actual.getValue(BlockBamboo.PROP_SIDES.get(EnumFacing.UP));
-        val boxes = Lists.newArrayList(up ? BlockBamboo.AABB_NORMAL : BlockBamboo.AABB_NORMAL_TOP);
+        val actualState = state.getActualState(world, position);
+        val up = actualState.getValue(BlockBamboo.SIDES.get(EnumFacing.UP));
+        val boxes = Lists.newArrayList(up ? BlockBamboo.FANCY_AABB : BlockBamboo.FANCY_AABB_TOP);
 
-        for (val side : BlockBamboo.AABB_SIDE.keySet()) {
-            if (actual.getValue(BlockBamboo.PROP_SIDES.get(side))) {
-                boxes.add(BlockBamboo.AABB_SIDE.get(side));
+        for (val facing : BlockBamboo.FANCY_AABB_SIDE.keySet()) {
+            val property = BlockBamboo.SIDES.get(facing);
+
+            if (actualState.getValue(property)) {
+                boxes.add(BlockBamboo.FANCY_AABB_SIDE.get(facing));
             }
         }
 
-        BoundingBoxes.renderAt(boxes, player, pos, event.getPartialTicks());
+        GlStateManager.disableAlpha();
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(
+            SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA,
+            SourceFactor.ONE, DestFactor.ZERO
+        );
+        GlStateManager.glLineWidth(2.0F);
+        GlStateManager.disableTexture2D();
+        GlStateManager.depthMask(false);
+
+        val partialTicks = event.getPartialTicks();
+        val x = position.getX() - (player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks);
+        val y = position.getY() - (player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks);
+        val z = position.getZ() - (player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks);
+
+        for (val box : boxes) {
+            RenderGlobal.drawSelectionBoundingBox(box.grow(0.002D).offset(x, y, z), 0.0F, 0.0F, 0.0F, 0.4F);
+        }
+
+        GlStateManager.depthMask(true);
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
 
         event.setCanceled(true);
     }
@@ -130,20 +156,25 @@ public final class BlockBamboo extends Block implements IPlantable {
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(final int meta) {
-        return this.getDefaultState().withProperty(BlockBamboo.PROP_AGE, meta);
+        val state = this.getDefaultState();
+        val age = meta % 16;
+
+        return state.withProperty(BlockBamboo.AGE, age);
     }
 
     @Override
     public int getMetaFromState(final IBlockState state) {
-        return state.getValue(BlockBamboo.PROP_AGE);
+        return state.getValue(BlockBamboo.AGE);
     }
 
     @Override
     @Deprecated
-    public IBlockState getActualState(final IBlockState state, final IBlockAccess access, final BlockPos pos) {
+    public IBlockState getActualState(final IBlockState state, final IBlockAccess access, final BlockPos position) {
         var actualState = state;
-        actualState = this.getLeavesForPos(actualState, pos);
-        actualState = this.getConnectionsForPos(actualState, access, pos);
+
+        actualState = this.getLeavesForPosition(actualState, position);
+        actualState = this.getSidesForPosition(actualState, access, position);
+
         return actualState;
     }
 
@@ -155,27 +186,34 @@ public final class BlockBamboo extends Block implements IPlantable {
 
     @Override
     @Deprecated
-    public BlockFaceShape getBlockFaceShape(final IBlockAccess access, final IBlockState state, final BlockPos pos, final EnumFacing face) {
+    public BlockFaceShape getBlockFaceShape(final IBlockAccess access, final IBlockState state, final BlockPos position, final EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 
     @Override
     @Deprecated
-    public void addCollisionBoxToList(final IBlockState state, final World world, final BlockPos pos, final AxisAlignedBB entityBox, final List<AxisAlignedBB> boxes, final Entity entity, final boolean isActualState) {
+    public void addCollisionBoxToList(final IBlockState state, final World world, final BlockPos position, final AxisAlignedBB entityBox, final List<AxisAlignedBB> boxes, final Entity entity, final boolean isActualState) {
         if (!Bamboozled.getConfig().isFancyBambooEnabled()) {
-            Block.addCollisionBoxToList(pos, entityBox, boxes, BlockBamboo.AABB_SIMPLE);
+            Block.addCollisionBoxToList(position, entityBox, boxes, BlockBamboo.SIMPLE_AABB);
+
             return;
         }
 
-        val actual = state.getActualState(world, pos);
+        val actualState = state.getActualState(world, position);
+        val up = BlockBamboo.SIDES.get(EnumFacing.UP);
+        val isUp = actualState.getValue(up);
 
-        for (val box : actual.getValue(BlockBamboo.PROP_SIDES.get(EnumFacing.UP)) ? BlockBamboo.AABB_NORMAL : BlockBamboo.AABB_NORMAL_TOP) {
-            Block.addCollisionBoxToList(pos, entityBox, boxes, box);
+        for (val box : isUp ? BlockBamboo.FANCY_AABB : BlockBamboo.FANCY_AABB_TOP) {
+            Block.addCollisionBoxToList(position, entityBox, boxes, box);
         }
 
-        for (val side : BlockBamboo.AABB_SIDE.keySet()) {
-            if (actual.getValue(BlockBamboo.PROP_SIDES.get(side))) {
-                Block.addCollisionBoxToList(pos, entityBox, boxes, BlockBamboo.AABB_SIDE.get(side));
+        for (val facing : BlockBamboo.FANCY_AABB_SIDE.keySet()) {
+            val property = BlockBamboo.SIDES.get(facing);
+
+            if (actualState.getValue(property)) {
+                val box = BlockBamboo.FANCY_AABB_SIDE.get(facing);
+
+                Block.addCollisionBoxToList(position, entityBox, boxes, box);
             }
         }
     }
@@ -187,66 +225,102 @@ public final class BlockBamboo extends Block implements IPlantable {
     }
 
     @Override
-    public void updateTick(final World world, final BlockPos pos, final IBlockState state, final Random rand) {
-        this.checkForDrop(state, world, pos);
+    public void updateTick(final World world, final BlockPos position, final IBlockState state, final Random rand) {
+        if (!world.isRemote && !this.canPlaceBlockAt(world, position)) {
+            world.destroyBlock(position, true);
+        }
 
-        if (world.isAirBlock(pos.up())) {
-            var i = 1;
+        val above = position.up();
 
-            while (world.getBlockState(pos.down(i)).getBlock() == this) {
-                ++i;
+        if (!world.isAirBlock(above)) {
+            return;
+        }
+
+        var i = 1;
+
+        while (this == world.getBlockState(position.down(i)).getBlock()) {
+            ++i;
+        }
+
+        if (6 > i && ForgeHooks.onCropsGrowPre(world, position, state, true)) {
+            val age = state.getValue(BlockBamboo.AGE);
+
+            if (15 == age) {
+                world.setBlockState(above, this.getDefaultState());
+                world.setBlockState(position, state.withProperty(BlockBamboo.AGE, 0), 4);
+            } else {
+                world.setBlockState(position, state.withProperty(BlockBamboo.AGE, age + 1), 4);
             }
 
-            if (i < 6 && ForgeHooks.onCropsGrowPre(world, pos, state, true)) {
-                val age = state.getValue(BlockBamboo.PROP_AGE);
-
-                if (age == 15) {
-                    world.setBlockState(pos.up(), this.getDefaultState());
-                    world.setBlockState(pos, state.withProperty(BlockBamboo.PROP_AGE, 0), 4);
-                } else {
-                    world.setBlockState(pos, state.withProperty(BlockBamboo.PROP_AGE, age + 1), 4);
-                }
-
-                ForgeHooks.onCropsGrowPost(world, pos, state, world.getBlockState(pos));
-            }
+            ForgeHooks.onCropsGrowPost(world, position, state, world.getBlockState(position));
         }
     }
 
     @Override
     @Deprecated
-    public void neighborChanged(final IBlockState state, final World world, final BlockPos pos, final Block block, final BlockPos fromPos) {
-        this.checkForDrop(state, world, pos);
+    public void neighborChanged(final IBlockState state, final World world, final BlockPos position, final Block neighbor, final BlockPos offset) {
+        if (!world.isRemote && !this.canPlaceBlockAt(world, position)) {
+            world.destroyBlock(position, true);
+        }
     }
 
     @Override
-    public void onBlockAdded(final World world, final BlockPos pos, final IBlockState state) {
-        this.checkForDrop(state, world, pos);
+    public void onBlockAdded(final World world, final BlockPos position, final IBlockState state) {
+        if (!world.isRemote && !this.canPlaceBlockAt(world, position)) {
+            world.destroyBlock(position, true);
+        }
     }
 
     @Override
     @Deprecated
     @Nullable
-    public RayTraceResult collisionRayTrace(final IBlockState state, final World world, final BlockPos pos, final Vec3d start, final Vec3d end) {
+    public RayTraceResult collisionRayTrace(final IBlockState state, final World world, final BlockPos position, final Vec3d start, final Vec3d end) {
         if (!Bamboozled.getConfig().isFancyBambooEnabled()) {
-            return this.rayTrace(pos, start, end, BlockBamboo.AABB_SIMPLE);
+            return this.rayTrace(position, start, end, BlockBamboo.SIMPLE_AABB);
         }
 
-        val boxes = Lists.<AxisAlignedBB>newArrayList();
-        val actual = state.getActualState(world, pos);
+        val actualState = state.getActualState(world, position);
+        val up = actualState.getValue(BlockBamboo.SIDES.get(EnumFacing.UP));
+        val boxes = Lists.newArrayList(up ? BlockBamboo.FANCY_AABB : BlockBamboo.FANCY_AABB_TOP);
 
-        if (actual.getValue(BlockBamboo.PROP_SIDES.get(EnumFacing.UP))) {
-            boxes.addAll(BlockBamboo.AABB_NORMAL);
-        } else {
-            boxes.addAll(BlockBamboo.AABB_NORMAL_TOP);
-        }
+        for (val facing : BlockBamboo.FANCY_AABB_SIDE.keySet()) {
+            val property = BlockBamboo.SIDES.get(facing);
 
-        for (val side : BlockBamboo.AABB_SIDE.keySet()) {
-            if (actual.getValue(BlockBamboo.PROP_SIDES.get(side))) {
-                boxes.add(BlockBamboo.AABB_SIDE.get(side));
+            if (actualState.getValue(property)) {
+                boxes.add(BlockBamboo.FANCY_AABB_SIDE.get(facing));
             }
         }
 
-        return BoundingBoxes.rayTrace(boxes, pos, start, end);
+        val x = position.getX();
+        val y = position.getY();
+        val z = position.getZ();
+        val hits = Lists.<RayTraceResult>newArrayList();
+        val a = start.subtract(x, y, z);
+        val b = end.subtract(x, y, z);
+
+        for (val box : boxes) {
+            @Nullable val hit = box.calculateIntercept(a, b);
+
+            if (hit != null) {
+                val vec = hit.hitVec.add(x, y, z);
+
+                hits.add(new RayTraceResult(vec, hit.sideHit, position));
+            }
+        }
+
+        @Nullable RayTraceResult ret = null;
+        var sqrDis = 0.0D;
+
+        for (val hit : hits) {
+            val newSqrDis = hit.hitVec.squareDistanceTo(end);
+
+            if (newSqrDis > sqrDis) {
+                ret = hit;
+                sqrDis = newSqrDis;
+            }
+        }
+
+        return ret;
     }
 
     @Override
@@ -256,56 +330,71 @@ public final class BlockBamboo extends Block implements IPlantable {
     }
 
     @Override
-    public boolean canPlaceBlockAt(final World world, final BlockPos pos) {
-        val state = world.getBlockState(pos.down());
+    public boolean canPlaceBlockAt(final World world, final BlockPos position) {
+        val below = position.down();
+        val state = world.getBlockState(below);
+        val block = state.getBlock();
 
-        if (state.getBlock() == this) {
-            return true;
-        }
-
-        return state.getBlock().canSustainPlant(state, world, pos.down(), EnumFacing.UP, (IPlantable) Blocks.SAPLING);
+        return this == block || block.canSustainPlant(state, world, below, EnumFacing.UP, (IPlantable) Blocks.SAPLING);
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
         val builder = new BlockStateContainer.Builder(this);
-        builder.add(BlockBamboo.PROP_AGE, BlockBamboo.PROP_LEAVES);
-        BlockBamboo.PROP_SIDES.values().forEach(builder::add);
+
+        builder.add(BlockBamboo.AGE, BlockBamboo.LEAVES);
+        BlockBamboo.SIDES.values().forEach(builder::add);
+
         return builder.build();
     }
 
     @Override
-    public boolean doesSideBlockRendering(final IBlockState state, final IBlockAccess access, final BlockPos pos, final EnumFacing side) {
-        return side.getAxis().isVertical() && access.getBlockState(pos.offset(side)).getBlock() == this;
-    }
-
-    @Override
-    public EnumPlantType getPlantType(final IBlockAccess access, final BlockPos pos) {
-        return Bamboozled.TROPICAL_PLANT_TYPE;
-    }
-
-    @Override
-    public IBlockState getPlant(final IBlockAccess world, final BlockPos pos) {
-        return world.getBlockState(pos);
-    }
-
-    private IBlockState getConnectionsForPos(IBlockState state, final IBlockAccess access, final BlockPos pos) {
-        for (val side : BlockBamboo.PROP_SIDES.keySet()) {
-            val block = access.getBlockState(pos.offset(side)).getBlock();
-            state = state.withProperty(BlockBamboo.PROP_SIDES.get(side), block == this);
+    public boolean doesSideBlockRendering(final IBlockState state, final IBlockAccess access, final BlockPos position, final EnumFacing face) {
+        if (face.getAxis().isHorizontal()) {
+            return false;
         }
+
+        val offset = position.offset(face);
+        val other = access.getBlockState(offset);
+
+        return this == other.getBlock();
+    }
+
+    @Override
+    public EnumPlantType getPlantType(final IBlockAccess access, final BlockPos position) {
+        return Bamboozled.getTropicalPlantType();
+    }
+
+    @Override
+    public IBlockState getPlant(final IBlockAccess access, final BlockPos position) {
+        val state = access.getBlockState(position);
+
+        if (this != state.getBlock()) {
+            throw new IllegalStateException("Expected " + this.getRegistryName() + ", received " + state);
+        }
+
         return state;
     }
 
-    private IBlockState getLeavesForPos(final IBlockState state, final BlockPos pos) {
-        val rand = new Random(MathHelper.getCoordinateRandom(pos.getX(), pos.getY(), pos.getZ()));
-        return state.withProperty(BlockBamboo.PROP_LEAVES, rand.nextInt(4));
+    private IBlockState getSidesForPosition(IBlockState state, final IBlockAccess access, final BlockPos position) {
+        for (val facing : BlockBamboo.SIDES.keySet()) {
+            val offset = position.offset(facing);
+            val other = access.getBlockState(offset);
+            val block = other.getBlock();
+            val property = BlockBamboo.SIDES.get(facing);
+
+            state = state.withProperty(property, this == block);
+        }
+
+        return state;
     }
 
-    private void checkForDrop(final IBlockState state, final World world, final BlockPos pos) {
-        if (!this.canPlaceBlockAt(world, pos)) {
-            this.dropBlockAsItem(world, pos, state, 0);
-            world.setBlockToAir(pos);
-        }
+    private IBlockState getLeavesForPosition(final IBlockState state, final BlockPos position) {
+        val x = position.getX();
+        val y = position.getY();
+        val z = position.getZ();
+        val seed = MathHelper.getCoordinateRandom(x, y, z);
+
+        return state.withProperty(BlockBamboo.LEAVES, new Random(seed).nextInt(4));
     }
 }

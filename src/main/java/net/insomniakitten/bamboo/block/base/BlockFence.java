@@ -27,16 +27,20 @@ public class BlockFence extends net.minecraft.block.BlockFence {
     }
 
     @Override
-    public boolean doesSideBlockRendering(final IBlockState state, final IBlockAccess access, final BlockPos pos, final EnumFacing side) {
-        return access.getBlockState(pos.offset(side)).getBlock() == this;
+    public boolean doesSideBlockRendering(final IBlockState state, final IBlockAccess access, final BlockPos position, final EnumFacing face) {
+        val offset = position.offset(face);
+        val other = access.getBlockState(offset);
+
+        return this == other.getBlock();
     }
 
     @Override
     @Deprecated
     @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(final IBlockState state, final IBlockAccess access, final BlockPos pos, final EnumFacing side) {
-        val offset = pos.offset(side);
+    public boolean shouldSideBeRendered(final IBlockState state, final IBlockAccess access, final BlockPos position, final EnumFacing face) {
+        val offset = position.offset(face);
         val other = access.getBlockState(offset);
-        return other.getBlock() != this && !other.doesSideBlockRendering(access, offset, side.getOpposite());
+
+        return this != other.getBlock() && !other.doesSideBlockRendering(access, offset, face.getOpposite());
     }
 }

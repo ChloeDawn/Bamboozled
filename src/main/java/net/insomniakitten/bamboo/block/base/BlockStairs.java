@@ -1,5 +1,6 @@
 package net.insomniakitten.bamboo.block.base;
 
+import lombok.val;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -48,19 +49,25 @@ public class BlockStairs extends net.minecraft.block.BlockStairs {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void randomDisplayTick(final IBlockState state, final World world, final BlockPos pos, final Random rand) {}
+    public void randomDisplayTick(final IBlockState state, final World world, final BlockPos position, final Random rand) {
+
+    }
 
     @Override
-    public void onBlockClicked(final World world, final BlockPos pos, final EntityPlayer player) {}
+    public void onBlockClicked(final World world, final BlockPos position, final EntityPlayer player) {
+
+    }
 
     @Override
-    public void onPlayerDestroy(final World world, final BlockPos pos, final IBlockState state) {}
+    public void onPlayerDestroy(final World world, final BlockPos position, final IBlockState state) {
+
+    }
 
     @Override
     @Deprecated
     @SideOnly(Side.CLIENT)
-    public int getPackedLightmapCoords(final IBlockState state, final IBlockAccess access, final BlockPos pos) {
-        return access.getCombinedLight(pos, state.getLightValue(access, pos));
+    public int getPackedLightmapCoords(final IBlockState state, final IBlockAccess access, final BlockPos position) {
+        return access.getCombinedLight(position, state.getLightValue(access, position));
     }
 
     @Override
@@ -74,7 +81,7 @@ public class BlockStairs extends net.minecraft.block.BlockStairs {
     }
 
     @Override
-    public Vec3d modifyAcceleration(final World world, final BlockPos pos, final Entity entity, final Vec3d motion) {
+    public Vec3d modifyAcceleration(final World world, final BlockPos position, final Entity entity, final Vec3d motion) {
         return motion;
     }
 
@@ -87,8 +94,8 @@ public class BlockStairs extends net.minecraft.block.BlockStairs {
     @Override
     @Deprecated
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBox(final IBlockState state, final World world, final BlockPos pos) {
-        return Block.FULL_BLOCK_AABB.offset(pos);
+    public AxisAlignedBB getSelectedBoundingBox(final IBlockState state, final World world, final BlockPos position) {
+        return Block.FULL_BLOCK_AABB.offset(position);
     }
 
     @Override
@@ -102,33 +109,46 @@ public class BlockStairs extends net.minecraft.block.BlockStairs {
     }
 
     @Override
-    public boolean canPlaceBlockAt(final World world, final BlockPos pos) {
-        return world.getBlockState(pos).getBlock().isReplaceable(world, pos);
+    public boolean canPlaceBlockAt(final World world, final BlockPos position) {
+        val state = world.getBlockState(position);
+        val block = state.getBlock();
+
+        return block.isReplaceable(world, position);
     }
 
     @Override
-    public void onBlockAdded(final World world, final BlockPos pos, final IBlockState state) {}
+    public void onBlockAdded(final World world, final BlockPos position, final IBlockState state) {
+
+    }
 
     @Override
-    public void breakBlock(final World world, final BlockPos pos, final IBlockState state) {}
+    public void breakBlock(final World world, final BlockPos position, final IBlockState state) {
+
+    }
 
     @Override
-    public void onEntityWalk(final World world, final BlockPos pos, final Entity entity) {}
+    public void onEntityWalk(final World world, final BlockPos position, final Entity entity) {
+
+    }
 
     @Override
-    public void updateTick(final World world, final BlockPos pos, final IBlockState state, final Random rand) {}
+    public void updateTick(final World world, final BlockPos position, final IBlockState state, final Random random) {
+
+    }
 
     @Override
-    public boolean onBlockActivated(final World world, final BlockPos pos, final IBlockState state, final EntityPlayer player, final EnumHand hand, final EnumFacing facing, final float hitX, final float hitY, final float hitZ) {
+    public boolean onBlockActivated(final World world, final BlockPos position, final IBlockState state, final EntityPlayer player, final EnumHand hand, final EnumFacing face, final float x, final float y, final float z) {
         return false;
     }
 
     @Override
-    public void onExplosionDestroy(final World world, final BlockPos pos, final Explosion explosion) {}
+    public void onExplosionDestroy(final World world, final BlockPos position, final Explosion explosion) {
+
+    }
 
     @Override
     @Deprecated
-    public MapColor getMapColor(final IBlockState state, final IBlockAccess access, final BlockPos pos) {
+    public MapColor getMapColor(final IBlockState state, final IBlockAccess access, final BlockPos position) {
         return this.mapColor;
     }
 }

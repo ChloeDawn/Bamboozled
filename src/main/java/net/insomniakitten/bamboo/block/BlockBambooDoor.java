@@ -1,9 +1,10 @@
 package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableMap;
-import lombok.experimental.var;
+import com.google.common.collect.Maps;
 import lombok.val;
-import net.insomniakitten.bamboo.BamboozledItems;
+import lombok.var;
+import net.insomniakitten.bamboo.util.LazyBlockItem;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -11,6 +12,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -21,14 +23,19 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
 public final class BlockBambooDoor extends BlockDoor {
-    private static final ImmutableMap<EnumFacing, AxisAlignedBB> AABB = ImmutableMap.of(
-        EnumFacing.NORTH, new AxisAlignedBB(0.0D, 0.0D, 0.8125D, 1.0D, 1.0D, 1.0D),
-        EnumFacing.SOUTH, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 0.1875D),
-        EnumFacing.WEST, new AxisAlignedBB(0.8125D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D),
-        EnumFacing.EAST, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.1875D, 1.0D, 1.0D)
+    public static final ImmutableMap<EnumFacing, AxisAlignedBB> FACING_AABB = Maps.immutableEnumMap(
+        ImmutableMap.of(
+            EnumFacing.NORTH, new AxisAlignedBB(0.0D, 0.0D, 0.8125D, 1.0D, 1.0D, 1.0D),
+            EnumFacing.SOUTH, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 0.1875D),
+            EnumFacing.WEST, new AxisAlignedBB(0.8125D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D),
+            EnumFacing.EAST, new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.1875D, 1.0D, 1.0D)
+        )
     );
+
+    private final Supplier<ItemBlock> item = new LazyBlockItem(this);
 
     public BlockBambooDoor() {
         super(Material.WOOD);
@@ -38,20 +45,20 @@ public final class BlockBambooDoor extends BlockDoor {
     }
 
     @Override
-    public Item getItemDropped(final IBlockState state, final Random rand, final int fortune) {
-        return state.getValue(BlockDoor.HALF) == EnumDoorHalf.LOWER ? BamboozledItems.BAMBOO_DOOR : Items.AIR;
+    public Item getItemDropped(final IBlockState state, final Random random, final int fortune) {
+        return EnumDoorHalf.LOWER == state.getValue(BlockDoor.HALF) ? this.item.get() : Items.AIR;
     }
 
     @Override
-    public ItemStack getItem(final World world, final BlockPos pos, final IBlockState state) {
-        return new ItemStack(BamboozledItems.BAMBOO_DOOR);
+    public ItemStack getItem(final World world, final BlockPos position, final IBlockState state) {
+        return new ItemStack(this.item.get());
     }
 
     @Override
     @Deprecated
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBox(final IBlockState state, final World world, final BlockPos pos) {
-        val actual = state.getActualState(world, pos);
+    public AxisAlignedBB getSelectedBoundingBox(final IBlockState state, final World world, final BlockPos position) {
+        val actual = state.getActualState(world, position);
         val open = actual.getValue(BlockDoor.OPEN);
         val left = actual.getValue(BlockDoor.HINGE) == EnumHingePosition.LEFT;
         var facing = actual.getValue(BlockDoor.FACING);
@@ -64,12 +71,11 @@ public final class BlockBambooDoor extends BlockDoor {
             facing = facing.getOpposite();
         }
 
-        return BlockBambooDoor.AABB.get(facing).offset(pos);
+        return BlockBambooDoor.FACING_AABB.get(facing).offset(position);
     }
 
     @Override
-    public ItemStack getPickBlock(final IBlockState state, final RayTraceResult target, final World world, final BlockPos pos, final EntityPlayer player) {
-        return new ItemStack(BamboozledItems.BAMBOO_DOOR);
+    public ItemStack getPickBlock(final IBlockState state, final RayTraceResult hit, final World world, final BlockPos position, final EntityPlayer player) {
+        return new ItemStack(this.item.get());
     }
 }
-

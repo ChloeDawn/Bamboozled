@@ -1,8 +1,9 @@
 package net.insomniakitten.bamboo.block;
 
 import lombok.val;
+import lombok.var;
 import net.insomniakitten.bamboo.Bamboozled;
-import net.insomniakitten.bamboo.BamboozledItems;
+import net.insomniakitten.bamboo.util.LazyBlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -16,6 +17,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
@@ -29,10 +31,15 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public final class BlockBambooBundle extends Block {
-    public static final IProperty<Axis> PROP_AXIS = PropertyEnum.create("axis", Axis.class);
-    public static final IProperty<Integer> PROP_DRIED = PropertyInteger.create("dried", 0, 3);
+    public static final IProperty<Axis> AXIS = PropertyEnum.create("axis", Axis.class);
+    public static final IProperty<Integer> DRIED = PropertyInteger.create("dried", 0, 3);
+
+    private static final Axis[] AXIS_BY_ORDINAL = Axis.values();
+
+    private final Supplier<ItemBlock> item = new LazyBlockItem(this);
 
     public BlockBambooBundle() {
         super(Material.PLANTS);
@@ -44,11 +51,11 @@ public final class BlockBambooBundle extends Block {
     }
 
     public static boolean isDry(final IBlockState state) {
-        return state.getValue(BlockBambooBundle.PROP_DRIED) == 3;
+        return 3 == state.getValue(BlockBambooBundle.DRIED);
     }
 
     public static boolean isDry(final int meta) {
-        return meta == 1;
+        return 1 == meta;
     }
 
     @Override
@@ -59,62 +66,76 @@ public final class BlockBambooBundle extends Block {
 
     @Override
     @Deprecated
-    public MapColor getMapColor(final IBlockState state, final IBlockAccess access, final BlockPos pos) {
+    public MapColor getMapColor(final IBlockState state, final IBlockAccess access, final BlockPos position) {
         return BlockBambooBundle.isDry(state) ? MapColor.WOOD : MapColor.GREEN;
     }
 
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(final int meta) {
-        return this.getDefaultState()
-            .withProperty(BlockBambooBundle.PROP_AXIS, Axis.values()[meta & 3])
-            .withProperty(BlockBambooBundle.PROP_DRIED, meta >> 2);
+        var state = this.getDefaultState();
+        val axis = BlockBambooBundle.AXIS_BY_ORDINAL[meta & 3];
+        val dried = meta >> 2;
+
+        state = state.withProperty(BlockBambooBundle.AXIS, axis);
+        state = state.withProperty(BlockBambooBundle.DRIED, dried);
+
+        return state;
     }
 
     @Override
     public int getMetaFromState(final IBlockState state) {
-        val axis = state.getValue(BlockBambooBundle.PROP_AXIS).ordinal();
-        val dried = state.getValue(BlockBambooBundle.PROP_DRIED) << 2;
+        val axis = state.getValue(BlockBambooBundle.AXIS).ordinal();
+        val dried = state.getValue(BlockBambooBundle.DRIED) << 2;
+
         return axis | dried;
     }
 
     @Override
     @Deprecated
     public IBlockState withRotation(final IBlockState state, final Rotation rotation) {
-        if (rotation == Rotation.CLOCKWISE_90 || rotation == Rotation.COUNTERCLOCKWISE_90) {
-            switch (state.getValue(BlockBambooBundle.PROP_AXIS)) {
-                case X: return state.withProperty(BlockBambooBundle.PROP_AXIS, Axis.Z);
+        if (Rotation.CLOCKWISE_90 == rotation || Rotation.COUNTERCLOCKWISE_90 == rotation) {
+            switch (state.getValue(BlockBambooBundle.AXIS)) {
+                case X: return state.withProperty(BlockBambooBundle.AXIS, Axis.Z);
                 case Y: break;
-                case Z: return state.withProperty(BlockBambooBundle.PROP_AXIS, Axis.X);
+                case Z: return state.withProperty(BlockBambooBundle.AXIS, Axis.X);
             }
         }
+
         return state;
     }
 
     @Override
-    public void updateTick(final World world, final BlockPos pos, final IBlockState state, final Random rand) {
+    public void updateTick(final World world, final BlockPos position, final IBlockState state, final Random rand) {
         if (!Bamboozled.getConfig().isInWorldBambooDryingEnabled()) {
             return;
         }
+
         if (world.isRemote || !world.isDaytime()) {
             return;
         }
-        if (!BlockBambooBundle.isDry(state) && world.canBlockSeeSky(pos.up())) {
-            world.setBlockState(pos, state.cycleProperty(BlockBambooBundle.PROP_DRIED));
+
+        if (!BlockBambooBundle.isDry(state) && world.canBlockSeeSky(position.up())) {
+            world.setBlockState(position, state.cycleProperty(BlockBambooBundle.DRIED));
         }
     }
 
     @Override
-    public void onFallenUpon(World world, BlockPos pos, Entity entity, float fallDistance) {
-        super.onFallenUpon(world, pos, entity, fallDistance * 0.5F);
+    public void onFallenUpon(final World world, final BlockPos position, final Entity entity, final float fallDistance) {
+        super.onFallenUpon(world, position, entity, fallDistance * 0.5F);
     }
 
     @Override
-    public void onLanded(World world, Entity entity) {
+    public void onLanded(final World world, final Entity entity) {
         if (entity.isSneaking()) {
             super.onLanded(world, entity);
-        } else if (entity.motionY < 0.0) {
+
+            return;
+        }
+
+        if (entity.motionY < 0.0) {
             entity.motionY = -entity.motionY * 0.66;
+
             if (!(entity instanceof EntityLivingBase)) {
                 entity.motionY *= 0.8;
             }
@@ -122,40 +143,45 @@ public final class BlockBambooBundle extends Block {
     }
 
     @Override
-    public void getSubBlocks(final CreativeTabs tab, final NonNullList<ItemStack> items) {
-        items.add(new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, 0));
-        items.add(new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, 1));
+    public void getSubBlocks(final CreativeTabs group, final NonNullList<ItemStack> items) {
+        items.add(new ItemStack(this.item.get(), 1, 0));
+        items.add(new ItemStack(this.item.get(), 1, 1));
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, BlockBambooBundle.PROP_AXIS, BlockBambooBundle.PROP_DRIED);
+        return new BlockStateContainer(this, BlockBambooBundle.AXIS, BlockBambooBundle.DRIED);
     }
 
     @Override
-    public void getDrops(final NonNullList<ItemStack> drops, final IBlockAccess access, final BlockPos pos, final IBlockState state, final int fortune) {
-        drops.add(new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, BlockBambooBundle.isDry(state) ? 1 : 0));
+    public void getDrops(final NonNullList<ItemStack> drops, final IBlockAccess access, final BlockPos position, final IBlockState state, final int fortune) {
+        drops.add(new ItemStack(this.item.get(), 1, BlockBambooBundle.isDry(state) ? 1 : 0));
     }
 
     @Override
-    public ItemStack getPickBlock(final IBlockState state, final RayTraceResult target, final World world, final BlockPos pos, final EntityPlayer player) {
-        return new ItemStack(BamboozledItems.BAMBOO_BUNDLE, 1, BlockBambooBundle.isDry(state) ? 1 : 0);
-    }
-
-    @Override // TODO More accurate rotation based on given 'axis'?
-    public boolean rotateBlock(final World world, final BlockPos pos, final EnumFacing axis) {
-        return world.setBlockState(pos, world.getBlockState(pos).cycleProperty(BlockBambooBundle.PROP_AXIS));
+    public ItemStack getPickBlock(final IBlockState state, final RayTraceResult hit, final World world, final BlockPos position, final EntityPlayer player) {
+        return new ItemStack(this.item.get(), 1, BlockBambooBundle.isDry(state) ? 1 : 0);
     }
 
     @Override
-    public SoundType getSoundType(final IBlockState state, final World world, final BlockPos pos, @Nullable final Entity entity) {
+    public boolean rotateBlock(final World world, final BlockPos position, final EnumFacing face) {
+        val state = world.getBlockState(position);
+        val block = state.getBlock();
+
+        return this == block && world.setBlockState(position, state.cycleProperty(BlockBambooBundle.AXIS));
+    }
+
+    @Override
+    public SoundType getSoundType(final IBlockState state, final World world, final BlockPos position, @Nullable final Entity entity) {
         return BlockBambooBundle.isDry(state) ? SoundType.WOOD : SoundType.PLANT;
     }
 
     @Override
-    public IBlockState getStateForPlacement(final World world, final BlockPos pos, final EnumFacing side, final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer, final EnumHand hand) {
-        return this.getDefaultState()
-            .withProperty(BlockBambooBundle.PROP_AXIS, side.getAxis())
-            .withProperty(BlockBambooBundle.PROP_DRIED, BlockBambooBundle.isDry(meta) ? 3 : 0);
+    public IBlockState getStateForPlacement(final World world, final BlockPos position, final EnumFacing face, final float x, final float y, final float z, final int meta, final EntityLivingBase placer, final EnumHand hand) {
+        val state = this.getDefaultState();
+        val axis = face.getAxis();
+        val dried = BlockBambooBundle.isDry(meta) ? 3 : 0;
+
+        return state.withProperty(BlockBambooBundle.AXIS, axis).withProperty(BlockBambooBundle.DRIED, dried);
     }
 }

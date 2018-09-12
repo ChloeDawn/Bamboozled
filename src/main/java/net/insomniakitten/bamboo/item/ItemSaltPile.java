@@ -42,12 +42,13 @@ public final class ItemSaltPile extends ItemBlock {
         player.getCooldownTracker().setCooldown(this, 10);
 
         if (!world.isRemote) {
-            val saltPile = new EntityThrownSaltPile(world, player);
-            saltPile.shoot(player, player.rotationPitch, player.rotationYaw, 0.0F, 1.5F, 1.0F);
-            world.spawnEntity(saltPile);
+            val entity = new EntityThrownSaltPile(world, player);
+
+            entity.shoot(player, player.rotationPitch, player.rotationYaw, 0.0F, 1.5F, 1.0F);
+            world.spawnEntity(entity);
         }
 
-        player.addStat(Objects.requireNonNull(StatList.getObjectUseStats(this), "objectUseStats"));
+        player.addStat(Objects.requireNonNull(StatList.getObjectUseStats(this), "StatList.getObjectUseStats(this)"));
 
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }

@@ -1,11 +1,11 @@
 package net.insomniakitten.bamboo.block;
 
-import lombok.experimental.var;
 import lombok.val;
+import lombok.var;
 import net.insomniakitten.bamboo.Bamboozled;
-import net.insomniakitten.bamboo.BamboozledBlocks;
-import net.insomniakitten.bamboo.BamboozledItems;
+import net.insomniakitten.bamboo.init.BamboozledItems;
 import net.insomniakitten.bamboo.entity.EntityFallingSaltBlock;
+import net.insomniakitten.bamboo.util.LazyBlockItem;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -13,6 +13,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.NonNullList;
@@ -23,8 +24,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
 public final class BlockSalt extends BlockFalling {
+    public static final int DUST_COLOR = 0xE9E9E9;
+
+    private final Supplier<ItemBlock> item = new LazyBlockItem(this);
+
     public BlockSalt() {
         super(Material.SAND);
         this.setHardness(0.5F);
@@ -32,43 +38,48 @@ public final class BlockSalt extends BlockFalling {
         this.setSoundType(SoundType.SAND);
     }
 
-    private boolean isEmpty(final IBlockAccess access, final BlockPos pos) {
-        val state = access.getBlockState(pos);
-        return state.getBlock().isAir(state, access, pos) && BlockFalling.canFallThrough(state);
-    }
-
     @Override
-    public void updateTick(final World world, final BlockPos pos, final IBlockState state, final Random rand) {
-        if (!world.isRemote && pos.getY() >= 0 && this.isEmpty(world, pos.down())) {
-            if (BlockFalling.fallInstantly || !world.isAreaLoaded(pos.add(-32, -32, -32), pos.add(32, 32, 32))) {
-                world.setBlockToAir(pos);
+    public void updateTick(final World world, final BlockPos position, final IBlockState state, final Random random) {
+        if (world.isRemote || position.getY() < 0 || !this.isEmpty(world, position.down())) {
+            return;
+        }
 
-                var target = pos.down();
+        if (BlockFalling.fallInstantly) {
+            world.setBlockToAir(position);
 
-                while (target.getY() > 0 && this.isEmpty(world, pos.down())) {
-                    target = target.down();
-                }
+            var below = position.down();
 
-                if (target.getY() > 0) {
-                    world.setBlockState(target.up(), world.getBlockState(pos));
-                }
-            } else {
-                val x = pos.getX() + 0.5D;
-                val y = pos.getY();
-                val z = pos.getZ() + 0.5D;
-                world.spawnEntity(new EntityFallingSaltBlock(world, x, y, z));
+            while (below.getY() > 0 && this.isEmpty(world, position.down())) {
+                below = below.down();
             }
+
+            if (below.getY() > 0) {
+                world.setBlockState(below.up(), world.getBlockState(position));
+            }
+
+            return;
+        }
+
+        val min = position.add(-32, -32, -32);
+        val max = position.add(32, 32, 32);
+
+        if (world.isAreaLoaded(min, max)) {
+            val x = position.getX() + 0.5D;
+            val y = position.getY();
+            val z = position.getZ() + 0.5D;
+
+            world.spawnEntity(new EntityFallingSaltBlock(world, x, y, z));
         }
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public int getDustColor(final IBlockState state) {
-        return 0xE9E9E9;
+        return BlockSalt.DUST_COLOR;
     }
 
     @Override
-    public void onEntityWalk(final World world, final BlockPos pos, final Entity entity) {
+    public void onEntityWalk(final World world, final BlockPos position, final Entity entity) {
         if (!Bamboozled.getConfig().isSaltUndeadDamageEnabled()) {
             return;
         }
@@ -85,9 +96,18 @@ public final class BlockSalt extends BlockFalling {
     }
 
     @Override
-    public void getDrops(final NonNullList<ItemStack> drops, final IBlockAccess access, final BlockPos pos, final IBlockState state, final int fortune) {
+    public void getDrops(final NonNullList<ItemStack> drops, final IBlockAccess access, final BlockPos position, final IBlockState state, final int fortune) {
         if (Bamboozled.getConfig().isSaltBlockDropsEnabled()) {
-            drops.add(new ItemStack(BamboozledBlocks.SALT_BLOCK));
-        } else drops.add(new ItemStack(BamboozledItems.SALT_PILE, 9));
+            drops.add(new ItemStack(this.item.get()));
+        } else {
+            drops.add(new ItemStack(BamboozledItems.SALT_PILE, 9));
+        }
+    }
+
+    private boolean isEmpty(final IBlockAccess access, final BlockPos position) {
+        val state = access.getBlockState(position);
+        val block = state.getBlock();
+
+        return block.isAir(state, access, position) && BlockFalling.canFallThrough(state);
     }
 }

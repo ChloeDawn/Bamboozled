@@ -2,13 +2,12 @@ package net.insomniakitten.bamboo.entity;
 
 import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
-import net.insomniakitten.bamboo.BamboozledBlocks;
-import net.insomniakitten.bamboo.BamboozledItems;
+import net.insomniakitten.bamboo.init.BamboozledBlocks;
+import net.insomniakitten.bamboo.init.BamboozledItems;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.crash.CrashReportCategory;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityFallingBlock;
@@ -19,27 +18,19 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public final class EntityFallingSaltBlock extends EntityFallingBlock {
-    public static final EntityEntryBuilder<Entity> ENTRY = EntityEntryBuilder
-        .create()
-        .entity(EntityFallingSaltBlock.class)
-        .id(new ResourceLocation(Bamboozled.ID, "falling_salt_block"), 0)
-        .name(Bamboozled.ID + ".falling_salt_block")
-        .tracker(256, 1, true);
+import javax.annotation.Nonnull;
+import java.util.Objects;
 
+public final class EntityFallingSaltBlock extends EntityFallingBlock {
     private static final DataParameter<BlockPos> ORIGIN = EntityDataManager.createKey(EntityFallingSaltBlock.class, DataSerializers.BLOCK_POS);
 
     private int fallTime;
 
-    @SuppressWarnings("unused")
     public EntityFallingSaltBlock(final World world) {
         super(world);
     }
@@ -63,10 +54,12 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
         return false;
     }
 
-    private boolean canDropAsItem(final BlockPos pos) {
+    private boolean canDropAsItem(final BlockPos position) {
         if (this.fallTime > 100) {
             if (!this.world.isRemote) {
-                if (pos.getY() < 1 || pos.getY() > 256) {
+                val y = position.getY();
+
+                if (1 > y || 256 < y) {
                     return true;
                 }
             }
@@ -75,8 +68,8 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
     }
 
     @Override
-    public void setOrigin(BlockPos pos) {
-        this.dataManager.set(EntityFallingSaltBlock.ORIGIN, pos);
+    public void setOrigin(final BlockPos position) {
+        this.dataManager.set(EntityFallingSaltBlock.ORIGIN, position);
     }
 
     @Override
@@ -107,10 +100,11 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
         this.prevPosZ = this.posZ;
 
         if (this.fallTime++ == 0) {
-            val pos = new BlockPos(this);
+            val position = new BlockPos(this);
+            val state = this.world.getBlockState(position);
 
-            if (this.world.getBlockState(pos).getBlock() == BamboozledBlocks.SALT_BLOCK) {
-                this.world.setBlockToAir(pos);
+            if (BamboozledBlocks.SALT_BLOCK == state.getBlock()) {
+                this.world.setBlockToAir(position);
             } else if (!this.world.isRemote) {
                 this.setDead();
                 return;
@@ -124,28 +118,34 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
         this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 
         if (!this.world.isRemote) {
-            val pos = new BlockPos(this);
+            val position = new BlockPos(this);
 
             if (this.onGround) {
-                val state = this.world.getBlockState(pos);
-                if (this.world.isAirBlock(new BlockPos(this.posX, this.posY - 0.01D, this.posZ)) && !(this.world
-                    .getBlockState(pos)
-                    .getMaterial() == Material.WATER) && BlockFalling.canFallThrough(this.world.getBlockState(new BlockPos(this.posX, this.posY - 0.01D, this.posZ)))) {
-                    this.onGround = false;
-                    return;
+                val state = this.world.getBlockState(position);
+                val below = new BlockPos(this.posX, this.posY - 0.01D, this.posZ);
+                val other = this.world.getBlockState(position);
+
+                if (Material.WATER != other.getMaterial() && this.world.isAirBlock(below)) {
+                    if (BlockFalling.canFallThrough(other)) {
+                        this.onGround = false;
+
+                        return;
+                    }
                 }
 
                 this.motionX *= 0.7D;
                 this.motionZ *= 0.7D;
                 this.motionY *= -0.5D;
 
-                if (state.getBlock() != Blocks.PISTON_EXTENSION) {
+                if (Blocks.PISTON_EXTENSION != state.getBlock()) {
                     this.setDead();
 
-                    if (this.world.mayPlace(BamboozledBlocks.SALT_BLOCK, pos, true, EnumFacing.UP, null) && (this.world
-                        .getBlockState(pos)
-                        .getMaterial() == Material.WATER || !BlockFalling.canFallThrough(this.world.getBlockState(pos.down())))) {
-                        this.world.setBlockState(pos, BamboozledBlocks.SALT_BLOCK.getDefaultState(), 3);
+                    val mayPlace = this.world.mayPlace(BamboozledBlocks.SALT_BLOCK, position, true, EnumFacing.UP, null);
+                    val isWater = this.world.getBlockState(position).getMaterial() == Material.WATER;
+                    val canFallThrough = BlockFalling.canFallThrough(this.world.getBlockState(position.down()));
+
+                    if (mayPlace && (isWater || !canFallThrough)) {
+                        this.world.setBlockState(position, BamboozledBlocks.SALT_BLOCK.getDefaultState(), 3);
                     } else if (this.shouldDropItem && this.world.getGameRules().getBoolean("doEntityDrops")) {
                         if (Bamboozled.getConfig().isSaltBlockDropsEnabled()) {
                             this.entityDropItem(new ItemStack(BamboozledBlocks.SALT_BLOCK), 0.0F);
@@ -155,7 +155,7 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
                     }
                 }
             } else {
-                if (this.canDropAsItem(pos)) {
+                if (this.canDropAsItem(position)) {
                     if (this.shouldDropItem && this.world.getGameRules().getBoolean("doEntityDrops")) {
                         if (Bamboozled.getConfig().isSaltBlockDropsEnabled()) {
                             this.entityDropItem(new ItemStack(BamboozledBlocks.SALT_BLOCK), 0.0F);
@@ -163,6 +163,7 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
                             this.entityDropItem(new ItemStack(BamboozledItems.SALT_PILE, 9), 0.0F);
                         }
                     }
+
                     this.setDead();
                 }
             }
@@ -173,38 +174,47 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
         this.motionZ *= 0.98D;
     }
 
-
-
     @Override
     public void fall(final float distance, final float damageMultiplier) {}
 
     @Override
     protected void writeEntityToNBT(final NBTTagCompound compound) {
-        compound.setInteger("fall_time", this.fallTime);
+        compound.setInteger("fall_time", this.fallTime); // TODO fall_time -> FallTime ?
     }
 
     @Override
     protected void readEntityFromNBT(final NBTTagCompound compound) {
-        this.fallTime = compound.getInteger("fall_time");
+        this.fallTime = compound.getInteger("fall_time"); // TODO fall_time -> FallTime ?
     }
 
     @Override
     public void addEntityCrashInfo(final CrashReportCategory category) {
-        category.addDetail("Entity Type", () -> EntityList.getKey(this) + " (" + this.getClass().getCanonicalName() + ")");
+        category.addDetail("Entity Type", () -> {
+            val key = Objects.requireNonNull(EntityList.getKey(this), "EntityList.getKey(this)");
+            return String.format("%s (%s)", key, this.getClass().getCanonicalName());
+        });
+
         category.addCrashSection("Entity ID", this.getEntityId());
         category.addDetail("Entity Name", this::getName);
-        category.addCrashSection("Entity's Exact location", String.format("%.2f, %.2f, %.2f", this.posX, this.posY, this.posZ));
-        category.addCrashSection("Entity's Block location", CrashReportCategory.getCoordinateInfo(MathHelper.floor(this.posX), MathHelper
-            .floor(this.posY), MathHelper.floor(this.posZ)));
-        category.addCrashSection("Entity's Momentum", String.format("%.2f, %.2f, %.2f", this.motionX, this.motionY, this.motionZ));
+
+        val x = this.posX;
+        val y = this.posY;
+        val z = this.posZ;
+
+        category.addCrashSection("Entity's Exact location", String.format("%.2f, %.2f, %.2f", x, y, z));
+
+        val location = CrashReportCategory.getCoordinateInfo(new BlockPos(x, y, z));
+
+        category.addCrashSection("Entity's Block location", location);
+
+        val mX = this.motionX;
+        val mY = this.motionY;
+        val mZ = this.motionZ;
+
+        category.addCrashSection("Entity's Momentum", String.format("%.2f, %.2f, %.2f", mX, mY, mZ));
+
         category.addDetail("Entity's Passengers", () -> this.getPassengers().toString());
         category.addDetail("Entity's Vehicle", () -> String.valueOf(this.getRidingEntity()));
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public World getWorldObj() {
-        return this.world;
     }
 
     @Override
@@ -214,6 +224,7 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
     }
 
     @Override
+    @Nonnull
     public IBlockState getBlock() {
         return BamboozledBlocks.SALT_BLOCK.getDefaultState();
     }

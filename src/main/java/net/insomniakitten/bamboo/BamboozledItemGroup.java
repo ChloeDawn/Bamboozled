@@ -1,25 +1,29 @@
 package net.insomniakitten.bamboo;
 
+import net.insomniakitten.bamboo.init.BamboozledItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class BamboozledItemGroup extends CreativeTabs {
+    private static final String TRANSLATION_KEY = "item_group." + Bamboozled.ID + ".label";
+
     static final CreativeTabs INSTANCE = new BamboozledItemGroup();
 
-    private final String translationKey = "item_group." + Bamboozled.ID + ".label";
-    private final ResourceLocation backgroundImage = new ResourceLocation(Bamboozled.ID, "textures/gui/item_group.png");
-
     private BamboozledItemGroup() {
-        super(Bamboozled.ID);
+        super("");
+    }
+
+    @Override
+    public String getTabLabel() {
+        return Bamboozled.ID;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public String getTranslationKey() {
-        return this.translationKey;
+        return BamboozledItemGroup.TRANSLATION_KEY;
     }
 
     @Override
@@ -38,11 +42,5 @@ public final class BamboozledItemGroup extends CreativeTabs {
     @SideOnly(Side.CLIENT)
     public boolean hasScrollbar() {
         return true;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public ResourceLocation getBackgroundImage() {
-        return this.backgroundImage;
     }
 }

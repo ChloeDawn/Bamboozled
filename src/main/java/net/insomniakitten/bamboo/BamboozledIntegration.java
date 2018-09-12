@@ -1,6 +1,7 @@
 package net.insomniakitten.bamboo;
 
 import lombok.val;
+import net.insomniakitten.bamboo.init.BamboozledBlocks;
 import net.minecraft.block.Block;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -8,11 +9,12 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 import java.util.Objects;
 
 public final class BamboozledIntegration {
-    private BamboozledIntegration() {}
+    private BamboozledIntegration() {
+        throw new UnsupportedOperationException("Cannot instantiate " + this.getClass());
+    }
 
-    static void onInitialization() {
-        BamboozledIntegration.addCharsetCarry(BamboozledBlocks.BAMBOO_CHEST);
-        BamboozledIntegration.addCharsetCarry(BamboozledBlocks.TRAPPED_BAMBOO_CHEST);
+    static void addCharsetCarries() {
+        BamboozledIntegration.addCharsetCarry(BamboozledBlocks.BAMBOO_CRATE);
     }
 
     private static void addCharsetCarry(final IForgeRegistryEntry<Block> block) {
