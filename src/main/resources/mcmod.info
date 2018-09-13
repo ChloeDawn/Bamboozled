@@ -3,7 +3,7 @@
     "modid": "bamboozled",
     "name": "Bamboozled",
     "description": "Adds bamboo that can be crafted into decorative blocks, and much more",
-    "version": "@mod.version@",
+    "version": "${mod.version}",
     "authorList": [ "InsomniaKitten" ]
   }
 ]

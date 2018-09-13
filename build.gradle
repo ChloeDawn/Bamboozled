@@ -1,5 +1,3 @@
-import org.apache.tools.ant.filters.ReplaceTokens
-
 buildscript {
   repositories {
     jcenter()
@@ -56,7 +54,12 @@ lombok {
 }
 
 processResources {
-  filesMatching(['**/*.info', '**/*.mcmeta', '**/*.json', '**/*.properties']) {
-    filter ReplaceTokens, tokens: ['mod.version': modVersion]
+  from(sourceSets.main.resources.srcDirs) {
+    include 'mcmod.info', 'pack.mcmeta', 'version.properties'
+    expand 'mod.version': modVersion
+  }
+
+  from(sourceSets.main.resources.srcDirs) {
+    exclude 'mcmod.info', 'pack.mcmeta', 'version.properties'
   }
 }
