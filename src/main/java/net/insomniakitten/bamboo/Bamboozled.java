@@ -104,6 +104,6 @@ public final class Bamboozled {
 
     @EventHandler
     void onInitialization(final FMLInitializationEvent event) {
-        BamboozledIntegration.addCharsetCarries();
+        BamboozledIntegration.init();
     }
 }
