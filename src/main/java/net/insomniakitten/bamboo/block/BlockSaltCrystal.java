@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 public final class BlockSaltCrystal extends Block {
     public static final IProperty<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
 
-    private final Supplier<ItemBlock> item = new LazyBlockItem<>(this);
+    private final Supplier<ItemBlock> item = LazyBlockItem.of(this);
 
     public BlockSaltCrystal() {
         super(Material.ROCK, MapColor.SNOW);

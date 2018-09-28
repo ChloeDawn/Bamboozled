@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 public class BlockPlanks extends Block {
     private static final IProperty<Orientation> ORIENTATION = PropertyEnum.create("orientation", Orientation.class);
 
-    private final Supplier<ItemBlock> item = new LazyBlockItem(this);
+    private final Supplier<ItemBlock> item = LazyBlockItem.of(this);
 
     public BlockPlanks() {
         super(Material.WOOD);

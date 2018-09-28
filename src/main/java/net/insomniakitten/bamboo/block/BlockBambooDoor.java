@@ -36,7 +36,7 @@ public final class BlockBambooDoor extends BlockDoor {
         )
     );
 
-    private final Supplier<Item> item = new LazyBlockItem<>(this, it -> {
+    private final Supplier<Item> item = LazyBlockItem.of(this, it -> {
         val name = Objects.requireNonNull(it.getRegistryName(), "registryName");
 
         return ForgeRegistries.ITEMS.getValue(name);

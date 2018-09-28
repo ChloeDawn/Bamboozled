@@ -18,13 +18,17 @@ public final class LazyBlockItem<T extends Item> implements Supplier<T> {
     @Nullable
     private T item;
 
-    public LazyBlockItem(final Block block, final Function<Block, T> function) {
+    private LazyBlockItem(final Block block, final Function<Block, T> function) {
         this.block = block;
         this.function = function;
     }
 
-    public LazyBlockItem(final Block block) {
-        this(block, LazyBlockItem::lookupTypedItem);
+    public static <T extends Item> Supplier<T> of(final Block block) {
+        return new LazyBlockItem<>(block, LazyBlockItem::lookupTypedItem);
+    }
+
+    public static <T extends Item> Supplier<T> of(final Block block, final Function<Block, T> function) {
+        return new LazyBlockItem<>(block, function);
     }
 
     @Override

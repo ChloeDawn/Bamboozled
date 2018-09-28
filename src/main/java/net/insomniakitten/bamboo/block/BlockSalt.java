@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 public final class BlockSalt extends BlockFalling {
     public static final int DUST_COLOR = 0xE9E9E9;
 
-    private final Supplier<ItemBlock> item = new LazyBlockItem<>(this);
+    private final Supplier<ItemBlock> item = LazyBlockItem.of(this);
 
     public BlockSalt() {
         super(Material.SAND);

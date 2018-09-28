@@ -39,7 +39,7 @@ public final class BlockBambooBundle extends Block {
 
     private static final Axis[] AXIS_BY_ORDINAL = Axis.values();
 
-    private final Supplier<ItemBlock> item = new LazyBlockItem<>(this);
+    private final Supplier<ItemBlock> item = LazyBlockItem.of(this);
 
     public BlockBambooBundle() {
         super(Material.PLANTS);
