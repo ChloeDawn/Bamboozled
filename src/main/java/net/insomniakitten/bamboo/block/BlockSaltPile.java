@@ -2,8 +2,6 @@ package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import lombok.val;
-import lombok.var;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -71,11 +69,11 @@ public final class BlockSaltPile extends Block {
     @Override
     @Deprecated
     public IBlockState getActualState(final IBlockState state, final IBlockAccess access, final BlockPos position) {
-        var actualState = state;
+        IBlockState actualState = state;
 
-        for (val facing : BlockSaltPile.CONNECTIONS.keySet()) {
-            val property = BlockSaltPile.CONNECTIONS.get(facing);
-            val connection = this.getConnection(access, position, facing);
+        for (final EnumFacing facing : BlockSaltPile.CONNECTIONS.keySet()) {
+            final IProperty<Connection> property = BlockSaltPile.CONNECTIONS.get(facing);
+            final Connection connection = this.getConnection(access, position, facing);
 
             actualState = actualState.withProperty(property, connection);
         }
@@ -97,8 +95,8 @@ public final class BlockSaltPile extends Block {
     @Override
     @Deprecated
     public AxisAlignedBB getBoundingBox(final IBlockState state, final IBlockAccess access, final BlockPos position) {
-        val actualState = state.getActualState(access, position);
-        val index = this.getBoundingBoxIndex(actualState);
+        final IBlockState actualState = state.getActualState(access, position);
+        final int index = this.getBoundingBoxIndex(actualState);
 
         return BlockSaltPile.CONNECTION_AABB.get(index);
     }
@@ -145,9 +143,9 @@ public final class BlockSaltPile extends Block {
 
     @Override
     public boolean canPlaceBlockAt(final World world, final BlockPos position) {
-        val below = position.down();
-        val state = world.getBlockState(below);
-        val shape = state.getBlockFaceShape(world, below, EnumFacing.UP);
+        final BlockPos below = position.down();
+        final IBlockState state = world.getBlockState(below);
+        final BlockFaceShape shape = state.getBlockFaceShape(world, below, EnumFacing.UP);
 
         return BlockFaceShape.SOLID == shape;
     }
@@ -171,7 +169,7 @@ public final class BlockSaltPile extends Block {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        val builder = new BlockStateContainer.Builder(this);
+        final BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
 
         BlockSaltPile.CONNECTIONS.values().forEach(builder::add);
 
@@ -180,12 +178,12 @@ public final class BlockSaltPile extends Block {
 
     @SuppressWarnings("OverlyComplexBooleanExpression")
     private int getBoundingBoxIndex(final IBlockState state) {
-        val n = this.getConnection(state, EnumFacing.NORTH).isConnected();
-        val s = this.getConnection(state, EnumFacing.SOUTH).isConnected();
-        val e = this.getConnection(state, EnumFacing.EAST).isConnected();
-        val w = this.getConnection(state, EnumFacing.WEST).isConnected();
+        final boolean n = this.getConnection(state, EnumFacing.NORTH).isConnected();
+        final boolean s = this.getConnection(state, EnumFacing.SOUTH).isConnected();
+        final boolean e = this.getConnection(state, EnumFacing.EAST).isConnected();
+        final boolean w = this.getConnection(state, EnumFacing.WEST).isConnected();
 
-        var index = 0;
+        int index = 0;
 
         if (n || s && !e && !w) {
             index |= 1 << EnumFacing.NORTH.getHorizontalIndex();
@@ -207,7 +205,7 @@ public final class BlockSaltPile extends Block {
     }
 
     private Connection getConnection(final IBlockAccess access, final BlockPos position, final EnumFacing face) {
-        val offset = position.offset(face);
+        final BlockPos offset = position.offset(face);
 
         if (this == access.getBlockState(offset).getBlock()) {
             return Connection.SIDE;
@@ -225,7 +223,7 @@ public final class BlockSaltPile extends Block {
     }
 
     private Connection getConnection(final IBlockState state, final EnumFacing face) {
-        val property = BlockSaltPile.CONNECTIONS.get(face);
+        final IProperty<Connection> property = BlockSaltPile.CONNECTIONS.get(face);
 
         return state.getValue(property);
     }

@@ -1,9 +1,9 @@
 package net.insomniakitten.bamboo.util;
 
-import lombok.val;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
@@ -49,10 +49,10 @@ public final class LazyBlockItem<T extends Item> implements Supplier<T> {
     }
 
     private void setItem() {
-        val item = this.function.apply(this.block);
+        final T item = this.function.apply(this.block);
 
         if (Items.AIR == item) {
-            val name = Objects.requireNonNull(this.block.getRegistryName());
+            final ResourceLocation name = Objects.requireNonNull(this.block.getRegistryName());
 
             throw new IllegalStateException("Missing an item mapping: " + name);
         }
@@ -64,7 +64,7 @@ public final class LazyBlockItem<T extends Item> implements Supplier<T> {
         final Item item = Item.getItemFromBlock(block);
 
         if (Items.AIR == item) {
-            val name = Objects.requireNonNull(block.getRegistryName());
+            final ResourceLocation name = Objects.requireNonNull(block.getRegistryName());
 
             throw new IllegalStateException("Missing an item mapping: " + name);
         }
@@ -83,8 +83,8 @@ public final class LazyBlockItem<T extends Item> implements Supplier<T> {
                 throw new AssertionError("Existential crisis, could not find self", e1);
             }
 
-            val type = method.getGenericReturnType().getTypeName();
-            val name = Objects.requireNonNull(block.getRegistryName());
+            final String type = method.getGenericReturnType().getTypeName();
+            final ResourceLocation name = Objects.requireNonNull(block.getRegistryName());
 
             throw new IllegalStateException("Item mapping for '" + name + "' cannot be cast to '" + type + "'");
         }

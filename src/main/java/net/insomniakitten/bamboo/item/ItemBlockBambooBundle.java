@@ -1,6 +1,5 @@
 package net.insomniakitten.bamboo.item;
 
-import lombok.var;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.block.BlockBambooBundle;
 import net.insomniakitten.bamboo.item.base.ItemSubBlockBase;
@@ -34,12 +33,8 @@ public final class ItemBlockBambooBundle extends ItemSubBlockBase {
 
     @Override
     public String getTranslationKey(final ItemStack stack) {
-        var name = super.getTranslationKey(stack);
+        final String name = super.getTranslationKey(stack);
 
-        if (BlockBambooBundle.isDry(stack.getMetadata())) {
-            name += "_dried";
-        }
-
-        return name;
+        return BlockBambooBundle.isDry(stack.getMetadata()) ? name + "_dried" : name;
     }
 }

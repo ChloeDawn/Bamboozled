@@ -1,11 +1,10 @@
 package net.insomniakitten.bamboo.block;
 
-import lombok.val;
-import lombok.var;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.entity.EntityFallingSaltBlock;
 import net.insomniakitten.bamboo.init.BamboozledItems;
 import net.insomniakitten.bamboo.util.LazyBlockItem;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -47,7 +46,7 @@ public final class BlockSalt extends BlockFalling {
         if (BlockFalling.fallInstantly) {
             world.setBlockToAir(position);
 
-            var below = position.down();
+            BlockPos below = position.down();
 
             while (below.getY() > 0 && this.isEmpty(world, position.down())) {
                 below = below.down();
@@ -60,13 +59,13 @@ public final class BlockSalt extends BlockFalling {
             return;
         }
 
-        val min = position.add(-32, -32, -32);
-        val max = position.add(32, 32, 32);
+        final BlockPos min = position.add(-32, -32, -32);
+        final BlockPos max = position.add(32, 32, 32);
 
         if (world.isAreaLoaded(min, max)) {
-            val x = position.getX() + 0.5D;
-            val y = position.getY();
-            val z = position.getZ() + 0.5D;
+            final double x = position.getX() + 0.5D;
+            final double y = position.getY();
+            final double z = position.getZ() + 0.5D;
 
             world.spawnEntity(new EntityFallingSaltBlock(world, x, y, z));
         }
@@ -105,8 +104,8 @@ public final class BlockSalt extends BlockFalling {
     }
 
     private boolean isEmpty(final IBlockAccess access, final BlockPos position) {
-        val state = access.getBlockState(position);
-        val block = state.getBlock();
+        final IBlockState state = access.getBlockState(position);
+        final Block block = state.getBlock();
 
         return block.isAir(state, access, position) && BlockFalling.canFallThrough(state);
     }

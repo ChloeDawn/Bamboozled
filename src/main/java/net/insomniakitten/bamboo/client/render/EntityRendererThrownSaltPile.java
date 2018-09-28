@@ -1,6 +1,5 @@
 package net.insomniakitten.bamboo.client.render;
 
-import lombok.val;
 import net.insomniakitten.bamboo.entity.EntityThrownSaltPile;
 import net.insomniakitten.bamboo.init.BamboozledItems;
 import net.minecraft.client.Minecraft;
@@ -8,6 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -64,8 +64,8 @@ public final class EntityRendererThrownSaltPile extends Render<EntityThrownSaltP
     }
 
     private float getRotationAngle() {
-        val renderer = this.getEntityRenderer();
-        val options = renderer.options;
+        final RenderManager renderer = this.getEntityRenderer();
+        final GameSettings options = renderer.options;
 
         return renderer.playerViewX * (2 == options.thirdPersonView ? -1 : 1);
     }

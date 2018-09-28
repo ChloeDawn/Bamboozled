@@ -1,6 +1,5 @@
 package net.insomniakitten.bamboo.block;
 
-import lombok.val;
 import net.insomniakitten.bamboo.util.LazyBlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -35,29 +34,29 @@ public final class BlockSaltCrystal extends Block {
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(final int meta) {
-        val state = this.getDefaultState();
-        val variant = Variant.byOrdinal(meta);
+        final IBlockState state = this.getDefaultState();
+        final Variant variant = Variant.byOrdinal(meta);
 
         return state.withProperty(BlockSaltCrystal.VARIANT, variant);
     }
 
     @Override
     public int getMetaFromState(final IBlockState state) {
-        val variant = state.getValue(BlockSaltCrystal.VARIANT);
+        final Variant variant = state.getValue(BlockSaltCrystal.VARIANT);
 
         return variant.ordinal();
     }
 
     @Override
     public int damageDropped(final IBlockState state) {
-        val variant = state.getValue(BlockSaltCrystal.VARIANT);
+        final Variant variant = state.getValue(BlockSaltCrystal.VARIANT);
 
         return variant.ordinal();
     }
 
     @Override
     public void getSubBlocks(final CreativeTabs group, final NonNullList<ItemStack> items) {
-        for (val variant : BlockSaltCrystal.VARIANT.getAllowedValues()) {
+        for (final Variant variant : BlockSaltCrystal.VARIANT.getAllowedValues()) {
             items.add(new ItemStack(this.item.get(), 1, variant.ordinal()));
         }
     }

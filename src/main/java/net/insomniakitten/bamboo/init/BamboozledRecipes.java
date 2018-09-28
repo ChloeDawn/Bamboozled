@@ -1,8 +1,6 @@
 package net.insomniakitten.bamboo.init;
 
 import com.google.common.base.Stopwatch;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -13,14 +11,16 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 @ObjectHolder(Bamboozled.ID)
 @EventBusSubscriber(modid = Bamboozled.ID)
-@Log4j2(topic = Bamboozled.ID + ".recipes")
 public final class BamboozledRecipes {
+    private static final Logger LOGGER = Bamboozled.getLogger("recipes");
+
     private BamboozledRecipes() {
         throw new UnsupportedOperationException("Cannot instantiate " + this.getClass());
     }
@@ -29,13 +29,13 @@ public final class BamboozledRecipes {
     static void onRegisterRecipes(final RegistryEvent.Register<IRecipe> event) {
         BamboozledRecipes.LOGGER.info("Beginning recipe registration");
 
-        val stopwatch = Stopwatch.createStarted();
+        final Stopwatch stopwatch = Stopwatch.createStarted();
 
         GameRegistry.addSmelting(BamboozledItems.BAMBOO, new ItemStack(BamboozledItems.BAMBOO_DRIED, 1), 0.0F);
         GameRegistry.addSmelting(BamboozledItems.SALT_BLOCK, new ItemStack(BamboozledItems.SALT_PILE, 4), 0.0F);
         GameRegistry.addSmelting(new ItemStack(BamboozledItems.SALT_CRYSTAL_BLOCK, 1, 1), new ItemStack(BamboozledItems.SALT_CRYSTAL_BLOCK, 1, 2), 0.1F);
 
-        val elapsed = stopwatch.stop().elapsed(TimeUnit.MILLISECONDS);
+        final long elapsed = stopwatch.stop().elapsed(TimeUnit.MILLISECONDS);
 
         BamboozledRecipes.LOGGER.info("Recipe registration completed in {}ms", elapsed);
 
@@ -45,7 +45,7 @@ public final class BamboozledRecipes {
     private static void registerOres() {
         BamboozledRecipes.LOGGER.info("Beginning ore dictionary registration");
 
-        val stopwatch = Stopwatch.createStarted();
+        final Stopwatch stopwatch = Stopwatch.createStarted();
 
         BamboozledRecipes.registerOre(BamboozledItems.BAMBOO, 0, "bamboo");
         BamboozledRecipes.registerOre(BamboozledItems.BAMBOO_BUNDLE, 0, "blockBamboo");
@@ -75,7 +75,7 @@ public final class BamboozledRecipes {
         BamboozledRecipes.registerOre(BamboozledItems.ROPE_FENCE, 0, "fenceWood", "fenceRope");
         BamboozledRecipes.registerOre(BamboozledItems.BAMBOO_CRATE, 0, "chest", "chestBamboo", "crate", "crateBamboo");
 
-        val elapsed = stopwatch.stop().elapsed(TimeUnit.MILLISECONDS);
+        final long elapsed = stopwatch.stop().elapsed(TimeUnit.MILLISECONDS);
 
         BamboozledRecipes.LOGGER.info("Ore dictionary registration completed in {}ms", elapsed);
     }
@@ -83,9 +83,9 @@ public final class BamboozledRecipes {
     private static void registerOre(final Item item, final int meta, final String... ores) {
         BamboozledRecipes.LOGGER.debug("Registering ores {} for item '{}'", Arrays.toString(ores), item.getRegistryName());
 
-        val stack = new ItemStack(item, 1, meta);
+        final ItemStack stack = new ItemStack(item, 1, meta);
 
-        for (val ore : ores) {
+        for (final String ore : ores) {
             OreDictionary.registerOre(ore, stack);
         }
     }

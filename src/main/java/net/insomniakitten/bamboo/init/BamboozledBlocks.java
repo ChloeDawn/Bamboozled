@@ -1,8 +1,6 @@
 package net.insomniakitten.bamboo.init;
 
 import com.google.common.base.Stopwatch;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.block.BlockBamboo;
 import net.insomniakitten.bamboo.block.BlockBambooBundle;
@@ -31,12 +29,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.registries.IForgeRegistry;
+import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.TimeUnit;
 
 @ObjectHolder(Bamboozled.ID)
 @EventBusSubscriber(modid = Bamboozled.ID)
-@Log4j2(topic = Bamboozled.ID + ".blocks")
 public final class BamboozledBlocks {
     public static final Block BAMBOO = Blocks.AIR;
     public static final Block BAMBOO_BUNDLE = Blocks.AIR;
@@ -61,6 +59,8 @@ public final class BamboozledBlocks {
     public static final Block ROPE_FENCE = Blocks.AIR;
     public static final Block BAMBOO_CRATE = Blocks.AIR;
 
+    private static final Logger LOGGER = Bamboozled.getLogger("blocks");
+
     private BamboozledBlocks() {
         throw new UnsupportedOperationException("Cannot instantiate " + this.getClass());
     }
@@ -69,8 +69,8 @@ public final class BamboozledBlocks {
     static void onRegisterBlocks(final RegistryEvent.Register<Block> context) {
         BamboozledBlocks.LOGGER.info("Beginning block registration");
 
-        val stopwatch = Stopwatch.createStarted();
-        val registry = context.getRegistry();
+        final Stopwatch stopwatch = Stopwatch.createStarted();
+        final IForgeRegistry<Block> registry = context.getRegistry();
 
         BamboozledBlocks.registerBlock(registry, "bamboo", new BlockBamboo());
         BamboozledBlocks.registerBlock(registry, "bamboo_bundle", new BlockBambooBundle());
@@ -97,7 +97,7 @@ public final class BamboozledBlocks {
 
         BamboozledBlocks.registerBlockEntity(BlockEntityBambooCrate.class, "bamboo_crate");
 
-        val elapsed = stopwatch.stop().elapsed(TimeUnit.MILLISECONDS);
+        final long elapsed = stopwatch.stop().elapsed(TimeUnit.MILLISECONDS);
 
         BamboozledBlocks.LOGGER.info("Block registration completed in {}ms", elapsed);
     }

@@ -2,8 +2,6 @@ package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import lombok.val;
-import lombok.var;
 import net.insomniakitten.bamboo.util.LazyBlockItem;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.SoundType;
@@ -14,6 +12,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -37,7 +36,7 @@ public final class BlockBambooDoor extends BlockDoor {
     );
 
     private final Supplier<Item> item = LazyBlockItem.of(this, it -> {
-        val name = Objects.requireNonNull(it.getRegistryName(), "registryName");
+        final ResourceLocation name = Objects.requireNonNull(it.getRegistryName(), "registryName");
 
         return ForgeRegistries.ITEMS.getValue(name);
     });
@@ -63,10 +62,10 @@ public final class BlockBambooDoor extends BlockDoor {
     @Deprecated
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getSelectedBoundingBox(final IBlockState state, final World world, final BlockPos position) {
-        val actual = state.getActualState(world, position);
-        val open = actual.getValue(BlockDoor.OPEN);
-        val left = actual.getValue(BlockDoor.HINGE) == EnumHingePosition.LEFT;
-        var facing = actual.getValue(BlockDoor.FACING);
+        final IBlockState actual = state.getActualState(world, position);
+        final boolean open = actual.getValue(BlockDoor.OPEN);
+        final boolean left = actual.getValue(BlockDoor.HINGE) == EnumHingePosition.LEFT;
+        EnumFacing facing = actual.getValue(BlockDoor.FACING);
 
         if (open) {
             facing = facing.rotateYCCW();

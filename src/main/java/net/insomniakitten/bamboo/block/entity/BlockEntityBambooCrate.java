@@ -1,6 +1,6 @@
 package net.insomniakitten.bamboo.block.entity;
 
-import lombok.val;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -26,7 +26,8 @@ public final class BlockEntityBambooCrate extends TileEntity {
     };
 
     public IItemHandler getItems() {
-        @Nullable val items = this.getCapability(this.getItemCapability(), null);
+        @Nullable
+        final IItemHandler items = this.getCapability(this.getItemCapability(), null);
 
         if (items == null) {
             throw new IllegalStateException("Missing item capability instance");
@@ -39,7 +40,7 @@ public final class BlockEntityBambooCrate extends TileEntity {
     public void readFromNBT(final NBTTagCompound compound) {
         super.readFromNBT(compound);
 
-        val items = compound.getCompoundTag("items");
+        final NBTTagCompound items = compound.getCompoundTag("items");
 
         this.items.deserializeNBT(items);
     }
@@ -48,7 +49,7 @@ public final class BlockEntityBambooCrate extends TileEntity {
     public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
         super.writeToNBT(compound);
 
-        val items = this.items.serializeNBT();
+        final NBTTagCompound items = this.items.serializeNBT();
 
         compound.setTag("items", items);
 
@@ -57,8 +58,8 @@ public final class BlockEntityBambooCrate extends TileEntity {
 
     @Override
     public boolean shouldRefresh(final World world, final BlockPos pos, final IBlockState oldState, final IBlockState newState) {
-        val oldBlock = oldState.getBlock();
-        val newBlock = newState.getBlock();
+        final Block oldBlock = oldState.getBlock();
+        final Block newBlock = newState.getBlock();
 
         return oldBlock != newBlock;
     }

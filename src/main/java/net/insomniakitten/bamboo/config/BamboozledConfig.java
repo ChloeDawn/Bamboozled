@@ -1,8 +1,5 @@
 package net.insomniakitten.bamboo.config;
 
-import lombok.Data;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
@@ -14,15 +11,17 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.logging.log4j.Logger;
 
 @EventBusSubscriber(modid = Bamboozled.ID)
 @Config(modid = Bamboozled.ID, name = Bamboozled.ID, category = "")
-@Log4j2(topic = Bamboozled.ID + ".config")
 @SuppressWarnings("RedundantFieldInitialization")
 public final class BamboozledConfig {
     public static final Client CLIENT = new Client();
     public static final General GENERAL = new General();
     public static final World WORLD = new World();
+
+    private static final Logger LOGGER = Bamboozled.getLogger("config");
 
     private BamboozledConfig() {
         throw new UnsupportedOperationException("Cannot instantiate " + this.getClass());
@@ -38,18 +37,18 @@ public final class BamboozledConfig {
     }
 
     private static void syncConfiguration(final boolean isWorldRunning) {
-        val handler = FMLCommonHandler.instance();
+        final FMLCommonHandler handler = FMLCommonHandler.instance();
 
         if (handler.getSide().isServer() || !isWorldRunning) {
             ConfigManager.sync(Bamboozled.ID, Type.INSTANCE);
             return;
         }
 
-        val lastFancySaltOre = Bamboozled.getClientConfig().isFancySaltOreForced();
+        final boolean lastFancySaltOre = Bamboozled.getClientConfig().isFancySaltOreForced();
 
         ConfigManager.sync(Bamboozled.ID, Type.INSTANCE);
 
-        val fancySaltOre = Bamboozled.getClientConfig().isFancySaltOreForced();
+        final boolean fancySaltOre = Bamboozled.getClientConfig().isFancySaltOreForced();
 
         if (fancySaltOre != lastFancySaltOre) {
             BamboozledConfig.LOGGER.info("Reloading world renderers");
@@ -57,7 +56,6 @@ public final class BamboozledConfig {
         }
     }
 
-    @Data
     public static final class Client implements ClientConfig {
         @Name("force_fancy_salt_ore")
         @Comment({ "Should halite always render as a translucent block?",
@@ -67,9 +65,13 @@ public final class BamboozledConfig {
         private Client() {
             BamboozledConfig.LOGGER.info("Client configuration initialized");
         }
+
+        @Override
+        public boolean isFancySaltOreForced() {
+            return this.fancySaltOreForced;
+        }
     }
 
-    @Data
     public static final class General implements GeneralConfig {
         @Name("in_world_bamboo_drying")
         @Comment("Should bundles of bamboo dry out over time when placed outside under the sun?")
@@ -107,9 +109,38 @@ public final class BamboozledConfig {
         private General() {
             BamboozledConfig.LOGGER.info("General configuration initialized");
         }
+
+        @Override
+        public boolean isInWorldBambooDryingEnabled() {
+            return this.inWorldBambooDryingEnabled;
+        }
+
+        @Override
+        public boolean isSaltBlockDropsEnabled() {
+            return this.saltBlockDropsEnabled;
+        }
+
+        @Override
+        public boolean isSaltUndeadDamageEnabled() {
+            return this.saltUndeadDamageEnabled;
+        }
+
+        @Override
+        public boolean isThrowableSaltPilesEnabled() {
+            return this.throwableSaltPilesEnabled;
+        }
+
+        @Override
+        public boolean isThrowSneakingRequirementEnabled() {
+            return this.throwSneakingRequirementEnabled;
+        }
+
+        @Override
+        public boolean isFancyBambooEnabled() {
+            return this.fancyBambooEnabled;
+        }
     }
 
-    @Data
     public static final class World implements WorldConfig {
         @Name("generate_bamboo")
         @Comment("Should bamboo stalks be generated in tropical biomes?")
@@ -128,6 +159,21 @@ public final class BamboozledConfig {
 
         private World() {
             BamboozledConfig.LOGGER.info("World configuration initialized");
+        }
+
+        @Override
+        public boolean isBambooGenerationEnabled() {
+            return this.bambooGenerationEnabled;
+        }
+
+        @Override
+        public boolean isSaltOreGenerationEnabled() {
+            return this.saltOreGenerationEnabled;
+        }
+
+        @Override
+        public int getSaltClusterSize() {
+            return this.saltClusterSize;
         }
     }
 }

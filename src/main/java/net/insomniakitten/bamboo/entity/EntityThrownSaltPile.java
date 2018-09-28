@@ -1,7 +1,7 @@
 package net.insomniakitten.bamboo.entity;
 
-import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.DamageSource;
@@ -33,7 +33,7 @@ public final class EntityThrownSaltPile extends EntityThrowable {
             return;
         }
 
-        val entity = Objects.requireNonNull(hit.entityHit, "hit entity");
+        final Entity entity = Objects.requireNonNull(hit.entityHit, "hit entity");
 
         if (entity instanceof EntityLivingBase) {
             if (((EntityLivingBase) entity).isEntityUndead()) {

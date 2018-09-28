@@ -1,6 +1,5 @@
 package net.insomniakitten.bamboo.block.base;
 
-import lombok.val;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -110,8 +109,8 @@ public class BlockStairs extends net.minecraft.block.BlockStairs {
 
     @Override
     public boolean canPlaceBlockAt(final World world, final BlockPos position) {
-        val state = world.getBlockState(position);
-        val block = state.getBlock();
+        final IBlockState state = world.getBlockState(position);
+        final Block block = state.getBlock();
 
         return block.isReplaceable(world, position);
     }

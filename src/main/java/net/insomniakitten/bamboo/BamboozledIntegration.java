@@ -1,8 +1,8 @@
 package net.insomniakitten.bamboo;
 
-import lombok.val;
 import net.insomniakitten.bamboo.init.BamboozledBlocks;
 import net.minecraft.block.Block;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -18,7 +18,7 @@ public final class BamboozledIntegration {
     }
 
     private static void addCharsetCarry(final IForgeRegistryEntry<Block> block) {
-        val registryName = Objects.requireNonNull(block.getRegistryName(), "registryName");
-        FMLInterModComms.sendMessage("charset", "addCarry", registryName);
+        final ResourceLocation name = Objects.requireNonNull(block.getRegistryName(), "registryName");
+        FMLInterModComms.sendMessage("charset", "addCarry", name);
     }
 }

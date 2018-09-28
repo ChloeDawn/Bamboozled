@@ -3,7 +3,6 @@ package net.insomniakitten.bamboo.block;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import lombok.val;
 import net.insomniakitten.bamboo.util.LazyBlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -18,6 +17,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
@@ -25,8 +25,10 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -60,7 +62,7 @@ public final class BlockRope extends Block {
     }
 
     public IBlockState withFacing(final EnumFacing facing) {
-        val state = this.getDefaultState();
+        final IBlockState state = this.getDefaultState();
 
         return state.withProperty(BlockRope.FACING, facing);
     }
@@ -68,7 +70,7 @@ public final class BlockRope extends Block {
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(final int meta) {
-        val facing = EnumFacing.byIndex(meta);
+        final EnumFacing facing = EnumFacing.byIndex(meta);
 
         return this.withFacing(facing);
     }
@@ -81,10 +83,10 @@ public final class BlockRope extends Block {
     @Override
     @Deprecated
     public IBlockState withRotation(final IBlockState state, final Rotation rotation) {
-        val facing = state.getValue(BlockRope.FACING);
+        final EnumFacing facing = state.getValue(BlockRope.FACING);
 
         if (facing.getAxis().isHorizontal()) {
-            val rotated = rotation.rotate(facing);
+            final EnumFacing rotated = rotation.rotate(facing);
 
             return state.withProperty(BlockRope.FACING, rotated);
         }
@@ -95,10 +97,10 @@ public final class BlockRope extends Block {
     @Override
     @Deprecated
     public IBlockState withMirror(final IBlockState state, final Mirror mirror) {
-        val facing = state.getValue(BlockRope.FACING);
+        final EnumFacing facing = state.getValue(BlockRope.FACING);
 
         if (facing.getAxis().isHorizontal()) {
-            val rotation = mirror.toRotation(facing);
+            final Rotation rotation = mirror.toRotation(facing);
 
             return state.withRotation(rotation);
         }
@@ -115,7 +117,7 @@ public final class BlockRope extends Block {
     @Override
     @Deprecated
     public AxisAlignedBB getBoundingBox(final IBlockState state, final IBlockAccess access, final BlockPos position) {
-        val facing = state.getValue(BlockRope.FACING);
+        final EnumFacing facing = state.getValue(BlockRope.FACING);
 
         return BlockRope.FACING_AABB.get(facing);
     }
@@ -135,7 +137,7 @@ public final class BlockRope extends Block {
     @Override
     @Deprecated
     public void neighborChanged(final IBlockState state, final World world, final BlockPos position, final Block neighbor, final BlockPos offset) {
-        val facing = state.getValue(BlockRope.FACING);
+        final EnumFacing facing = state.getValue(BlockRope.FACING);
 
         if (!world.isRemote && !this.canPlaceBlockOnSide(world, position, facing)) {
             world.destroyBlock(position, true);
@@ -144,7 +146,7 @@ public final class BlockRope extends Block {
 
     @Override
     public void onBlockAdded(final World world, final BlockPos position, final IBlockState state) {
-        val facing = state.getValue(BlockRope.FACING);
+        final EnumFacing facing = state.getValue(BlockRope.FACING);
 
         if (!world.isRemote && !this.canPlaceBlockOnSide(world, position, facing)) {
             world.destroyBlock(position, true);
@@ -153,15 +155,15 @@ public final class BlockRope extends Block {
 
     @Override
     public boolean canPlaceBlockOnSide(final World world, final BlockPos position, final EnumFacing face) {
-        val offset = position.offset(face.getOpposite());
-        val other = world.getBlockState(offset);
-        val shape = other.getBlockFaceShape(world, offset, face);
+        final BlockPos offset = position.offset(face.getOpposite());
+        final IBlockState other = world.getBlockState(offset);
+        final BlockFaceShape shape = other.getBlockFaceShape(world, offset, face);
 
         if (!BlockRope.FACING.getAllowedValues().contains(face)) {
             return this.canPlaceBlockAt(world, position);
         }
 
-        val above = world.getBlockState(position.up());
+        final IBlockState above = world.getBlockState(position.up());
 
         if (this == above.getBlock() && face == above.getValue(BlockRope.FACING)) {
             return true;
@@ -176,7 +178,7 @@ public final class BlockRope extends Block {
 
     @Override
     public boolean canPlaceBlockAt(final World world, final BlockPos pos) {
-        for (val facing : BlockRope.FACING.getAllowedValues()) {
+        for (final EnumFacing facing : BlockRope.FACING.getAllowedValues()) {
             if (this.canPlaceBlockOnSide(world, pos, facing)) {
                 return true;
             }
@@ -187,14 +189,14 @@ public final class BlockRope extends Block {
 
     @Override
     public boolean onBlockActivated(final World world, final BlockPos position, final IBlockState state, final EntityPlayer player, final EnumHand hand, final EnumFacing facing, final float hitX, final float hitY, final float hitZ) {
-        val stack = player.getHeldItem(hand);
+        final ItemStack stack = player.getHeldItem(hand);
 
         if (stack.isEmpty() || this.item.get() != stack.getItem()) {
             return false;
         }
 
-        val chunk = world.getChunk(position);
-        val target = new BlockPos.MutableBlockPos(position);
+        final Chunk chunk = world.getChunk(position);
+        final MutableBlockPos target = new MutableBlockPos(position);
 
         do {
             target.move(EnumFacing.DOWN);
@@ -239,15 +241,15 @@ public final class BlockRope extends Block {
             return false;
         }
 
-        val other = access.getBlockState(position.offset(face));
+        final IBlockState other = access.getBlockState(position.offset(face));
 
         return other.getBlock() == this && state.getValue(BlockRope.FACING) == other.getValue(BlockRope.FACING);
     }
 
     @Override
     public boolean rotateBlock(final World world, final BlockPos position, final EnumFacing face) {
-        val state = world.getBlockState(position);
-        val facing = state.getValue(BlockRope.FACING);
+        final IBlockState state = world.getBlockState(position);
+        final EnumFacing facing = state.getValue(BlockRope.FACING);
 
         if (facing.getAxis().isVertical()) {
             return false;
@@ -270,8 +272,8 @@ public final class BlockRope extends Block {
 
     @Override
     public IBlockState getStateForPlacement(final World world, final BlockPos position, final EnumFacing face, final float x, final float y, final float z, final int meta, final EntityLivingBase placer, final EnumHand hand) {
-        val placerFacing = placer.getHorizontalFacing().getOpposite();
-        val above = world.getBlockState(position.up());
+        final EnumFacing placerFacing = placer.getHorizontalFacing().getOpposite();
+        final IBlockState above = world.getBlockState(position.up());
 
         if (this == above.getBlock() && face == above.getValue(BlockRope.FACING)) {
             return this.withFacing(above.getValue(BlockRope.FACING));
@@ -285,7 +287,7 @@ public final class BlockRope extends Block {
             return this.withFacing(placerFacing);
         }
 
-        for (val facing : BlockRope.FACING.getAllowedValues()) {
+        for (final EnumFacing facing : BlockRope.FACING.getAllowedValues()) {
             if (this.canPlaceBlockOnSide(world, position, facing)) {
                 return this.withFacing(facing);
             }

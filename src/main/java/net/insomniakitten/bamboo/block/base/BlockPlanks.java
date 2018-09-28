@@ -1,6 +1,5 @@
 package net.insomniakitten.bamboo.block.base;
 
-import lombok.val;
 import net.insomniakitten.bamboo.util.LazyBlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -41,15 +40,15 @@ public class BlockPlanks extends Block {
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(final int meta) {
-        val state = this.getDefaultState();
-        val orientation = Orientation.byOrdinal(meta);
+        final IBlockState state = this.getDefaultState();
+        final Orientation orientation = Orientation.byOrdinal(meta);
 
         return state.withProperty(BlockPlanks.ORIENTATION, orientation);
     }
 
     @Override
     public int getMetaFromState(final IBlockState state) {
-        val orientation = state.getValue(BlockPlanks.ORIENTATION);
+        final Orientation orientation = state.getValue(BlockPlanks.ORIENTATION);
 
         return orientation.ordinal();
     }
@@ -77,7 +76,7 @@ public class BlockPlanks extends Block {
 
     @Override
     public boolean rotateBlock(final World world, final BlockPos position, final EnumFacing axis) {
-        val state = world.getBlockState(position);
+        final IBlockState state = world.getBlockState(position);
 
         if (this != state.getBlock()) {
             throw new IllegalStateException("Cannot rotate " + state + " at " + position);
@@ -88,8 +87,8 @@ public class BlockPlanks extends Block {
 
     @Override
     public IBlockState getStateForPlacement(final World world, final BlockPos position, final EnumFacing face, final float x, final float y, final float z, final int meta, final EntityLivingBase placer, final EnumHand hand) {
-        val state = this.getDefaultState();
-        val orientation = meta > 0 ? Orientation.VERTICAL : Orientation.HORIZONTAL;
+        final IBlockState state = this.getDefaultState();
+        final Orientation orientation = meta > 0 ? Orientation.VERTICAL : Orientation.HORIZONTAL;
 
         return state.withProperty(BlockPlanks.ORIENTATION, orientation);
     }

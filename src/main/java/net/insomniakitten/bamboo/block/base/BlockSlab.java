@@ -1,7 +1,6 @@
 package net.insomniakitten.bamboo.block.base;
 
 import com.google.common.base.MoreObjects;
-import lombok.val;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab.EnumBlockHalf;
 import net.minecraft.block.SoundType;
@@ -45,37 +44,37 @@ public class BlockSlab extends Block {
     }
 
     public final IBlockState getLowerSlab() {
-        val state = this.getDefaultState();
+        final IBlockState state = this.getDefaultState();
 
         return state.withProperty(BlockSlab.VARIANT, Variant.LOWER);
     }
 
     public final IBlockState getUpperSlab() {
-        val state = this.getDefaultState();
+        final IBlockState state = this.getDefaultState();
 
         return state.withProperty(BlockSlab.VARIANT, Variant.UPPER);
     }
 
     public final IBlockState getDoubleSlab() {
-        val state = this.getDefaultState();
+        final IBlockState state = this.getDefaultState();
 
         return state.withProperty(BlockSlab.VARIANT, Variant.DOUBLE);
     }
 
     public final boolean isLowerSlab(final IBlockState state) {
-        val variant = state.getValue(BlockSlab.VARIANT);
+        final Variant variant = state.getValue(BlockSlab.VARIANT);
 
         return variant.isLower();
     }
 
     public final boolean isUpperSlab(final IBlockState state) {
-        val variant = state.getValue(BlockSlab.VARIANT);
+        final Variant variant = state.getValue(BlockSlab.VARIANT);
 
         return variant.isUpper();
     }
 
     public final boolean isDoubleSlab(final IBlockState state) {
-        val variant = state.getValue(BlockSlab.VARIANT);
+        final Variant variant = state.getValue(BlockSlab.VARIANT);
 
         return variant.isDouble();
     }
@@ -89,15 +88,15 @@ public class BlockSlab extends Block {
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(final int meta) {
-        val state = this.getDefaultState();
-        val variant = Variant.byOrdinal(meta);
+        final IBlockState state = this.getDefaultState();
+        final Variant variant = Variant.byOrdinal(meta);
 
         return state.withProperty(BlockSlab.VARIANT, variant);
     }
 
     @Override
     public int getMetaFromState(final IBlockState state) {
-        val variant = state.getValue(BlockSlab.VARIANT);
+        final Variant variant = state.getValue(BlockSlab.VARIANT);
 
         return variant.ordinal();
     }
@@ -111,7 +110,7 @@ public class BlockSlab extends Block {
     @Override
     @Deprecated
     public AxisAlignedBB getBoundingBox(final IBlockState state, final IBlockAccess access, final BlockPos position) {
-        val variant = state.getValue(BlockSlab.VARIANT);
+        final Variant variant = state.getValue(BlockSlab.VARIANT);
 
         return variant.getBoundingBox();
     }
@@ -120,16 +119,16 @@ public class BlockSlab extends Block {
     @Deprecated
     @SideOnly(Side.CLIENT)
     public int getPackedLightmapCoords(final IBlockState state, final IBlockAccess access, final BlockPos position) {
-        val lightValue = state.getLightValue(access, position);
-        val combinedLight = access.getCombinedLight(position, lightValue);
+        final int lightValue = state.getLightValue(access, position);
+        final int combinedLight = access.getCombinedLight(position, lightValue);
 
         if (combinedLight != 0) {
             return combinedLight;
         }
 
-        val below = position.down();
-        val other = access.getBlockState(below);
-        val otherLightValue = other.getLightValue(access, below);
+        final BlockPos below = position.down();
+        final IBlockState other = access.getBlockState(below);
+        final int otherLightValue = other.getLightValue(access, below);
 
         return access.getCombinedLight(below, otherLightValue);
     }
@@ -137,7 +136,7 @@ public class BlockSlab extends Block {
     @Override
     @Deprecated
     public BlockFaceShape getBlockFaceShape(final IBlockAccess access, final IBlockState state, final BlockPos position, final EnumFacing face) {
-        val variant = state.getValue(BlockSlab.VARIANT);
+        final Variant variant = state.getValue(BlockSlab.VARIANT);
 
         return variant.isFaceSolid(face) ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
     }
@@ -169,12 +168,12 @@ public class BlockSlab extends Block {
             return state.getValue(BlockSlab.VARIANT).isFaceSolid(face);
         }
 
-        val offset = position.offset(face);
-        val other = access.getBlockState(offset);
-        val block = other.getBlock();
+        final BlockPos offset = position.offset(face);
+        final IBlockState other = access.getBlockState(offset);
+        final Block block = other.getBlock();
 
         if (block instanceof BlockSlab) {
-            val variant = state.getValue(BlockSlab.VARIANT);
+            final Variant variant = state.getValue(BlockSlab.VARIANT);
 
             if (variant == other.getValue(BlockSlab.VARIANT)) {
                 return true;
@@ -182,8 +181,8 @@ public class BlockSlab extends Block {
         }
 
         if (block instanceof net.minecraft.block.BlockSlab) {
-            val variant = state.getValue(BlockSlab.VARIANT);
-            val half = other.getValue(net.minecraft.block.BlockSlab.HALF);
+            final Variant variant = state.getValue(BlockSlab.VARIANT);
+            final EnumBlockHalf half = other.getValue(net.minecraft.block.BlockSlab.HALF);
 
             return variant.isEquivalentTo(half);
         }

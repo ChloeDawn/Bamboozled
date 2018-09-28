@@ -1,8 +1,6 @@
 package net.insomniakitten.bamboo.client;
 
 import com.google.common.base.Stopwatch;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.block.BlockBamboo;
 import net.insomniakitten.bamboo.client.render.EntityRendererThrownSaltPile;
@@ -13,12 +11,14 @@ import net.insomniakitten.bamboo.init.BamboozledItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.entity.RenderFallingBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -27,6 +27,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
@@ -34,8 +35,9 @@ import java.util.function.Consumer;
 
 @SideOnly(Side.CLIENT)
 @EventBusSubscriber(modid = Bamboozled.ID, value = Side.CLIENT)
-@Log4j2(topic = Bamboozled.ID + ".client")
 public final class BamboozledClient {
+    private static final Logger LOGGER = Bamboozled.getLogger("client");
+
     private BamboozledClient() {
         throw new UnsupportedOperationException("Cannot instantiate " + this.getClass());
     }
@@ -44,13 +46,13 @@ public final class BamboozledClient {
     static void onRegisterModels(final ModelRegistryEvent context) {
         BamboozledClient.LOGGER.info("Beginning model registration");
 
-        val stopwatch = Stopwatch.createStarted();
+        final Stopwatch stopwatch = Stopwatch.createStarted();
 
         BamboozledClient.registerEntityRenderers();
         BamboozledClient.registerStateMappers();
         BamboozledClient.registerItemModels();
 
-        val elapsed = stopwatch.stop().elapsed(TimeUnit.MILLISECONDS);
+        final long elapsed = stopwatch.stop().elapsed(TimeUnit.MILLISECONDS);
 
         BamboozledClient.LOGGER.info("Model registration completed in {}ms", elapsed);
     }
@@ -118,11 +120,11 @@ public final class BamboozledClient {
 
         BamboozledClient.LOGGER.debug("Registering block model mapper for '{}'", block.getRegistryName());
 
-        val builder = new StateMap.Builder();
+        final StateMap.Builder builder = new StateMap.Builder();
 
         consumer.accept(builder);
 
-        val stateMapper = builder.build();
+        final IStateMapper stateMapper = builder.build();
 
         ModelLoader.setCustomStateMapper(block, stateMapper);
     }
@@ -132,7 +134,7 @@ public final class BamboozledClient {
             throw new IllegalStateException("Empty item");
         }
 
-        @Nullable val name = item.getRegistryName();
+        @Nullable final ResourceLocation name = item.getRegistryName();
 
         if (name == null) {
             throw new IllegalStateException("Missing registry name");

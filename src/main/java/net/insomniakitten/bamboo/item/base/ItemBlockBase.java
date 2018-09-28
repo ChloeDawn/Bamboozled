@@ -1,7 +1,5 @@
 package net.insomniakitten.bamboo.item.base;
 
-import lombok.val;
-import lombok.var;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -22,14 +20,14 @@ public class ItemBlockBase extends ItemBlock {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(final ItemStack stack, @Nullable final World world, final List<String> tooltip, final ITooltipFlag flag) {
-        val key = this.getTranslationKey(stack);
+        final String key = this.getTranslationKey(stack);
 
         if (I18n.hasKey(key + ".desc")) {
             tooltip.add(I18n.format(key + ".desc"));
             return;
         }
 
-        for (var i = 0; I18n.hasKey(key + ".desc." + i); ++i) {
+        for (int i = 0; I18n.hasKey(key + ".desc." + i); ++i) {
             tooltip.add(I18n.format(key + ".desc." + i));
         }
     }

@@ -1,8 +1,6 @@
 package net.insomniakitten.bamboo.init;
 
 import com.google.common.base.Stopwatch;
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.item.ItemBlockBambooBundle;
 import net.insomniakitten.bamboo.item.ItemBlockSaltCrystal;
@@ -19,12 +17,12 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.registries.IForgeRegistry;
+import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.TimeUnit;
 
 @ObjectHolder(Bamboozled.ID)
 @EventBusSubscriber(modid = Bamboozled.ID)
-@Log4j2(topic = Bamboozled.ID + ".items")
 public final class BamboozledItems {
     public static final Item BAMBOO = Items.AIR;
     public static final Item BAMBOO_DRIED = Items.AIR;
@@ -51,6 +49,8 @@ public final class BamboozledItems {
     public static final Item ROPE_FENCE = Items.AIR;
     public static final Item BAMBOO_CRATE = Items.AIR;
 
+    private static final Logger LOGGER = Bamboozled.getLogger("items");
+
     private BamboozledItems() {
         throw new UnsupportedOperationException("Cannot instantiate " + this.getClass());
     }
@@ -59,8 +59,8 @@ public final class BamboozledItems {
     static void onRegisterItems(final RegistryEvent.Register<Item> event) {
         BamboozledItems.LOGGER.info("Beginning item registration");
 
-        val stopwatch = Stopwatch.createStarted();
-        val registry = event.getRegistry();
+        final Stopwatch stopwatch = Stopwatch.createStarted();
+        final IForgeRegistry<Item> registry = event.getRegistry();
 
         BamboozledItems.registerItem(registry, "bamboo", new ItemBlockBase(BamboozledBlocks.BAMBOO));
         BamboozledItems.registerItem(registry, "bamboo_dried", new ItemBase());
@@ -87,7 +87,7 @@ public final class BamboozledItems {
         BamboozledItems.registerItem(registry, "rope_fence", new ItemBlockBase(BamboozledBlocks.ROPE_FENCE));
         BamboozledItems.registerItem(registry, "bamboo_crate", new ItemBlockBase(BamboozledBlocks.BAMBOO_CRATE));
 
-        val elapsed = stopwatch.stop().elapsed(TimeUnit.MILLISECONDS);
+        final long elapsed = stopwatch.stop().elapsed(TimeUnit.MILLISECONDS);
 
         BamboozledItems.LOGGER.info("Item registration completed in {}ms", elapsed);
     }

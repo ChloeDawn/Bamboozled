@@ -1,7 +1,5 @@
 package net.insomniakitten.bamboo.block;
 
-import lombok.val;
-import lombok.var;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.util.LazyBlockItem;
 import net.minecraft.block.Block;
@@ -73,9 +71,9 @@ public final class BlockBambooBundle extends Block {
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(final int meta) {
-        var state = this.getDefaultState();
-        val axis = BlockBambooBundle.AXIS_BY_ORDINAL[meta & 3];
-        val dried = meta >> 2;
+        IBlockState state = this.getDefaultState();
+        final Axis axis = BlockBambooBundle.AXIS_BY_ORDINAL[meta & 3];
+        final int dried = meta >> 2;
 
         state = state.withProperty(BlockBambooBundle.AXIS, axis);
         state = state.withProperty(BlockBambooBundle.DRIED, dried);
@@ -85,8 +83,8 @@ public final class BlockBambooBundle extends Block {
 
     @Override
     public int getMetaFromState(final IBlockState state) {
-        val axis = state.getValue(BlockBambooBundle.AXIS).ordinal();
-        val dried = state.getValue(BlockBambooBundle.DRIED) << 2;
+        final int axis = state.getValue(BlockBambooBundle.AXIS).ordinal();
+        final int dried = state.getValue(BlockBambooBundle.DRIED) << 2;
 
         return axis | dried;
     }
@@ -165,8 +163,8 @@ public final class BlockBambooBundle extends Block {
 
     @Override
     public boolean rotateBlock(final World world, final BlockPos position, final EnumFacing face) {
-        val state = world.getBlockState(position);
-        val block = state.getBlock();
+        final IBlockState state = world.getBlockState(position);
+        final Block block = state.getBlock();
 
         return this == block && world.setBlockState(position, state.cycleProperty(BlockBambooBundle.AXIS));
     }
@@ -178,9 +176,9 @@ public final class BlockBambooBundle extends Block {
 
     @Override
     public IBlockState getStateForPlacement(final World world, final BlockPos position, final EnumFacing face, final float x, final float y, final float z, final int meta, final EntityLivingBase placer, final EnumHand hand) {
-        val state = this.getDefaultState();
-        val axis = face.getAxis();
-        val dried = BlockBambooBundle.isDry(meta) ? 3 : 0;
+        final IBlockState state = this.getDefaultState();
+        final Axis axis = face.getAxis();
+        final int dried = BlockBambooBundle.isDry(meta) ? 3 : 0;
 
         return state.withProperty(BlockBambooBundle.AXIS, axis).withProperty(BlockBambooBundle.DRIED, dried);
     }

@@ -1,6 +1,5 @@
 package net.insomniakitten.bamboo.item;
 
-import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.entity.EntityThrownSaltPile;
 import net.minecraft.block.Block;
@@ -24,7 +23,7 @@ public final class ItemSaltPile extends ItemBlock {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(final World world, final EntityPlayer player, final EnumHand hand) {
-        val stack = player.getHeldItem(hand);
+        final ItemStack stack = player.getHeldItem(hand);
 
         if (!Bamboozled.getConfig().isThrowableSaltPilesEnabled()) {
             return new ActionResult<>(EnumActionResult.PASS, stack);
@@ -42,7 +41,7 @@ public final class ItemSaltPile extends ItemBlock {
         player.getCooldownTracker().setCooldown(this, 10);
 
         if (!world.isRemote) {
-            val entity = new EntityThrownSaltPile(world, player);
+            final EntityThrownSaltPile entity = new EntityThrownSaltPile(world, player);
 
             entity.shoot(player, player.rotationPitch, player.rotationYaw, 0.0F, 1.5F, 1.0F);
             world.spawnEntity(entity);

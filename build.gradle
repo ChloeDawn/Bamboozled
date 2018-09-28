@@ -8,10 +8,6 @@ buildscript {
   }
 }
 
-plugins {
-  id 'io.franzbecker.gradle-lombok' version '1.14'
-}
-
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 def modVersion = '2.0.0'
@@ -43,14 +39,6 @@ dependencies {
   deobfCompile "team.chisel.ctm:CTM:$ctmVersion"
   deobfCompile "mcp.mobius.waila:Hwyla:$hwylaVersion"
   deobfCompile "mezz.jei:jei_$jeiVersion"
-}
-
-jar {
-  manifest { attributes 'FMLAT': 'bamboozled_at.cfg' }
-}
-
-lombok {
-  version = '1.18.2'
 }
 
 processResources {

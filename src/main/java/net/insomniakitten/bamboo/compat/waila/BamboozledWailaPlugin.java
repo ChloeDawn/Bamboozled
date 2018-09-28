@@ -1,7 +1,5 @@
 package net.insomniakitten.bamboo.compat.waila;
 
-import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
@@ -10,14 +8,18 @@ import mcp.mobius.waila.api.IWailaRegistrar;
 import mcp.mobius.waila.api.WailaPlugin;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.block.BlockBambooBundle;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
 @WailaPlugin
-@Log4j2(topic = Bamboozled.ID + ".waila")
 public final class BamboozledWailaPlugin implements IWailaPlugin {
+    private static final Logger LOGGER = Bamboozled.getLogger("waila");
+
     @Override
     public void register(final IWailaRegistrar registrar) {
         BamboozledWailaPlugin.LOGGER.info("Registering data provider");
@@ -34,16 +36,16 @@ public final class BamboozledWailaPlugin implements IWailaPlugin {
                 return tooltip;
             }
 
-            val state = accessor.getBlockState();
-            val dried = state.getValue(BlockBambooBundle.DRIED);
+            final IBlockState state = accessor.getBlockState();
+            final int dried = state.getValue(BlockBambooBundle.DRIED);
 
             if (dried >= 3) {
                 return tooltip;
             }
 
-            val progress = 33 * dried;
-            val component = new TextComponentTranslation(DataProvider.DRY_PROGRESS, progress);
-            val line = component.getUnformattedComponentText();
+            final int progress = 33 * dried;
+            final ITextComponent component = new TextComponentTranslation(DataProvider.DRY_PROGRESS, progress);
+            final String line = component.getUnformattedComponentText();
 
             tooltip.add(line);
 

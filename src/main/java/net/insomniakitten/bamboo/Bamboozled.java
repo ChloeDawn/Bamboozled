@@ -1,6 +1,5 @@
 package net.insomniakitten.bamboo;
 
-import lombok.extern.log4j.Log4j2;
 import net.insomniakitten.bamboo.block.BlockBamboo;
 import net.insomniakitten.bamboo.config.BamboozledConfig;
 import net.insomniakitten.bamboo.config.ClientConfig;
@@ -17,11 +16,14 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.InstanceFactory;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Bamboozled.ID, useMetadata = true)
-@Log4j2(topic = Bamboozled.ID + ".main")
 public final class Bamboozled {
     public static final String ID = "bamboozled";
+
+    private static final Logger LOGGER = Bamboozled.getLogger("main");
 
     private static final Bamboozled INSTANCE;
     private static final EnumPlantType TROPICAL_PLANT_TYPE;
@@ -59,6 +61,14 @@ public final class Bamboozled {
 
     public static WorldConfig getWorldConfig() {
         return BamboozledConfig.WORLD;
+    }
+
+    public static Logger getLogger(final String topic) {
+        if (topic.isEmpty()) {
+            throw new IllegalArgumentException("Topic cannot be empty");
+        }
+
+        return LogManager.getLogger(Bamboozled.ID + "." + topic);
     }
 
     public static ResourceLocation addNamespace(final String string) {

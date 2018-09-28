@@ -1,6 +1,5 @@
 package net.insomniakitten.bamboo.item.base;
 
-import lombok.var;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
@@ -11,12 +10,8 @@ public class ItemBlockPlanksBase extends ItemSubBlockBase {
 
     @Override
     public String getTranslationKey(final ItemStack stack) {
-        var name = this.getTranslationKey();
+        final String name = this.getTranslationKey();
 
-        if (0 < stack.getMetadata()) {
-            name += "_vertical";
-        }
-
-        return name;
+        return stack.getMetadata() > 0 ? name + "_vertical" : name;
     }
 }

@@ -1,6 +1,5 @@
 package net.insomniakitten.bamboo.item;
 
-import lombok.val;
 import net.insomniakitten.bamboo.item.base.ItemSubBlockBase;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -12,7 +11,7 @@ public final class ItemBlockSaltCrystal extends ItemSubBlockBase {
 
     @Override
     public String getTranslationKey(final ItemStack stack) {
-        val name = this.getTranslationKey();
+        final String name = this.getTranslationKey();
 
         switch (stack.getMetadata()) {
             case 1: return name + "_bricks";

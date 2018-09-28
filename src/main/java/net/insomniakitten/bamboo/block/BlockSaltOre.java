@@ -1,7 +1,6 @@
 package net.insomniakitten.bamboo.block;
 
 import com.google.common.collect.ImmutableSet;
-import lombok.val;
 import net.insomniakitten.bamboo.Bamboozled;
 import net.insomniakitten.bamboo.init.BamboozledItems;
 import net.minecraft.block.Block;
@@ -28,13 +27,14 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.util.NoSuchElementException;
 import java.util.Random;
+import java.util.Set;
 
 public final class BlockSaltOre extends Block {
     private static final MethodHandle DONT_SET_BLOCK_FIELD;
 
     static {
-        val target = BlockSaltOre.findDontSetBlockField();
-        val lookup = MethodHandles.lookup();
+        final Field target = BlockSaltOre.findDontSetBlockField();
+        final MethodHandles.Lookup lookup = MethodHandles.lookup();
 
         target.setAccessible(true);
 
@@ -54,10 +54,10 @@ public final class BlockSaltOre extends Block {
     }
 
     private static Field findDontSetBlockField() {
-        val clazz = EntityFallingBlock.class;
-        val names = ImmutableSet.of("field_145808_f", "dontSetBlock");
+        final Class<EntityFallingBlock> clazz = EntityFallingBlock.class;
+        final Set<String> names = ImmutableSet.of("field_145808_f", "dontSetBlock");
 
-        for (val field : clazz.getDeclaredFields()) {
+        for (final Field field : clazz.getDeclaredFields()) {
             if (names.contains(field.getName())) {
                 return field;
             }
@@ -80,7 +80,7 @@ public final class BlockSaltOre extends Block {
 
     @Override
     public void onLanded(final World world, final Entity entity) {
-        val motion = entity.motionY;
+        final double motion = entity.motionY;
 
         super.onLanded(world, entity);
 
@@ -91,20 +91,20 @@ public final class BlockSaltOre extends Block {
             return;
         }
 
-        val position = new BlockPos(entity);
-        val fallingBlock = (EntityFallingBlock) entity;
+        final BlockPos position = new BlockPos(entity);
+        final EntityFallingBlock fallingBlock = (EntityFallingBlock) entity;
 
         if (this.isDontSetBlock(fallingBlock)) {
             return;
         }
 
-        @Nullable val state = fallingBlock.getBlock();
+        @Nullable final IBlockState state = fallingBlock.getBlock();
 
         if (state == null) {
             return;
         }
 
-        val block = state.getBlock();
+        final Block block = state.getBlock();
 
         if (Blocks.ANVIL != block) {
             return;
@@ -116,8 +116,8 @@ public final class BlockSaltOre extends Block {
 
         world.destroyBlock(position.down(), false);
 
-        val amount = 4 + world.rand.nextInt(5);
-        val stack = new ItemStack(BamboozledItems.SALT_PILE, amount);
+        final int amount = 4 + world.rand.nextInt(5);
+        final ItemStack stack = new ItemStack(BamboozledItems.SALT_PILE, amount);
 
         Block.spawnAsEntity(world, position.down(), stack);
     }
@@ -128,16 +128,16 @@ public final class BlockSaltOre extends Block {
             return true;
         }
 
-        val offset = position.offset(face);
-        val other = access.getBlockState(offset);
+        final BlockPos offset = position.offset(face);
+        final IBlockState other = access.getBlockState(offset);
 
         return this == other.getBlock();
     }
 
     @Override
     public void getDrops(final NonNullList<ItemStack> drops, final IBlockAccess access, final BlockPos position, final IBlockState state, final int fortune) {
-        val random = access instanceof World ? ((World) access).rand : new Random();
-        val amount = 4 + random.nextInt(5) * (Math.max(0, random.nextInt(fortune + 2) - 1) + 1);
+        final Random random = access instanceof World ? ((World) access).rand : new Random();
+        final int amount = 4 + random.nextInt(5) * (Math.max(0, random.nextInt(fortune + 2) - 1) + 1);
 
         drops.add(new ItemStack(BamboozledItems.SALT_PILE, amount));
     }
