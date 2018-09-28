@@ -5,11 +5,18 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.logging.log4j.Logger;
 
 public final class BamboozledItemGroup extends CreativeTabs {
     private static final String TRANSLATION_KEY = "item_group." + Bamboozled.ID + ".label";
+    private static final Logger LOGGER = Bamboozled.getLogger("itemgroup");
 
-    static final CreativeTabs INSTANCE = new BamboozledItemGroup();
+    static final CreativeTabs INSTANCE;
+
+    static {
+        BamboozledItemGroup.LOGGER.info("Initializing item group");
+        INSTANCE = new BamboozledItemGroup();
+    }
 
     private BamboozledItemGroup() {
         super("");
