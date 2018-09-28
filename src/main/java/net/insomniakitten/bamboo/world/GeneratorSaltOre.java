@@ -53,7 +53,7 @@ public final class GeneratorSaltOre {
         }
 
         final MutableBlockPos target = new MutableBlockPos(position);
-        final int clusterSize = Bamboozled.getWorldConfig().getSaltClusterSize();
+        final int clusterSize = Bamboozled.getWorldConfig().saltOreClusterSize;
         final int size = random.nextInt(Math.max(clusterSize - 2, 1)) + 2;
 
         for (int x = position.getX() - size; x <= position.getX() + size; ++x) {

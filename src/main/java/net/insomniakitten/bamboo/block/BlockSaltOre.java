@@ -143,7 +143,7 @@ public final class BlockSaltOre extends Block {
     }
 
     private boolean isFancy() {
-        return Bamboozled.getClientConfig().isFancySaltOreForced() || !Blocks.LEAVES.getDefaultState().isOpaqueCube();
+        return Bamboozled.getClientConfig().forceFancySaltOre || !Blocks.LEAVES.getDefaultState().isOpaqueCube();
     }
 
     private boolean isDontSetBlock(final EntityFallingBlock entity) {

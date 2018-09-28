@@ -1,10 +1,6 @@
 package net.insomniakitten.bamboo;
 
 import net.insomniakitten.bamboo.block.BlockBamboo;
-import net.insomniakitten.bamboo.config.BamboozledConfig;
-import net.insomniakitten.bamboo.config.ClientConfig;
-import net.insomniakitten.bamboo.config.GeneralConfig;
-import net.insomniakitten.bamboo.config.WorldConfig;
 import net.insomniakitten.bamboo.world.GeneratorBamboo;
 import net.insomniakitten.bamboo.world.GeneratorSaltOre;
 import net.minecraft.creativetab.CreativeTabs;
@@ -51,15 +47,15 @@ public final class Bamboozled {
         return BamboozledItemGroup.INSTANCE;
     }
 
-    public static GeneralConfig getConfig() {
+    public static BamboozledConfig.General getConfig() {
         return BamboozledConfig.GENERAL;
     }
 
-    public static ClientConfig getClientConfig() {
+    public static BamboozledConfig.Client getClientConfig() {
         return BamboozledConfig.CLIENT;
     }
 
-    public static WorldConfig getWorldConfig() {
+    public static BamboozledConfig.World getWorldConfig() {
         return BamboozledConfig.WORLD;
     }
 
@@ -89,15 +85,15 @@ public final class Bamboozled {
 
     @EventHandler
     void onPreInitialization(final FMLPreInitializationEvent event) {
-        if (Bamboozled.getWorldConfig().isBambooGenerationEnabled()) {
+        if (Bamboozled.getWorldConfig().generateBamboo) {
             MinecraftForge.EVENT_BUS.register(GeneratorBamboo.class);
         }
 
-        if (Bamboozled.getWorldConfig().isSaltOreGenerationEnabled()) {
+        if (Bamboozled.getWorldConfig().generateSaltOre) {
             MinecraftForge.EVENT_BUS.register(GeneratorSaltOre.class);
         }
 
-        if (Bamboozled.getConfig().isFancyBambooEnabled()) {
+        if (Bamboozled.getConfig().fancyBamboo) {
             MinecraftForge.EVENT_BUS.register(BlockBamboo.class);
         }
     }

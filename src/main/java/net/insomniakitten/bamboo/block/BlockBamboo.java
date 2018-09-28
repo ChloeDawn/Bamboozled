@@ -193,7 +193,7 @@ public final class BlockBamboo extends Block implements IPlantable {
     @Override
     @Deprecated
     public void addCollisionBoxToList(final IBlockState state, final World world, final BlockPos position, final AxisAlignedBB entityBox, final List<AxisAlignedBB> boxes, final Entity entity, final boolean isActualState) {
-        if (!Bamboozled.getConfig().isFancyBambooEnabled()) {
+        if (!Bamboozled.getConfig().fancyBamboo) {
             Block.addCollisionBoxToList(position, entityBox, boxes, BlockBamboo.SIMPLE_AABB);
 
             return;
@@ -275,7 +275,7 @@ public final class BlockBamboo extends Block implements IPlantable {
     @Deprecated
     @Nullable
     public RayTraceResult collisionRayTrace(final IBlockState state, final World world, final BlockPos position, final Vec3d start, final Vec3d end) {
-        if (!Bamboozled.getConfig().isFancyBambooEnabled()) {
+        if (!Bamboozled.getConfig().fancyBamboo) {
             return this.rayTrace(position, start, end, BlockBamboo.SIMPLE_AABB);
         }
 

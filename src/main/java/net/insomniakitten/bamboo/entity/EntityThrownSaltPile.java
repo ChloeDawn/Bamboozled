@@ -25,7 +25,7 @@ public final class EntityThrownSaltPile extends EntityThrowable {
 
     @Override
     protected void onImpact(final RayTraceResult hit) {
-        if (!Bamboozled.getConfig().isSaltUndeadDamageEnabled()) {
+        if (!Bamboozled.getConfig().saltHurtsUndead) {
             return;
         }
 

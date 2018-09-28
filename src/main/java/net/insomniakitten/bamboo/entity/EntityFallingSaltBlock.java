@@ -147,7 +147,7 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
                     if (mayPlace && (isWater || !canFallThrough)) {
                         this.world.setBlockState(position, BamboozledBlocks.SALT_BLOCK.getDefaultState(), 3);
                     } else if (this.shouldDropItem && this.world.getGameRules().getBoolean("doEntityDrops")) {
-                        if (Bamboozled.getConfig().isSaltBlockDropsEnabled()) {
+                        if (Bamboozled.getConfig().saltBlockDropsItself) {
                             this.entityDropItem(new ItemStack(BamboozledBlocks.SALT_BLOCK), 0.0F);
                         } else {
                             this.entityDropItem(new ItemStack(BamboozledItems.SALT_PILE, 9), 0.0F);
@@ -157,7 +157,7 @@ public final class EntityFallingSaltBlock extends EntityFallingBlock {
             } else {
                 if (this.canDropAsItem(position)) {
                     if (this.shouldDropItem && this.world.getGameRules().getBoolean("doEntityDrops")) {
-                        if (Bamboozled.getConfig().isSaltBlockDropsEnabled()) {
+                        if (Bamboozled.getConfig().saltBlockDropsItself) {
                             this.entityDropItem(new ItemStack(BamboozledBlocks.SALT_BLOCK), 0.0F);
                         } else {
                             this.entityDropItem(new ItemStack(BamboozledItems.SALT_PILE, 9), 0.0F);

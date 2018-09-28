@@ -1,6 +1,5 @@
-package net.insomniakitten.bamboo.config;
+package net.insomniakitten.bamboo;
 
-import net.insomniakitten.bamboo.Bamboozled;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
@@ -44,136 +43,86 @@ public final class BamboozledConfig {
             return;
         }
 
-        final boolean lastFancySaltOre = Bamboozled.getClientConfig().isFancySaltOreForced();
+        final boolean last = Bamboozled.getClientConfig().forceFancySaltOre;
 
         ConfigManager.sync(Bamboozled.ID, Type.INSTANCE);
 
-        final boolean fancySaltOre = Bamboozled.getClientConfig().isFancySaltOreForced();
+        final boolean curr = Bamboozled.getClientConfig().forceFancySaltOre;
 
-        if (fancySaltOre != lastFancySaltOre) {
+        if (curr != last) {
             BamboozledConfig.LOGGER.info("Reloading world renderers");
             handler.reloadRenderers();
         }
     }
 
-    public static final class Client implements ClientConfig {
+    public static final class Client {
         @Name("force_fancy_salt_ore")
         @Comment({ "Should halite always render as a translucent block?",
                    "If false, halite will render solid on Fast graphics." })
-        public volatile boolean fancySaltOreForced = false;
+        public volatile boolean forceFancySaltOre = false;
 
         private Client() {
             BamboozledConfig.LOGGER.info("Client configuration initialized");
         }
-
-        @Override
-        public boolean isFancySaltOreForced() {
-            return this.fancySaltOreForced;
-        }
     }
 
-    public static final class General implements GeneralConfig {
+    public static final class General {
         @Name("in_world_bamboo_drying")
         @Comment("Should bundles of bamboo dry out over time when placed outside under the sun?")
         @RequiresMcRestart
-        public boolean inWorldBambooDryingEnabled = true;
+        public boolean inWorldBambooDrying = true;
 
         @Name("salt_block_drops_itself")
         @Comment("Should salt blocks drop themselves when broken? If false, they will drop 9 salt piles")
         @RequiresMcRestart
-        public boolean saltBlockDropsEnabled = false;
+        public boolean saltBlockDropsItself = false;
 
         @Name("salt_hurts_undead")
         @Comment("Should salt hurt undead mobs that walk on it?")
         @RequiresMcRestart
-        public boolean saltUndeadDamageEnabled = true;
+        public boolean saltHurtsUndead = true;
 
         @Name("throwable_salt_piles")
         @Comment({ "Should piles of salt be throwable?",
                    "If \"salt_hurts_undead\" is enabled, thrown salt will also deal damage" })
         @RequiresMcRestart
-        public boolean throwableSaltPilesEnabled = true;
+        public boolean throwableSaltPiles = true;
 
         @Name("throw_requires_sneaking")
         @Comment({ "Should sneaking be required to throw salt piles?",
                    "This config is unused if \"throwable_salt_piles\" is disabled" })
         @RequiresMcRestart
-        public boolean throwSneakingRequirementEnabled = false;
+        public boolean throwRequiresSneaking = false;
 
         @Name("fancy_bamboo")
         @Comment({ "Should the bounding box of bamboo be fancy and detailed?",
                    "When false, collision logic will also be simplified" })
         @RequiresMcRestart
-        public boolean fancyBambooEnabled = true;
+        public boolean fancyBamboo = true;
 
         private General() {
             BamboozledConfig.LOGGER.info("General configuration initialized");
         }
-
-        @Override
-        public boolean isInWorldBambooDryingEnabled() {
-            return this.inWorldBambooDryingEnabled;
-        }
-
-        @Override
-        public boolean isSaltBlockDropsEnabled() {
-            return this.saltBlockDropsEnabled;
-        }
-
-        @Override
-        public boolean isSaltUndeadDamageEnabled() {
-            return this.saltUndeadDamageEnabled;
-        }
-
-        @Override
-        public boolean isThrowableSaltPilesEnabled() {
-            return this.throwableSaltPilesEnabled;
-        }
-
-        @Override
-        public boolean isThrowSneakingRequirementEnabled() {
-            return this.throwSneakingRequirementEnabled;
-        }
-
-        @Override
-        public boolean isFancyBambooEnabled() {
-            return this.fancyBambooEnabled;
-        }
     }
 
-    public static final class World implements WorldConfig {
+    public static final class World {
         @Name("generate_bamboo")
         @Comment("Should bamboo stalks be generated in tropical biomes?")
         @RequiresMcRestart
-        public boolean bambooGenerationEnabled = true;
+        public boolean generateBamboo = true;
 
         @Name("generate_salt_ore")
         @Comment("Should halite clusters be generated underground?")
         @RequiresMcRestart
-        public boolean saltOreGenerationEnabled = true;
+        public boolean generateSaltOre = true;
 
         @Name("salt_ore_cluster_size")
         @Comment("The size of generated halite clusters")
         @RequiresMcRestart
-        public int saltClusterSize = 8;
+        public int saltOreClusterSize = 8;
 
         private World() {
             BamboozledConfig.LOGGER.info("World configuration initialized");
-        }
-
-        @Override
-        public boolean isBambooGenerationEnabled() {
-            return this.bambooGenerationEnabled;
-        }
-
-        @Override
-        public boolean isSaltOreGenerationEnabled() {
-            return this.saltOreGenerationEnabled;
-        }
-
-        @Override
-        public int getSaltClusterSize() {
-            return this.saltClusterSize;
         }
     }
 }

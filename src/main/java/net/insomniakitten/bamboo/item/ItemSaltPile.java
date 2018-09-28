@@ -25,11 +25,11 @@ public final class ItemSaltPile extends ItemBlock {
     public ActionResult<ItemStack> onItemRightClick(final World world, final EntityPlayer player, final EnumHand hand) {
         final ItemStack stack = player.getHeldItem(hand);
 
-        if (!Bamboozled.getConfig().isThrowableSaltPilesEnabled()) {
+        if (!Bamboozled.getConfig().throwableSaltPiles) {
             return new ActionResult<>(EnumActionResult.PASS, stack);
         }
 
-        if (Bamboozled.getConfig().isThrowSneakingRequirementEnabled() && !player.isSneaking()) {
+        if (Bamboozled.getConfig().throwRequiresSneaking && !player.isSneaking()) {
             return new ActionResult<>(EnumActionResult.PASS, stack);
         }
 

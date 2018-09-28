@@ -152,7 +152,7 @@ public final class BlockSaltPile extends Block {
 
     @Override
     public void onEntityCollision(final World world, final BlockPos position, final IBlockState state, final Entity entity) {
-        if (!Bamboozled.getConfig().isInWorldBambooDryingEnabled()) {
+        if (!Bamboozled.getConfig().inWorldBambooDrying) {
             return;
         }
 

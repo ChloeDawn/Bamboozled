@@ -79,7 +79,7 @@ public final class BlockSalt extends BlockFalling {
 
     @Override
     public void onEntityWalk(final World world, final BlockPos position, final Entity entity) {
-        if (!Bamboozled.getConfig().isSaltUndeadDamageEnabled()) {
+        if (!Bamboozled.getConfig().saltHurtsUndead) {
             return;
         }
 
@@ -96,7 +96,7 @@ public final class BlockSalt extends BlockFalling {
 
     @Override
     public void getDrops(final NonNullList<ItemStack> drops, final IBlockAccess access, final BlockPos position, final IBlockState state, final int fortune) {
-        if (Bamboozled.getConfig().isSaltBlockDropsEnabled()) {
+        if (Bamboozled.getConfig().saltBlockDropsItself) {
             drops.add(new ItemStack(this.item.get()));
         } else {
             drops.add(new ItemStack(BamboozledItems.SALT_PILE, 9));

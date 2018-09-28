@@ -105,7 +105,7 @@ public final class BlockBambooBundle extends Block {
 
     @Override
     public void updateTick(final World world, final BlockPos position, final IBlockState state, final Random rand) {
-        if (!Bamboozled.getConfig().isInWorldBambooDryingEnabled()) {
+        if (!Bamboozled.getConfig().inWorldBambooDrying) {
             return;
         }
 

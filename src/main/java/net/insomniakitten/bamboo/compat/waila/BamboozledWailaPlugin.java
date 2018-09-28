@@ -32,7 +32,7 @@ public final class BamboozledWailaPlugin implements IWailaPlugin {
 
         @Override
         public List<String> getWailaBody(final ItemStack stack, final List<String> tooltip, final IWailaDataAccessor accessor, final IWailaConfigHandler config) {
-            if (!Bamboozled.getConfig().isInWorldBambooDryingEnabled()) {
+            if (!Bamboozled.getConfig().inWorldBambooDrying) {
                 return tooltip;
             }
 

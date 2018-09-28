@@ -21,7 +21,7 @@ public final class ItemBlockBambooBundle extends ItemSubBlockBase {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(final ItemStack stack, @Nullable final World world, final List<String> tooltip, final ITooltipFlag flag) {
-        if (Bamboozled.getConfig().isInWorldBambooDryingEnabled() || BlockBambooBundle.isDry(stack.getMetadata())) {
+        if (Bamboozled.getConfig().inWorldBambooDrying || BlockBambooBundle.isDry(stack.getMetadata())) {
             super.addInformation(stack, world, tooltip, flag);
         }
     }
