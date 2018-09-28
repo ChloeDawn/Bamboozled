@@ -50,7 +50,7 @@ public final class BlockRope extends Block {
         BlockFaceShape.SOLID, BlockFaceShape.CENTER, BlockFaceShape.CENTER_BIG
     );
 
-    private final Supplier<ItemBlock> item = new LazyBlockItem(this);
+    private final Supplier<ItemBlock> item = new LazyBlockItem<>(this);
 
     public BlockRope() {
         super(Material.CIRCUITS);

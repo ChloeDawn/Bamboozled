@@ -3,8 +3,8 @@ package net.insomniakitten.bamboo.block;
 import lombok.val;
 import lombok.var;
 import net.insomniakitten.bamboo.Bamboozled;
-import net.insomniakitten.bamboo.init.BamboozledItems;
 import net.insomniakitten.bamboo.entity.EntityFallingSaltBlock;
+import net.insomniakitten.bamboo.init.BamboozledItems;
 import net.insomniakitten.bamboo.util.LazyBlockItem;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.SoundType;
@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 public final class BlockSalt extends BlockFalling {
     public static final int DUST_COLOR = 0xE9E9E9;
 
-    private final Supplier<ItemBlock> item = new LazyBlockItem(this);
+    private final Supplier<ItemBlock> item = new LazyBlockItem<>(this);
 
     public BlockSalt() {
         super(Material.SAND);

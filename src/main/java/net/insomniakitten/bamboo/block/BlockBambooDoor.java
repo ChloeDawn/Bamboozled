@@ -12,16 +12,17 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.function.Supplier;
 
@@ -35,7 +36,11 @@ public final class BlockBambooDoor extends BlockDoor {
         )
     );
 
-    private final Supplier<ItemBlock> item = new LazyBlockItem(this);
+    private final Supplier<Item> item = new LazyBlockItem<>(this, it -> {
+        val name = Objects.requireNonNull(it.getRegistryName(), "registryName");
+
+        return ForgeRegistries.ITEMS.getValue(name);
+    });
 
     public BlockBambooDoor() {
         super(Material.WOOD);
