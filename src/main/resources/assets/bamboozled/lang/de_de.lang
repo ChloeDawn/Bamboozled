@@ -1,0 +1,51 @@
+item_group.bamboozled.label=Bamboozled
+
+tile.bamboozled.bamboo.name=Bambushalme
+
+tile.bamboozled.bamboo_bundle.name=Bambusbündel
+tile.bamboozled.bamboo_bundle.desc=Unter Sonnenlicht zum Trocknen platzieren
+
+tile.bamboozled.bamboo_bundle_dried.name=Getrocknetes Bambusbündel
+tile.bamboozled.bamboo_bundle_dried.desc=Kann zu verschiedenen Dekorationen verarbeitet werden
+
+tile.bamboozled.bamboo_dried_slab.name=Getrocknete Bambusstufe
+tile.bamboozled.bamboo_dried_stairs.name=Getrocknete Bambustreppe
+tile.bamboozled.bamboo_dried_fence.name=Getrockneter Bambuszaun
+
+tile.bamboozled.bamboo_wall.name=Bambusmauer
+tile.bamboozled.bamboo_door.name=Bambustür
+
+tile.bamboozled.bamboo_planks.name=Bambusbrett
+tile.bamboozled.bamboo_planks_vertical.name=Vertikales Bambusbrett
+tile.bamboozled.bamboo_planks_slab.name=Bambusbrettstufe
+tile.bamboozled.bamboo_planks_stairs.name=Bambusbretttreppe
+tile.bamboozled.bamboo_planks_fence.name=Bambusbrettzaun
+
+tile.bamboozled.rope.name=Seil
+tile.bamboozled.rope_fence.name=Seilzaun
+
+tile.bamboozled.salt_ore.name=Halit
+tile.bamboozled.salt_pile.name=Salzhaufen
+tile.bamboozled.salt_block.name=Salzblock
+
+tile.bamboozled.salt_crystal_block.name=Salzkristallblock
+tile.bamboozled.salt_crystal_block_bricks.name=Salzkristallziegel
+tile.bamboozled.salt_crystal_block_bricks_cracked.name=Rissige Salzkristallziegel
+tile.bamboozled.salt_crystal_block_bricks_chiseled.name=Gemeißelte Salzkristallziegel
+tile.bamboozled.salt_crystal_block_stairs.name=Salzkristallblocktreppe
+tile.bamboozled.salt_crystal_brick_stairs.name=Salzkristallziegeltreppe
+tile.bamboozled.salt_crystal_block_slab.name=Salzkristallblockstufe
+tile.bamboozled.salt_crystal_brick_slab.name=Salzkristallziegelstufe
+
+tile.bamboozled.bamboo_crate.name=Bambuskiste
+
+item.bamboozled.bamboo_dried.name=Getrocknete Bambushalme
+item.bamboozled.bamboo_dried.desc=Kann zu verschiedenen Dekorationen verarbeitet werden
+
+item.bamboozled.salt_crystal.name=Salzkristall
+
+entity.bamboozled.falling_salt_block.name=Fallender Salzblock
+
+waila.bamboozled.bamboo_bundle.dry_progress=Trocknet %d%%
+
+container.bamboozled.bamboo_crate=Bambuskiste
