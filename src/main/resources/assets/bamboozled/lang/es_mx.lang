@@ -1,0 +1,51 @@
+item_group.bamboozled.label=Bamboozled
+
+tile.bamboozled.bamboo.name=Tallos de bambú
+
+tile.bamboozled.bamboo_bundle.name=Paquete de bambú
+tile.bamboozled.bamboo_bundle.desc=Colocar bajo la luz de sol para crear bambú seco
+
+tile.bamboozled.bamboo_bundle_dried.name=Paquete de bambú seco
+tile.bamboozled.bamboo_bundle_dried.desc=Puede ser manufacturado en varios objetos decorativos
+
+tile.bamboozled.bamboo_dried_slab.name=Losa de bambú seco
+tile.bamboozled.bamboo_dried_stairs.name=Escalón de bambú seco
+tile.bamboozled.bamboo_dried_fence.name=Cerca de bambú seco
+
+tile.bamboozled.bamboo_wall.name=Pared de bambú seco
+tile.bamboozled.bamboo_door.name=Puerta de bambú seco
+
+tile.bamboozled.bamboo_planks.name=Tablones de bambú
+tile.bamboozled.bamboo_planks_vertical.name=Tablones verticales de bambú
+tile.bamboozled.bamboo_planks_slab.name=Losa de tablones de bambú
+tile.bamboozled.bamboo_planks_stairs.name=Escalón de tablones de bambú
+tile.bamboozled.bamboo_planks_fence.name=Cerca de tablones de bambú
+
+tile.bamboozled.rope.name=Soga
+tile.bamboozled.rope_fence.name=Cerca con soga
+
+tile.bamboozled.salt_ore.name=Halita
+tile.bamboozled.salt_pile.name=Pila de sal
+tile.bamboozled.salt_block.name=Bloque de sal
+
+tile.bamboozled.salt_crystal_block.name=Bloque de cristal de sal
+tile.bamboozled.salt_crystal_block_bricks.name=Ladrillos de cristal de sal
+tile.bamboozled.salt_crystal_block_bricks_cracked.name=Ladrillos de cristal de sal agrietados
+tile.bamboozled.salt_crystal_block_bricks_chiseled.name=Ladrillos de cristal de sal cincelados
+tile.bamboozled.salt_crystal_block_stairs.name=Escalones de bloques de cristal de sal
+tile.bamboozled.salt_crystal_brick_stairs.name=Escalones de ladrillos de cristal de sal
+tile.bamboozled.salt_crystal_block_slab.name=Losa de bloques de cristal de sal
+tile.bamboozled.salt_crystal_brick_slab.name=Losa de ladrillos de cristal de sal
+
+tile.bamboozled.bamboo_crate.name=Caja de bambú
+
+item.bamboozled.bamboo_dried.name=Tallos de bambú secos
+item.bamboozled.bamboo_dried.desc=Puede ser manufacturado en varios objetos decorativos
+
+item.bamboozled.salt_crystal.name=Cristal de sal
+
+entity.bamboozled.falling_salt_block.name=Bloque de sal suelto
+
+waila.bamboozled.bamboo_bundle.dry_progress=Secando %d%%
+
+container.bamboozled.bamboo_crate=Caja de bambú
