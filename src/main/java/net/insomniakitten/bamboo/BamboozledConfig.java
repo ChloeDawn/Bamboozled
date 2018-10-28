@@ -16,11 +16,11 @@ import org.apache.logging.log4j.Logger;
 @Config(modid = Bamboozled.ID, name = Bamboozled.ID, category = "")
 @SuppressWarnings("RedundantFieldInitialization")
 public final class BamboozledConfig {
+    private static final Logger LOGGER = Bamboozled.getLogger("config");
+
     public static final Client CLIENT = new Client();
     public static final General GENERAL = new General();
     public static final World WORLD = new World();
-
-    private static final Logger LOGGER = Bamboozled.getLogger("config");
 
     private BamboozledConfig() {
         throw new UnsupportedOperationException("Cannot instantiate " + this.getClass());
