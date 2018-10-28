@@ -8,7 +8,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Logger;
 
 public final class BamboozledItemGroup extends CreativeTabs {
-    private static final String TRANSLATION_KEY = "item_group." + Bamboozled.ID + ".label";
     private static final Logger LOGGER = Bamboozled.getLogger("itemgroup");
 
     static final CreativeTabs INSTANCE;
@@ -30,7 +29,7 @@ public final class BamboozledItemGroup extends CreativeTabs {
     @Override
     @SideOnly(Side.CLIENT)
     public String getTranslationKey() {
-        return BamboozledItemGroup.TRANSLATION_KEY;
+        return "item_group." + Bamboozled.ID + ".label";
     }
 
     @Override
